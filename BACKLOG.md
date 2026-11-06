@@ -1,6 +1,6 @@
 # Backlog de Yavin
 
-**Atualizado em:** 05 de novembro de 2026  
+**Atualizado em:** 06 de novembro de 2026
 **Estado:** pendências e prioridades sugeridas para o MVP; não define arquitetura definitiva.
 
 ## Recorte do MVP
@@ -53,6 +53,20 @@ O backend continua sob responsabilidade do Idealizador; esta sequência é plane
 sem autorização implícita para modificá-lo.
 
 ## P0 — Executar e validar o núcleo
+
+- [x] **Manter os checkpoints de Silas em PostgreSQL.** Revisão de desenvolvimento
+  em 06/11/2026: `PostgresSaver` compartilhado durante o ciclo de vida da API,
+  `setup()` na inicialização e fechamento na parada. Recuperação confirmada após
+  fechar e reabrir a conexão, usando grafo de teste sem chamada ao modelo; thread
+  temporária removida. Contexto documental inicial não é repetido a cada turno.
+  Corrigidos os construtores Pydantic que bloqueavam o chat e aceita a mensagem
+  simples enviada pelo frontend. Três testes automatizados e build aprovados.
+  O histórico do grafo é persistente; `CHAT_CACHE` e entidades do domínio continuam
+  em memória. A validação conversacional real com Silas permanece pendente.
+
+- [ ] **Revisar os campos temporais das entidades de chat.** `created_at` ainda usa
+  `datetime.time()` (meia-noite), sem representar o instante de criação. Definir
+  timestamps e fuso antes de persistir essas entidades como registros do domínio.
 
 - [x] **Recuperar a base documental ausente após a reorganização.** Os cinco
   documentos foram recuperados em `src/agents/base_knowledge/`, usando cópias

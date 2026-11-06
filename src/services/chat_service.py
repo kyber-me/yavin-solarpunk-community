@@ -1,6 +1,8 @@
 from pathlib import Path
 from typing import Any
 
+from langgraph.checkpoint.postgres import PostgresSaver
+
 from src.agents.main import Agent
 from src.domain.chat.conversations.main import Conversation
 from src.domain.chat.conversations.value_objects.conversation_id import ConversationId
@@ -22,7 +24,7 @@ PROJECT_SOURCE = current_path.resolve().parents[1]  # /Users/tiagocuri/Repos/Yav
 
 
 # Redis Analogue (this remains on memory?)
-CHAT_CACHE: dict[str, Conversation] = {}
+CHAT_CACHE: dict[tuple[str, str], Conversation] = {}
 
 
 # 1 - O ChatService pode ser utilizado apenas quando há conversas em andamento (é mais barato enviar mensagens via agente por telefone virtual?)
@@ -34,34 +36,39 @@ CHAT_CACHE: dict[str, Conversation] = {}
 # se passando por uma outra pessoa Z.
 class ChatService(IService):
     @classmethod
-    async def run(cls, dto: ChatServiceRequestDto) -> dict[str, Any]:
+    def run(
+        cls, dto: ChatServiceRequestDto, checkpointer: PostgresSaver
+    ) -> dict[str, Any]:
+
+        content = dto.message if isinstance(dto.message, str) else dto.message.content
 
         # Adicionar camada de PromptShield
-        if not dto.message.content.strip():
+        if not content.strip():
             raise AppError(
                 code="INVALID_REQUEST",
                 message="The message is required",
                 status_code=400,
             )
 
-        conversation_id = ConversationId(dto.message.sender, dto.message.receiver)
+        conversation_id = ConversationId(dto.sender_id, dto.receiver_id)
         # Look-up for a existent conversation by id
-        conversation_exists = CHAT_CACHE.get(conversation_id.id)
+        cache_key = (conversation_id.id, dto.thread_id)
+        conversation_exists = CHAT_CACHE.get(cache_key)
         if not conversation_exists:
             # This Conversation has a mixed ID (review it)
             # If conversation does not exist, there is no messages exchanged between no one
             # If conversation does not exist, this will be the first message
             new_conversation = Conversation(conversation_id, dto.thread_id)
             new_message = TextMessage(
-                dto.message.content,
-                dto.sender_id,
-                dto.receiver_id,
-                new_conversation.id,
-                conversation_id.id,
+                content=content,
+                sender=dto.sender_id,
+                receiver=dto.receiver_id,
+                conversation_id=new_conversation.id,
+                conversation_look_up_id=conversation_id.id,
             )
 
             # Cache the conversation for future recovering
-            CHAT_CACHE[conversation_id.id] = new_conversation
+            CHAT_CACHE[cache_key] = new_conversation
 
             # Save the conversation and the message on the Database (?)
             # ?
@@ -69,10 +76,9 @@ class ChatService(IService):
         identity_path = (
             PROJECT_ROOT / "src" / "agents" / "prompts" / "IDENTIDADE_ID_SILAS.md"
         )
-        silas = Agent("Silas", identity_path)
-
         try:
-            response = silas.invoke(dto.message.content, dto.thread_id)
+            silas = Agent("Silas", identity_path, checkpointer)
+            response = silas.invoke(content, dto.thread_id)
 
             return response
         except Exception as e:  # noqa: BLE001

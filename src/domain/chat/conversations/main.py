@@ -16,6 +16,6 @@ class Conversation(BaseModel):
     active: bool = False
 
     def __init__(self, conversation_id: ConversationId, thread_id: str) -> None:
-        self.id = f"Conv_{ULID()}"
-        self.look_up_key = conversation_id.id
-        self.thread_id = thread_id
+        super().__init__(
+            id=f"Conv_{ULID()}", look_up_key=conversation_id.id, thread_id=thread_id
+        )

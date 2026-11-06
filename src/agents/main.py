@@ -1,10 +1,12 @@
+import os
 from pathlib import Path
 from typing import Any
 
+from dotenv import load_dotenv
 from langchain.agents import AgentState, create_agent
 from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
 from langchain_core.runnables import RunnableConfig
-from langgraph.checkpoint.memory import InMemorySaver
+from langgraph.checkpoint.postgres import PostgresSaver
 from langgraph.graph.state import CompiledStateGraph
 from langgraph.types import StateSnapshot
 from ulid import ULID
@@ -16,9 +18,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 BASE_KNOWLEDGE_PATH = PROJECT_ROOT / "src" / "agents" / "base_knowledge"
 TOOLS = [*common, *testing]
 
-from dotenv import load_dotenv
-
-load_dotenv()
+load_dotenv(PROJECT_ROOT / ".env")
 
 
 # Explore concept
@@ -39,7 +39,12 @@ class Agent:
 
     agent: CompiledStateGraph
 
-    def __init__(self, name: str, specialized_instructions_path: Path | None) -> None:
+    def __init__(
+        self,
+        name: str,
+        specialized_instructions_path: Path | None,
+        checkpointer: PostgresSaver,
+    ) -> None:
         super().__init__()  # Do why should `super()` be called?
 
         self.id = f"Agen_{ULID()}"
@@ -60,13 +65,19 @@ class Agent:
             model="gpt-4o-mini",
             tools=TOOLS,
             system_prompt=instructions,
-            checkpointer=InMemorySaver(),
+            checkpointer=checkpointer,
             name=name,
         )
 
     def invoke(self, human_message: str, thread_id: str | None) -> dict[str, Any]:
 
-        messages: list[BaseMessage] = self._retrieval_knowledge()
+        if not thread_id:
+            raise ValueError("thread_id is required")
+        config: RunnableConfig = {"configurable": {"thread_id": thread_id}}
+        state = self.agent.get_state(config)
+        messages: list[BaseMessage] = (
+            [] if state.values.get("messages") else self._retrieval_knowledge()
+        )
 
         messages.append(HumanMessage(human_message))
         result = self.agent.invoke(
@@ -117,9 +128,9 @@ class Agent:
     def get_state(
         self, thread_id: str, checkpoint_id: str = "", get_full_history: bool = False
     ) -> list[StateSnapshot]:
-        config: RunnableConfig = {
-            "configurable": {"thread_id": thread_id, "checkpoint_id": checkpoint_id}
-        }
+        config: RunnableConfig = {"configurable": {"thread_id": thread_id}}
+        if checkpoint_id:
+            config["configurable"]["checkpoint_id"] = checkpoint_id
         if get_full_history:
             return list(self.agent.get_state_history(config))
 
@@ -127,13 +138,16 @@ class Agent:
 
 
 if __name__ == "__main__":
+    from src.agents.infra.open_checkpointer_helper import open_checkpointer
+
     print("Executing as a script...")
 
     identity_path = (
         PROJECT_ROOT / "src" / "agents" / "prompts" / "IDENTIDADE_ID_SILAS.md"
     )
-    a = Agent("Silas", identity_path)
-    result = a.invoke("Me fale um pouco de você", "test-1")
+    with open_checkpointer() as checkpointer:
+        a = Agent("Silas", identity_path, checkpointer)
+        result = a.invoke("Me fale um pouco de você", "test-1")
 
     # result["messages"][-1].content_blocks
     for k, v in result.items():

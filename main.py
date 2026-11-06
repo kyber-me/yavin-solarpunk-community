@@ -1,14 +1,26 @@
+from contextlib import asynccontextmanager
+
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from starlette.concurrency import run_in_threadpool
 
+from src.agents.infra.open_checkpointer_helper import open_checkpointer
 from src.services.chat_service import ChatService
 from src.types.app_error import AppError
 from src.types.dtos.api_response import ApiError, ApiResponse
 from src.types.dtos.chat_service_request import ChatServiceRequestDto
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    with open_checkpointer() as checkpointer:
+        app.state.checkpointer = checkpointer
+        yield
+
+
+app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -38,8 +50,10 @@ async def root():
 
 
 @app.post("/chat", response_model=ApiResponse[dict])
-async def chat(request: ChatServiceRequestDto):
-    result = await ChatService.run(request)
+async def chat(payload: ChatServiceRequestDto, request: Request):
+    result = await run_in_threadpool(
+        ChatService.run, payload, request.app.state.checkpointer
+    )
 
     return ApiResponse(data=result)
 
