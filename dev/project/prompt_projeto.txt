@@ -1,0 +1,11 @@
+1 - Hoje, temos 3 tipos de documentos:
+- Atas com resumos de reuniões/ conversas
+- Manifestos da cultura Solarpunk
+- Transcriptions com os registros de conversas inteiras
+Enquanto o primeiro e o último podem ser importantes para dar suporte a memória, gerar contexto para futuras conversas, direcionar decisões ou até mesmo trazer pontos antes esquecidos, o segundo dá identidade ao projeto. Todos são úteis mas sinto falta de uma documentação técnica que descreva o objetivo da Pesquisa como projeto. Acho que uma boa forma de abordar isto é partindo de um desafio ou problema que responde a uma pergunta. Mais importante do que a resposta, é a pergunta: É possível construir uma pequena sociedade autossustentável baseada em tecnologia, sustentabilidade e cooperação? Quais são as decisões que precisariam ser tomadas com frequência? Quais seriam os grandes desafios? Quais são os pontos críticos?
+
+Essas perguntas podem e deverão ser respondidas durante a nossa simulação com orquestração multi-agêntica.
+
+Acho que elaborar um documento que sintetiza esse objetivo justifica principalmente o fato de termos escolhido começar do ponto (quase) zero. A simulação vai acompanhar todos os questionamentos e problemas que surgirão, como as conversas serão conduzidas, quais necessidades irão aparecer e quais serão as maiores limitações do projeto. 
+
+Além disto, será um documento de entrada, que ajudará agentes e humanos a nortearem suas decisões e a entenderem melhor o contexto do projeto do qual fazem parte.

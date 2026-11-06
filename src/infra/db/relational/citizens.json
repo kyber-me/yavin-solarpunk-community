@@ -1,0 +1,12 @@
+{
+    "citizens": [
+        {
+            "id": "cit_01M6M2Y6TGQDZB7CXPB9B34JS1",
+            "name": "Silas",
+            "roles": [
+                "lab_member",
+                "council_member"
+            ]
+        }
+    ]
+}

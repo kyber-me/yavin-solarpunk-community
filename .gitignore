@@ -1,0 +1,74 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Packaging and distribution
+node_modules/
+build/
+dist/
+wheels/
+*.egg-info/
+pip-wheel-metadata/
+MANIFEST
+
+# Test, coverage, and type-checking output
+.pytest_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.mypy_cache/
+.pyre/
+.pytype/
+.hypothesis/
+.tox/
+.nox/
+
+# Linters and formatters
+.ruff_cache/
+.basedpyright/
+.pyright/
+
+# Local tooling and editor settings
+.idea/
+.vscode/*
+!.vscode/launch.json
+!.vscode/tasks.json
+!.vscode/extensions.json
+
+# Environment files and local configuration
+.env
+.env.*
+!.env.example
+!.env.template
+
+# Private keys, certificates, and credential files
+*.pem
+*.key
+*.crt
+*.cer
+*.der
+*.p12
+*.pfx
+*.jks
+*credentials*.json
+*secret*.json
+secrets/
+
+# Local databases and logs
+*.db
+*.sqlite
+*.sqlite3
+*.log
+logs/
+
+# macOS
+.DS_Store

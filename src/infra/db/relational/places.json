@@ -1,0 +1,16 @@
+{
+    "places": [
+        {
+            "id": "plac_01M6M3WY7SKG1M98TJSKTTY1XA",
+            "name": "Central Lab",
+            "type": "Laboratory",
+            "status": "active",
+            "aproximmate_size": null,
+            "position": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            }
+        }
+    ]
+}

@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900">
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f0e2bd"/>
+      <stop offset="1" stop-color="#d8c697"/>
+    </linearGradient>
+    <linearGradient id="forest" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#143c36"/>
+      <stop offset="1" stop-color="#0b2827"/>
+    </linearGradient>
+    <pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse">
+      <path d="M28 0H0V28" fill="none" stroke="#47766a" stroke-opacity="0.22"/>
+    </pattern>
+    <filter id="soft-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="7" stdDeviation="9" flood-color="#071d1c" flood-opacity="0.28"/>
+    </filter>
+  </defs>
+
+  <!-- Platform frame -->
+  <rect width="1440" height="900" fill="#091f20"/>
+  <rect x="26" y="24" width="1388" height="852" rx="22" fill="url(#forest)" stroke="#4d806e" stroke-width="2"/>
+
+  <!-- Top bar -->
+  <rect x="26" y="24" width="1388" height="76" rx="22" fill="#102f2e"/>
+  <path d="M26 100H1414" stroke="#47766a"/>
+  <circle cx="70" cy="62" r="20" fill="#d2a65e"/>
+  <path d="M61 62h18M70 53v18" stroke="#123732" stroke-width="3"/>
+  <text x="106" y="59" fill="#f3ddb0" font-family="Georgia, serif" font-size="25" letter-spacing="2">YAVIN</text>
+  <text x="107" y="78" fill="#82aa97" font-family="monospace" font-size="10" letter-spacing="1">PLATAFORMA DE INVESTIGACAO</text>
+  <text x="1112" y="59" fill="#a2c2a8" font-family="sans-serif" font-size="12">fundacao conceitual</text>
+  <circle cx="1300" cy="61" r="5" fill="#d2a65e"/>
+  <text x="1315" y="65" fill="#dce6c5" font-family="sans-serif" font-size="12">Idealizador</text>
+
+  <!-- Navigation rail -->
+  <rect x="48" y="122" width="220" height="730" rx="16" fill="#0d2929" stroke="#315f56"/>
+  <text x="76" y="164" fill="#6f9a87" font-family="monospace" font-size="10" letter-spacing="2">NAVEGACAO</text>
+  <g font-family="sans-serif" font-size="14">
+    <rect x="68" y="188" width="180" height="44" rx="10" fill="#d2a65e"/>
+    <circle cx="91" cy="210" r="6" fill="#153b36"/>
+    <text x="110" y="215" fill="#153b36">Laboratorio</text>
+    <circle cx="91" cy="264" r="6" fill="none" stroke="#d2a65e" stroke-width="2"/>
+    <text x="110" y="269" fill="#e6e5c7">Investigar</text>
+    <circle cx="91" cy="318" r="6" fill="none" stroke="#d2a65e" stroke-width="2"/>
+    <text x="110" y="323" fill="#e6e5c7">Propostas</text>
+    <circle cx="91" cy="372" r="6" fill="none" stroke="#d2a65e" stroke-width="2"/>
+    <text x="110" y="377" fill="#e6e5c7">Memoria</text>
+  </g>
+  <path d="M76 426H240" stroke="#315f56"/>
+  <text x="76" y="462" fill="#6f9a87" font-family="monospace" font-size="10" letter-spacing="2">MODULOS</text>
+  <g font-family="sans-serif" font-size="13">
+    <text x="76" y="505" fill="#a7c3a9">Mapa</text>
+    <text x="76" y="542" fill="#557c70">Dados ambientais</text>
+    <text x="76" y="579" fill="#557c70">Recursos</text>
+    <text x="76" y="640" fill="#6f9a87" font-family="monospace" font-size="10" letter-spacing="1">AINDA EM ABERTO</text>
+    <text x="76" y="680" fill="#557c70">localizacao</text>
+    <text x="76" y="714" fill="#557c70">economia</text>
+    <text x="76" y="748" fill="#557c70">governanca</text>
+  </g>
+  <text x="76" y="816" fill="#557c70" font-family="monospace" font-size="10">YAVIN / 001</text>
+
+  <!-- Main research atelier -->
+  <rect x="288" y="122" width="748" height="730" rx="16" fill="#183f3b" stroke="#47766a"/>
+  <rect x="288" y="122" width="748" height="730" rx="16" fill="url(#grid)"/>
+  <text x="326" y="168" fill="#f0ddb3" font-family="Georgia, serif" font-size="29">Atelier de investigação</text>
+  <text x="326" y="195" fill="#87aa96" font-family="sans-serif" font-size="12">uma pergunta aberta, documentos ao redor, nenhum mundo pronto</text>
+  <rect x="812" y="145" width="184" height="30" rx="15" fill="#214e47" stroke="#5b927b"/>
+  <circle cx="832" cy="160" r="5" fill="#d2a65e"/>
+  <text x="845" y="164" fill="#d9e6c6" font-family="sans-serif" font-size="11">pesquisa em andamento</text>
+
+  <!-- Central question card -->
+  <g filter="url(#soft-shadow)">
+    <rect x="470" y="268" width="384" height="152" rx="12" fill="url(#paper)"/>
+    <text x="500" y="301" fill="#b1704b" font-family="monospace" font-size="10" letter-spacing="2">QUESTAO 001 · ENERGIA</text>
+    <text x="500" y="337" fill="#183f3b" font-family="Georgia, serif" font-size="23">Como começar a investigar</text>
+    <text x="500" y="366" fill="#183f3b" font-family="Georgia, serif" font-size="23">a autonomia energetica?</text>
+    <path d="M500 390H824" stroke="#b9955c"/>
+    <text x="500" y="407" fill="#63735e" font-family="sans-serif" font-size="11">hipotese introduzida pelo Idealizador · hoje</text>
+  </g>
+
+  <!-- Evidence and action cards -->
+  <g filter="url(#soft-shadow)">
+    <rect x="350" y="497" width="226" height="138" rx="12" fill="#e5d4a9"/>
+    <rect x="350" y="497" width="7" height="138" rx="3" fill="#5f9676"/>
+    <text x="378" y="529" fill="#5f9676" font-family="monospace" font-size="10" letter-spacing="1">REFERENCIA</text>
+    <text x="378" y="563" fill="#24453d" font-family="Georgia, serif" font-size="18">Manifesto</text>
+    <text x="378" y="588" fill="#66745f" font-family="sans-serif" font-size="12">Solarpunk e</text>
+    <text x="378" y="606" fill="#66745f" font-family="sans-serif" font-size="12">infraestrutura como resistencia</text>
+  </g>
+  <g filter="url(#soft-shadow)">
+    <rect x="622" y="497" width="226" height="138" rx="12" fill="#d5a25c"/>
+    <rect x="622" y="497" width="7" height="138" rx="3" fill="#8b4e3e"/>
+    <text x="650" y="529" fill="#754434" font-family="monospace" font-size="10" letter-spacing="1">PROXIMO PASSO</text>
+    <text x="650" y="563" fill="#183f3b" font-family="Georgia, serif" font-size="18">Abrir experimento</text>
+    <text x="650" y="588" fill="#49604e" font-family="sans-serif" font-size="12">definir variaveis</text>
+    <text x="650" y="606" fill="#49604e" font-family="sans-serif" font-size="12">antes de propor uma estrutura</text>
+  </g>
+
+  <!-- Future map as isolated module -->
+  <rect x="350" y="694" width="498" height="110" rx="12" fill="#123432" stroke="#386b5d" stroke-dasharray="6 6"/>
+  <text x="378" y="728" fill="#d2a65e" font-family="monospace" font-size="10" letter-spacing="2">MODULO FUTURO · MAPA</text>
+  <text x="378" y="760" fill="#dce6c5" font-family="Georgia, serif" font-size="18">O mundo visual nasce depois da investigacao.</text>
+  <text x="378" y="785" fill="#729988" font-family="sans-serif" font-size="11">componente isolado · dados comuns · nenhuma decisao espacial ainda</text>
+
+  <!-- Context panel -->
+  <rect x="1056" y="122" width="332" height="730" rx="16" fill="#0d2929" stroke="#315f56"/>
+  <text x="1092" y="168" fill="#f0ddb3" font-family="Georgia, serif" font-size="24">Caderno de Silas</text>
+  <text x="1092" y="194" fill="#82aa97" font-family="sans-serif" font-size="12">colaborador intelectual · contexto ativo</text>
+  <path d="M1092 220H1352" stroke="#315f56"/>
+  <text x="1092" y="256" fill="#d2a65e" font-family="monospace" font-size="10" letter-spacing="2">LEITURA DO MOMENTO</text>
+  <text x="1092" y="290" fill="#dce6c5" font-family="Georgia, serif" font-size="18">Yavin esta antes do mapa.</text>
+  <text x="1092" y="321" fill="#86aa96" font-family="sans-serif" font-size="12">A primeira estrutura da plataforma</text>
+  <text x="1092" y="341" fill="#86aa96" font-family="sans-serif" font-size="12">e uma pergunta que pode ser investigada.</text>
+  <rect x="1092" y="385" width="260" height="122" rx="10" fill="#183f3b"/>
+  <text x="1114" y="416" fill="#d2a65e" font-family="monospace" font-size="10" letter-spacing="1">DISTINCAO</text>
+  <text x="1114" y="448" fill="#e4edcf" font-family="sans-serif" font-size="13">Hipotese</text>
+  <text x="1210" y="448" fill="#81a995" font-family="sans-serif" font-size="13">nao e decisao</text>
+  <text x="1114" y="477" fill="#e4edcf" font-family="sans-serif" font-size="13">Proposta</text>
+  <text x="1210" y="477" fill="#81a995" font-family="sans-serif" font-size="13">nao e construcao</text>
+  <text x="1092" y="566" fill="#d2a65e" font-family="monospace" font-size="10" letter-spacing="2">MEMORIA RECENTE</text>
+  <text x="1092" y="601" fill="#dce6c5" font-family="sans-serif" font-size="13">ATA 001 · fundacao conceitual</text>
+  <text x="1092" y="632" fill="#dce6c5" font-family="sans-serif" font-size="13">CONVERSA 001 · origem de Yavin</text>
+  <text x="1092" y="663" fill="#dce6c5" font-family="sans-serif" font-size="13">IDENTIDADE · Silas v2</text>
+  <rect x="1092" y="744" width="260" height="50" rx="10" fill="#204b44" stroke="#5c9279"/>
+  <text x="1114" y="775" fill="#dce6c5" font-family="sans-serif" font-size="13">Conversar sobre a investigacao</text>
+</svg>

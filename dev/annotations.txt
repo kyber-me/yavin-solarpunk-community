@@ -1,0 +1,3 @@
+Como funciona exatamente o MemorySaver? Como acessar os dados que este objeto cria por debaixo dos panos?
+
+Qual a diferença de ter um método async?

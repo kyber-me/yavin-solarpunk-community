@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#173f3b"/>
+      <stop offset="0.62" stop-color="#2d6d5f"/>
+      <stop offset="1" stop-color="#d5aa62"/>
+    </linearGradient>
+    <linearGradient id="ground" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#315d4c"/>
+      <stop offset="1" stop-color="#183d37"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#09221f" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <rect width="1440" height="900" fill="#102c2b"/>
+  <rect x="28" y="28" width="1384" height="844" rx="26" fill="#183b38" stroke="#477f6d" stroke-width="2"/>
+
+  <rect x="52" y="52" width="226" height="796" rx="18" fill="#102e2d" stroke="#2d6557"/>
+  <text x="84" y="105" fill="#f3d9a1" font-family="Georgia, serif" font-size="31">YAVIN</text>
+  <text x="84" y="132" fill="#8eb8a1" font-family="sans-serif" font-size="12" letter-spacing="2">AUTONOMOUS SETTLEMENT LAB</text>
+
+  <circle cx="92" cy="188" r="20" fill="#d6a75e"/>
+  <path d="M92 176v24M80 188h24" stroke="#173f3b" stroke-width="3"/>
+  <text x="128" y="184" fill="#f3ead2" font-family="sans-serif" font-size="15">Laboratorio</text>
+  <text x="128" y="204" fill="#8eb8a1" font-family="sans-serif" font-size="12">estado persistente</text>
+
+  <g font-family="sans-serif" font-size="14">
+    <text x="84" y="274" fill="#779c8b">MEMORIA</text>
+    <text x="84" y="314" fill="#f3ead2">Atas</text>
+    <text x="84" y="352" fill="#f3ead2">Conversas</text>
+    <text x="84" y="390" fill="#f3ead2">Manifesto</text>
+    <text x="84" y="428" fill="#f3ead2">Investigações</text>
+    <text x="84" y="492" fill="#779c8b">ESTADO</text>
+    <rect x="84" y="520" width="154" height="30" rx="15" fill="#23594d"/>
+    <circle cx="102" cy="535" r="5" fill="#e1bd6e"/>
+    <text x="116" y="540" fill="#f3ead2" font-size="12">em fundação</text>
+  </g>
+  <text x="84" y="792" fill="#6f9787" font-family="sans-serif" font-size="11">03 NOV 2026 · REUNIAO 001</text>
+
+  <rect x="300" y="52" width="692" height="796" rx="18" fill="url(#sky)" stroke="#4e8c76"/>
+  <text x="336" y="101" fill="#f3ead2" font-family="sans-serif" font-size="13" letter-spacing="2">MUNDO PERSISTENTE / FUNDACAO</text>
+  <text x="336" y="140" fill="#fff2cf" font-family="Georgia, serif" font-size="28">O primeiro lugar ainda esta nascendo.</text>
+
+  <circle cx="850" cy="156" r="52" fill="#e9c879" opacity="0.85"/>
+  <circle cx="850" cy="156" r="78" fill="none" stroke="#e9c879" stroke-opacity="0.2"/>
+  <path d="M328 570 C470 410 690 430 950 570 L950 820 L328 820Z" fill="url(#ground)"/>
+  <path d="M360 692 C530 590 680 600 942 688" fill="none" stroke="#6fa681" stroke-width="3" opacity="0.7"/>
+  <path d="M380 760 C570 660 760 680 934 752" fill="none" stroke="#6fa681" stroke-width="2" opacity="0.5"/>
+
+  <g filter="url(#shadow)">
+    <path d="M500 650 L640 570 L780 650 L780 742 L500 742Z" fill="#d9b36b" stroke="#f4d89b" stroke-width="3"/>
+    <path d="M500 650 L640 570 L780 650 L640 724Z" fill="#4a8f7a" stroke="#f4d89b" stroke-width="3"/>
+    <path d="M576 693 L640 657 L704 693 L704 742 L576 742Z" fill="#1e5048"/>
+    <path d="M604 675 L640 655 L676 675 L676 700 L604 700Z" fill="#e6c477"/>
+  </g>
+  <text x="535" y="785" fill="#f5e5bb" font-family="sans-serif" font-size="13">LABORATORIO · ponto inicial</text>
+
+  <g>
+    <circle cx="432" cy="560" r="19" fill="#d6a75e"/>
+    <path d="M422 560h20M432 550v20" stroke="#1b4941" stroke-width="3"/>
+    <path d="M451 568 L505 640" stroke="#e7c77f" stroke-width="2" stroke-dasharray="5 7"/>
+    <text x="354" y="535" fill="#fff2cf" font-family="sans-serif" font-size="12">area de investigacao</text>
+  </g>
+
+  <rect x="1014" y="52" width="374" height="796" rx="18" fill="#102e2d" stroke="#2d6557"/>
+  <text x="1050" y="101" fill="#f3d9a1" font-family="Georgia, serif" font-size="24">Silas</text>
+  <text x="1050" y="126" fill="#8eb8a1" font-family="sans-serif" font-size="12">colaborador intelectual</text>
+  <circle cx="1347" cy="101" r="6" fill="#8dbb75"/>
+
+  <g font-family="sans-serif" font-size="14">
+    <rect x="1050" y="166" width="286" height="104" rx="14" fill="#23594d"/>
+    <text x="1072" y="194" fill="#eaf1d5">Yavin nao precisa nascer</text>
+    <text x="1072" y="216" fill="#eaf1d5">sabendo o que e uma comunidade</text>
+    <text x="1072" y="238" fill="#eaf1d5">ideal. Podemos investigar primeiro.</text>
+    <text x="1050" y="305" fill="#6f9787" font-size="11">AGORA · contexto: fundacao</text>
+
+    <rect x="1080" y="342" width="256" height="76" rx="14" fill="#d6a75e"/>
+    <text x="1102" y="371" fill="#173f3b">Quero formular uma hipotese</text>
+    <text x="1102" y="394" fill="#173f3b">sobre energia local.</text>
+
+    <rect x="1050" y="472" width="286" height="116" rx="14" fill="#183f3b" stroke="#477f6d"/>
+    <text x="1072" y="500" fill="#d6a75e" font-size="11" letter-spacing="1">DISTINCAO</text>
+    <text x="1072" y="527" fill="#eaf1d5">Hipotese registrada</text>
+    <text x="1072" y="550" fill="#8eb8a1" font-size="12">Ainda nao e uma decisao aprovada.</text>
+    <text x="1072" y="573" fill="#8eb8a1" font-size="12">Proximo passo: investigar.</text>
+  </g>
+
+  <rect x="1050" y="760" width="286" height="48" rx="13" fill="#1a4943" stroke="#477f6d"/>
+  <text x="1072" y="790" fill="#7fae98" font-family="sans-serif" font-size="13">Escreva para Silas...</text>
+  <text x="1310" y="790" fill="#d6a75e" font-family="sans-serif" font-size="18">↗</text>
+</svg>
