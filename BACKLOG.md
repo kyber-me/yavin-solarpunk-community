@@ -21,6 +21,14 @@ Prioridades:
 - **P2:** evolução após validar o núcleo do MVP.
 - **Futuro:** fora do escopo inicial, sem compromisso de implementação.
 
+## Marca ASCII do README
+
+- [x] **Definir a marca ASCII de Yavin no README.** Composição aprovada pelo
+  Idealizador em 05/11/2026: símbolo solar arredondado com raios ampliados ao lado
+  do nome YAVIN. Sete linhas, até 63 colunas, apenas caracteres ASCII e bloco de
+  código `text` para preservar a fonte monoespaçada. Caracteres, largura e ausência
+  de tabs e espaços finais conferidos. Entrega registrada em commit dedicado.
+
 ## Retomada sugerida — próxima sessão
 
 **Natureza:** planejamento de desenvolvimento sugerido em 05/11/2026; não define

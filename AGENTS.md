@@ -115,6 +115,11 @@ mapa, junto à estação. Clicar na figura abre a conversa individual no drawer.
 O personagem acompanha pan e zoom; não possui movimentação ou simulação autônoma.
 Arte, prompts e registro estão em `frontend/sketches/silas/README.md`.
 
+O README contém a marca ASCII aprovada pelo Idealizador em 05/11/2026, com
+símbolo solar e o nome YAVIN em sete linhas e até 63 colunas, usando apenas
+caracteres ASCII. O núcleo solar é arredondado e os raios foram ampliados.
+Essa aprovação se refere à composição textual do README.
+
 Não tratar a tentativa rejeitada como direção visual aprovada. Preservar as
 funcionalidades, rotas, dados e acessibilidade, mas não presumir que a composição
 visual atual precise ser mantida. A agressividade deve vir da atitude, do ritmo,
