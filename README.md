@@ -1,3 +1,16 @@
+```text
+             .-""""-.
+          .-'    |    '-.
+        .'   ----+----   '.
+       /        |        \
+      ;         |         ;
+       \        |        /
+        '.   ---+---   .'
+          '-.    |  .-'
+             '-.__.-'
+                 YAVIN
+```
+
 # Yavin
 
 Yavin é uma iniciativa experimental de construção progressiva de uma comunidade
