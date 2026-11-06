@@ -8,184 +8,166 @@
        |
 ```
 
+<p align="center">
+  <img src="frontend/src/assets/oficina-solar.jpg" width="560" alt="Três pessoas em uma oficina numa laje, entre ferramentas, painéis solares e vegetação.">
+</p>
+
+*Oficina solar urbana — imagem de referência para o imaginário de Yavin.*
+
 # Yavin
 
-Yavin é uma iniciativa experimental de construção progressiva de uma comunidade
-inspirada no solarpunk. O projeto combina investigação, documentação, agentes de
-inteligência artificial e, futuramente, um laboratório virtual relacionado às condições
-de um território real brasileiro.
+<!-- Natureza: apresentação pública do projeto e do protótipo de pesquisa. -->
 
-Yavin não começa como uma cidade virtual pronta. Começa como um laboratório que tenta
-descobrir, por meio de pesquisa, hipóteses, experimentos e deliberação, quais estruturas,
-infraestruturas e formas de organização poderiam compor essa comunidade.
-
-> Yavin não precisa nascer sabendo o que é uma comunidade ideal. Ela pode nascer tentando
-> descobrir.
-
-## Documento de entrada da pesquisa
-
-O [Projeto de pesquisa de Yavin](./src/agents/base_knowledge/projeto/PROJETO_DE_PESQUISA_YAVIN.md)
-explicita a pergunta central, os objetivos, a razão de começar quase do zero e o
-que se pretende observar durante a simulação. É uma orientação técnica para
-humanos e agentes, distinta das atas, conversas e referências culturais.
+Yavin é um laboratório experimental que investiga a construção progressiva de uma
+pequena comunidade inspirada no solarpunk. Combina pesquisa, documentação e agentes
+de inteligência artificial para explorar uma pergunta:
 
 > É possível construir uma pequena sociedade autossustentável baseada em tecnologia,
 > sustentabilidade e cooperação?
 
-A pesquisa acompanhará tanto as condições de viabilidade da comunidade quanto o
-processo de formular perguntas, conduzir conversas e tomar decisões com participação
-humana e futura orquestração multiagêntica. As respostas permanecem abertas.
+O projeto começa com perguntas, referências e um primeiro colaborador agêntico,
+Silas. A comunidade, suas infraestruturas e suas formas de organização serão
+investigadas ao longo do processo. Futuramente, um laboratório virtual poderá
+relacionar os experimentos às condições de um território real brasileiro.
 
-## Visão do projeto
+> Yavin não precisa nascer sabendo o que é uma comunidade ideal. Ela pode nascer tentando
+> descobrir.
 
-O laboratório terá um modelo híbrido de iniciativa:
+## Orientação solarpunk
 
-- o Idealizador poderá introduzir objetivos, hipóteses, comentários e restrições;
-- o próprio laboratório poderá identificar problemas e propor investigações;
-- agentes poderão observar, pesquisar, simular e elaborar propostas;
-- propostas não alteram automaticamente o mundo persistente;
-- decisões aprovadas deverão preservar suas justificativas, evidências e histórico.
+O solarpunk oferece a Yavin um horizonte de sustentabilidade, cooperação e autonomia
+comunitária. Essa orientação conecta a imaginação de futuros desejáveis às condições
+materiais para realizá-los: energia, recursos, manutenção, conhecimento e organização
+coletiva.
 
-A primeira área de investigação é **energia**, especialmente geração, armazenamento,
-distribuição e autonomia energética. O estudo de solarpunk orientará a elaboração do
-manifesto e ajudará a restringir o escopo das investigações iniciais.
+A tecnologia é examinada junto de suas consequências sociais e ambientais. Uma
+solução precisa ser avaliada pelo que entrega, mas também por quem consegue
+compreendê-la, mantê-la e ter acesso aos seus benefícios. Autonomia, reparabilidade,
+produção local e uso responsável de recursos são questões de investigação.
 
-## Memória institucional
+A [biblioteca conceitual](./src/agents/base_knowledge/manifestos/conceitos-fundamentais.md)
+reúne referências como swadeshi, jugaad e low-tech, em diálogo com o
+[manifesto solarpunk de referência](./src/agents/base_knowledge/manifestos/manifesto-solarpunk.md).
+Esses materiais alimentam a pesquisa; o manifesto autoral de Yavin permanece em elaboração.
 
-Yavin distingue a orientação da pesquisa dos registros de memória e das referências culturais:
+## O que estamos investigando
 
-- **Projeto de pesquisa:** problema, pergunta central, objetivos, recorte e limites.
-- **Atas:** conclusões, decisões, questões abertas e encaminhamentos.
-- **Conversas:** reconstruções editoriais do processo de elaboração, incluindo argumentos,
-  correções e mudanças de perspectiva.
-- **Manifestos e referências culturais:** fundamentação solarpunk; o manifesto autoral
-  de Yavin permanece em elaboração.
+A pesquisa acompanha duas frentes complementares:
 
-**Recuperação após a reorganização:** os cinco documentos de
-`src/agents/base_knowledge/` foram recuperados de cópias e registros locais em
-05/11/2026. A origem e os ajustes estão no [registro de recuperação](./dev/recuperacao-memoria-2026-11-05.md).
-A identidade está em `src/agents/prompts/IDENTIDADE_ID_SILAS.md`.
+- **Viabilidade da comunidade:** necessidades, recursos, infraestruturas, dependências
+  externas, decisões recorrentes e pontos de vulnerabilidade.
+- **Processo de investigação e decisão:** como humanos e agentes formulam perguntas,
+  confrontam alternativas, reconhecem incertezas e preservam as razões de suas escolhas.
 
-A documentação comunitária está em [`src/agents/base_knowledge/`](./src/agents/base_knowledge/):
+Começar quase do zero permite observar como os problemas surgem e por que certas
+soluções são escolhidas. A cada etapa, a intenção é formular uma pergunta delimitada,
+consultar referências, explicitar hipóteses, comparar alternativas e registrar o
+que foi aprendido ou precisa ser revisto.
 
-- [`ATA_001_Fundacao_de_Yavin.md`](./src/agents/base_knowledge/atas/ATA_001_Fundacao_de_Yavin.md)
-- [`CONVERSA_001_A_Fundacao_de_Yavin.md`](./src/agents/base_knowledge/transcriptions/CONVERSA_001_A_Fundacao_de_Yavin.md)
-- [`manifesto-solarpunk.md`](./src/agents/base_knowledge/manifestos/manifesto-solarpunk.md)
-- [`conceitos-fundamentais.md`](./src/agents/base_knowledge/manifestos/conceitos-fundamentais.md)
-- [`IDENTIDADE.md`](./src/agents/prompts/IDENTIDADE_ID_SILAS.md)
+O modelo de iniciativa previsto é híbrido: o Idealizador pode introduzir objetivos
+e restrições, enquanto o laboratório poderá identificar problemas e propor estudos.
+Hipóteses, evidências, propostas e decisões aprovadas devem permanecer distinguíveis.
+As justificativas e os desacordos também fazem parte do resultado.
 
-O carregador atual de Silas lê apenas `atas/`, `manifestos/` e `transcriptions/`.
-A categoria `projeto/` ainda precisa ser incluída no contexto pelo Idealizador;
-criar o documento não o disponibiliza automaticamente ao agente.
+Uma hipótese refutada ou uma limitação identificada pode ser uma contribuição útil.
+Os resultados dependerão dos dados, cenários e modelos empregados; uma simulação
+bem-sucedida não comprova, por si só, viabilidade no mundo real.
 
-## Silas
+O [projeto de pesquisa](./src/agents/base_knowledge/projeto/PROJETO_DE_PESQUISA_YAVIN.md)
+detalha os objetivos, o método e os limites dessa investigação.
 
-Silas é o primeiro colaborador agêntico de Yavin. Sua identidade inicial é a de um
-colaborador intelectual: ele ajuda o Idealizador a pensar, investigar, questionar
-hipóteses e transformar ideias em experimentos verificáveis.
+## Primeiro foco: energia
 
-Silas deve:
+Geração, armazenamento, distribuição e autonomia energética formam o primeiro
+campo de estudo. Ele permite relacionar necessidades materiais e escolhas coletivas:
+quanto consumir, como lidar com períodos de baixa geração, o que priorizar diante
+da escassez e quais dependências uma infraestrutura introduz.
 
-- demonstrar curiosidade, método e independência intelectual;
-- discordar quando houver razões fundamentadas;
-- distinguir hipóteses, evidências, propostas e decisões;
-- preferir experimentação a conclusões prematuras;
-- reconhecer incertezas e evitar complexidade desnecessária.
+O primeiro experimento ainda precisa ter sua pergunta e seus parâmetros definidos.
+Localização, escala da comunidade e modelo de governança permanecem abertos e
+serão aprofundados quando necessários às investigações.
 
-A continuidade de Silas é **operacional e documental**. Não representa a transferência
-literal de uma consciência ou memória interna entre plataformas.
+## Silas e a colaboração com agentes
 
-## Estado técnico atual
+Silas é o primeiro colaborador agêntico de Yavin. Seu papel é ajudar a investigar,
+questionar hipóteses e transformar ideias em experimentos verificáveis. Sua
+[identidade inicial](./src/agents/prompts/IDENTIDADE_ID_SILAS.md) orienta uma colaboração
+curiosa, fundamentada e capaz de discordar, reconhecer incertezas e evitar conclusões
+prematuras.
 
-O repositório contém uma base inicial em Python, gerenciada com `uv`, com LangChain,
-ferramentas simples e carregamento de documentos Markdown para fornecer contexto ao
-agente. O backend é responsabilidade do Idealizador, incluindo arquitetura,
-orquestração de agentes, lógica interna, persistência e integrações.
+A continuidade de Silas é operacional e documental: combina instruções, referências
+e estado de conversa persistido. A coordenação de múltiplos agentes é uma etapa
+futura; o protótipo atual oferece conversa individual com Silas.
 
-A estrutura inicial do backend está organizada provisoriamente em `src/domain/`,
-`src/services/`, `src/infra/` e `src/agents/`. Os arquivos JSON em `src/infra/db/relational/` são
-configurações em desenvolvimento e ainda não constituem um contrato oficial do domínio.
-O `main.py` da raiz é um entrypoint provisório da API, não uma interface de execução
-definitiva.
+## Protótipo atual
 
-O frontend possui uma primeira SPA local em [`frontend/`](./frontend/README.md), com
-React + Vite + TypeScript. A entrada apresenta uma estação científica ilustrada
-e clicável, baseada no modelo visual v3 aprovado. Ela leva ao painel de conversa
-fixo à direita, com conversas independentes e reuniões com múltiplos participantes.
-Há retorno ao mapa e navegação pelas rotas `#/mapa` e `#/laboratorio`. Históricos e
-rascunhos são salvos no navegador. Conversas individuais já chamam `POST /chat`;
-a continuidade do agente entre requisições e a validação integrada permanecem
-pendentes. Reuniões continuam locais. O mapa está em um módulo da página inicial,
-com grid isométrico discreto, panning limitado e zoom de 65% a 100%. Edifício e legenda acompanham a câmera; a área do
-mapa bloqueia seleção e arraste nativo sem interferir nos campos de conversa.
-A segunda proposta visual inclui um quadro de contexto ao lado da conversa e
-navegação entre território e laboratório; novas ferramentas de trabalho permanecem abertas.
+Yavin está em desenvolvimento experimental. O repositório já reúne:
 
-Para executar: `cd frontend`, `npm install` e `npm run dev`.
+- Uma interface de laboratório com mapa ilustrado, navegação, modo expandido e
+  chat recolhível integrado ao mapa.
+- Conversas individuais com Silas por uma API local, com históricos e rascunhos
+  da interface salvos no navegador.
+- Checkpoints do agente em PostgreSQL, permitindo recuperar o estado de uma
+  conversa pelo seu `thread_id` entre execuções.
+- Uma base documental em Markdown com registros da fundação, referências culturais,
+  identidade do agente e orientação da pesquisa.
 
-A direção visual mais ampla continua provisória:
+Reuniões na interface ainda registram mensagens apenas localmente. Simulações
+energéticas, execução multiagêntica e comandos que alterem o mapa são possibilidades
+futuras. A recuperação de checkpoints foi verificada tecnicamente; a validação
+conversacional integrada continua em andamento.
 
-- React + Vite + TypeScript;
-- uma plataforma de investigação, não uma cidade virtual pronta;
-- o laboratório/atelier como experiência principal;
-- Silas como caderno ou colaborador contextual;
-- memória institucional e investigações como áreas navegáveis;
-- expansão futura do mapa além da estação inicial;
-- ilustração 2D com interação em SVG; engine espacial depende de necessidades futuras.
+### Base técnica
 
-## Avaliação do redesign visual
+| Componente | Tecnologias e função |
+|---|---|
+| Interface | React, TypeScript e Vite; mapa 2D interativo e painel de conversas. |
+| API | Python e FastAPI; entrada de mensagens e serviços de aplicação. |
+| Agente | LangChain e LangGraph; instruções, contexto documental, ferramentas e execução. |
+| Persistência agêntica | PostgreSQL e `PostgresSaver`; checkpoints associados às threads. |
+| Conhecimento documental | Markdown versionado; atas, conversas, referências e orientação da pesquisa. |
+| Ambiente Python | Dependências e execução gerenciadas com `uv`. |
 
-A primeira tentativa de traduzir Yavin como uma oficina de futuros possíveis foi
-rejeitada pelo Idealizador. A mudança ficou próxima demais da interface anterior e
-se concentrou em cores e detalhes, sem alterar suficientemente a composição, a
-hierarquia e a personalidade da plataforma. O prompt original, com o veredicto e
-critérios para uma nova tentativa, está em
-[`dev/project/redesign-yavin-oficina-de-futuros-prompt.md`](./dev/project/redesign-yavin-oficina-de-futuros-prompt.md).
+A arquitetura está evoluindo com o protótipo. Os checkpoints preservam o estado do
+grafo do agente; o cache das entidades de conversa continua em memória. A interface
+também mantém seu próprio histórico local no navegador.
 
-Essa avaliação é uma orientação de desenvolvimento, não uma decisão institucional
-da comunidade. Em 05/11/2026 foi implementada uma segunda proposta: composição
-editorial, navegação lateral, mapa em bancada e painel de conversa com diretório e
-histórico lado a lado. A referência da laje aparece identificada como referência
-visual. O [registro da proposta e as capturas](./frontend/sketches/redesign-oficina-v2.md)
-documentam a entrega. O Idealizador reconheceu a força da nova identidade.
-O mapa recebeu um modo expandido que mantém cabeçalho e menu lateral, com zoom
-inicial de 65%; ao recolher, retorna a 100%. O chat também pode ser aberto como
-um drawer no mapa, usando a mesma conversa do laboratório. A interação do mapa
-permanece disponível no desktop enquanto o chat está aberto. A possibilidade de
-comandos de agentes produzirem efeitos no mapa foi registrada, mas não implementada.
+### Execução local
 
-Os estudos visuais estão em [`frontend/sketches/`](./frontend/sketches/):
+Para executar o backend, são necessários Python 3.14 ou superior, `uv`, acesso a um
+PostgreSQL e uma chave da OpenAI para o modelo atualmente configurado. Configure
+`DB_URI` e `OPENAI_API_KEY` em um arquivo `.env` na raiz, com valores do seu ambiente.
+Na inicialização, o checkpointer prepara suas tabelas; a conexão precisa de permissão
+para essa operação. Chamadas ao modelo utilizam a conta associada à chave.
 
-- [`yavin-platform-concept-v2.svg`](./frontend/sketches/yavin-platform-concept-v2.svg) é a direção
-  anterior para a organização do atelier;
-- [`laboratorio-v3.md`](./frontend/sketches/laboratorio-v3.md) registra o modelo aprovado da
-  estação científica, cuja arte isolada está integrada ao frontend;
-- [`yavin-frontend-concept.svg`](./frontend/sketches/yavin-frontend-concept.svg) é uma exploração
-  anterior, preservada para comparação;
-- [`tumblr_na42u3YMgH1s1rw00o6_1280.jpg`](./frontend/sketches/tumblr_na42u3YMgH1s1rw00o6_1280.jpg)
-  é uma referência atmosférica para um possível mapa futuro, não um modelo da plataforma.
+Na raiz do repositório:
 
-## O que ainda não foi decidido
+```sh
+uv sync
+uv run python main.py
+```
 
-Não tratar como decisões aprovadas:
+A API atende em `http://127.0.0.1:8000`; a documentação dos endpoints fica em `/docs`.
+Para abrir a interface, com Node.js e npm instalados, use outro terminal:
 
-- localização de Yavin;
-- arquitetura técnica definitiva;
-- modelo de governança;
-- economia ou moeda própria;
-- indicadores ambientais e fontes de dados;
-- regras completas do mundo virtual;
-- necessidade de uma engine 2.5D;
-- implementação de voz;
-- autonomia de construção por agentes.
+```sh
+cd frontend
+npm install
+npm run dev
+```
 
-## Retomada do trabalho
+O frontend utiliza `http://127.0.0.1:8000` como endereço padrão da API. A configuração,
+os controles do mapa e os detalhes da interface estão no
+[guia do frontend](./frontend/README.md).
 
-Antes de implementar novas partes, leia [`AGENTS.md`](./AGENTS.md), o
-[`BACKLOG.md`](./BACKLOG.md) e os documentos de fundação. Use os documentos de fundação
-como fonte de contexto, mas não transforme hipóteses ou propostas em decisões sem
-confirmação do Idealizador.
+## Para conhecer melhor
 
-`AGENTS.md`, `README.md` e `BACKLOG.md` apoiam o desenvolvimento e não fazem parte da
-base de conhecimento carregada automaticamente pelo agente Silas. Atualizar esses
-arquivos não altera automaticamente a memória do agente da simulação.
+- [Projeto de pesquisa](./src/agents/base_knowledge/projeto/PROJETO_DE_PESQUISA_YAVIN.md):
+  problema, objetivos, recorte e limites.
+- [Ata de fundação](./src/agents/base_knowledge/atas/ATA_001_Fundacao_de_Yavin.md):
+  diretrizes iniciais e questões abertas.
+- [Conversa de fundação](./src/agents/base_knowledge/transcriptions/CONVERSA_001_A_Fundacao_de_Yavin.md):
+  reconstrução editorial dos argumentos que deram origem ao projeto.
+- [Referências culturais](./src/agents/base_knowledge/manifestos/): estudos que
+  alimentam a orientação solarpunk.
+- [Backlog](./BACKLOG.md): andamento do desenvolvimento e próximos passos.

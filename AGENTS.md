@@ -45,7 +45,7 @@ foram recuperados de cópias e registros locais. A proveniência está em
 `dev/recuperacao-memoria-2026-11-05.md`. A identidade disponível está em
 `src/agents/prompts/IDENTIDADE_ID_SILAS.md`.
 
-1. [`README.md`](./README.md) — síntese e estado geral do projeto.
+1. [`README.md`](./README.md) — apresentação pública, orientação da pesquisa e síntese técnica.
 2. [`BACKLOG.md`](./BACKLOG.md) — prioridades, pendências e critérios de conclusão.
 3. [`src/agents/base_knowledge/atas/ATA_001_Fundacao_de_Yavin.md`](./src/agents/base_knowledge/atas/ATA_001_Fundacao_de_Yavin.md) —
    conclusões e questões abertas da fundação.
@@ -69,9 +69,17 @@ O Idealizador é responsável pelo backend, incluindo:
 - integrações;
 - execução e evolução do agente Silas.
 
-A colaboração agêntica atualmente solicitada concentra-se em documentação de produto,
-identidade visual, mockups e implementação incremental do frontend. Não altere o backend
-por iniciativa própria sem solicitação explícita.
+**Diretiva do Idealizador registrada em 06/11/2026:** jamais altere diretamente o
+backend sem consultá-lo primeiro e obter autorização para a alteração proposta.
+Pedidos de revisão, diagnóstico ou explicação não autorizam implementação.
+
+No backend, atue como mentor: identifique erros e oportunidades de melhoria, explique
+as causas e os caminhos possíveis e permita que o Idealizador implemente as mudanças
+para desenvolver-se profissionalmente. Antes de editar qualquer código, configuração
+ou dependência do backend, apresente a mudança proposta e aguarde sua autorização.
+
+No frontend, a colaboração agêntica permanece responsável pelas implementações
+solicitadas, além de documentação de produto, identidade visual e mockups.
 
 ## Estado do frontend
 
@@ -82,8 +90,9 @@ vista de conversas e reuniões, históricos e rascunhos locais.
 O modelo visual aprovado é a estação científica descrita em
 [`frontend/sketches/laboratorio-v3.md`](./frontend/sketches/laboratorio-v3.md). O mapa usa ilustração 2D,
 grid isométrico, panning limitado e zoom de 65% a 100%. Conversas individuais já
-chamam a API local de Silas; a validação integrada e a continuidade entre requisições
-permanecem pendentes. Reuniões continuam locais.
+chamam a API local de Silas. Os checkpoints em PostgreSQL já tiveram recuperação
+verificada entre conexões; a validação conversacional integrada permanece pendente.
+Reuniões continuam locais.
 
 A direção de produto continua sendo uma plataforma/atelier de investigação, não uma cidade
 virtual pronta. O centro da área de trabalho, o menu geral, a expansão do mapa e as
@@ -168,6 +177,29 @@ automaticamente no contexto dos agentes da simulação.
 
 O `main.py` da raiz é um entrypoint provisório da API e ainda não representa uma
 interface de execução definitiva.
+
+A criação do checkpointer fica em
+`src/agents/infra/open_checkpointer_helper.py`. O `lifespan` da API mantém um
+`PostgresSaver` compartilhado por processo, executa `setup()` na inicialização e
+fecha a conexão na parada. O serviço recebe esse recurso e o repassa para `Agent`.
+O estado do grafo é persistido por `thread_id`; o `CHAT_CACHE` de entidades continua
+em memória. Atualmente, o `.env` é carregado ao importar `src/agents/main.py`, um
+efeito colateral do import. A política de conexões permanece provisória; qualquer
+alteração do backend exige consulta prévia ao Idealizador.
+
+## Escopo da documentação de desenvolvimento
+
+**Natureza:** orientação editorial de desenvolvimento, registrada em 06/11/2026.
+
+O README da raiz é a entrada pública do projeto: propósito, orientação solarpunk,
+método de pesquisa, capacidades atuais e síntese técnica. Instruções de retomada,
+fronteiras de responsabilidade, particularidades de carregamento e recuperação de
+arquivos pertencem a este `AGENTS.md` e aos registros de desenvolvimento citados.
+Prioridades e critérios de conclusão pertencem ao `BACKLOG.md`. Detalhes da interface,
+controles e estudos visuais pertencem ao `frontend/README.md` e a
+`frontend/sketches/`. O histórico de tentativas rejeitadas continua nos registros
+visuais, sem ocupar a apresentação pública. Não é necessário um README interno
+adicional; estes documentos já cobrem as respectivas responsabilidades.
 
 ## Retomada
 

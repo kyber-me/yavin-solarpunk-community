@@ -50,10 +50,12 @@ npm run build
 O drawer integra visualmente mapa e conversa; comandos que alterem o mapa e um
 agente Engenheiro permanecem possibilidades futuras, sem execução implementada.
 
-A interface não verifica a disponibilidade da API antes do envio. O backend atual
-cria uma nova instância de `Citizen` por requisição, portanto a presença de
-`thread_id` não comprova continuidade do histórico do agente entre chamadas.
-A validação do redesign usou respostas controladas, sem chamar o modelo.
+A interface não verifica a disponibilidade da API antes do envio. O backend cria
+uma nova instância de `Agent` por requisição e injeta o checkpointer compartilhado
+pela aplicação. O `PostgresSaver` recupera o estado pelo `thread_id`; em 06/11/2026,
+a recuperação foi verificada após fechar e reabrir a conexão, sem chamada ao modelo.
+A validação conversacional integrada permanece pendente. A validação visual do
+redesign usou respostas controladas, sem chamar o modelo.
 
 ## Mapa e acessibilidade
 
@@ -95,3 +97,30 @@ se adapta também à altura reduzida da janela.
 
 Barlow Condensed, Space Grotesk e DM Mono são carregadas pelo Google Fonts, com
 fallbacks locais. Nenhuma biblioteca de interface ou dependência nova foi adicionada.
+
+## Histórico e estudos visuais
+
+**Natureza:** referências visuais e registros de desenvolvimento, reunidos aqui a
+partir da revisão editorial do README público em 06/11/2026.
+
+A primeira tentativa de redesign foi rejeitada por conservar a composição anterior
+e concentrar mudanças em cores e detalhes. O
+[prompt e a avaliação](../dev/project/redesign-yavin-oficina-de-futuros-prompt.md)
+preservam os critérios dessa revisão. A segunda proposta recebeu avaliação positiva
+quanto à identidade; sua composição, capturas e verificações estão no
+[registro do redesign](sketches/redesign-oficina-v2.md).
+
+- [Conceito de plataforma v2](sketches/yavin-platform-concept-v2.svg): direção
+  anterior para organização do atelier.
+- [Estação científica v3](sketches/laboratorio-v3.md): modelo visual aprovado e
+  origem da arte integrada ao mapa.
+- [Conceito inicial](sketches/yavin-frontend-concept.svg): exploração anterior,
+  preservada para comparação.
+- [Referência atmosférica](sketches/tumblr_na42u3YMgH1s1rw00o6_1280.jpg): inspiração
+  para um possível mapa futuro.
+- [Chat no mapa](sketches/chat-drawer.md): decisão de interface e verificações.
+- [Silas](sketches/silas/README.md): estudos do personagem, prompts e aplicações.
+
+A foto principal do README público utiliza o mesmo asset
+`src/assets/oficina-solar.jpg` da interface, sem duplicar o arquivo. Sua origem e
+natureza de referência visual estão descritas no [registro dos assets](src/assets/README.md).

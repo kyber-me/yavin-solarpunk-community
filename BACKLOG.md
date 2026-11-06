@@ -220,6 +220,16 @@ sem autorização implícita para modificá-lo.
 
 ## Entregas e correções já realizadas
 
+- [x] **Transformar o README em apresentação pública do projeto.** Revisão editorial
+  em 06/11/2026: propósito, orientação solarpunk, método, estágio do protótipo,
+  tecnologias e execução local. Marca ASCII preservada e foto da oficina solar
+  urbana incluída como referência visual. Instruções e recuperação documental
+  permanecem em `AGENTS.md` e no registro de recuperação; detalhes e histórico
+  visual foram concentrados em `frontend/README.md` e nos estudos já existentes.
+  Pendências permanecem neste backlog. Não foi criado um README interno adicional.
+  Descrições de persistência alinhadas ao checkpointer implementado; nenhum código
+  ou configuração de backend foi alterado.
+
 - [x] **Alinhar imports e caminhos à nova estrutura.** Imports ativos usam
   `src.agents.main` e `src.agents.tools`; identidade aponta para
   `src/agents/prompts/IDENTIDADE_ID_SILAS.md`. Referências aos estudos visuais e
