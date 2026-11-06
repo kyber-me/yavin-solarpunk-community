@@ -22,7 +22,7 @@ PROJECT_SOURCE = current_path.resolve().parents[1]  # /Users/tiagocuri/Repos/Yav
 
 
 # Redis Analogue (this remains on memory?)
-CHAT_CACHE: dict[str, str] = {}
+CHAT_CACHE: dict[str, Conversation] = {}
 
 
 # 1 - O ChatService pode ser utilizado apenas quando há conversas em andamento (é mais barato enviar mensagens via agente por telefone virtual?)
