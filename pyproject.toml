@@ -13,3 +13,6 @@ dependencies = [
     "python-dotenv>=1.2.4",
     "python-ulid>=4.1.0",
 ]
+
+[tool.pyright]
+typeCheckingMode = "strict"
