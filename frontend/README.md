@@ -33,29 +33,59 @@ npm run build
 
 ## Conversas e integração
 
-- Criar e alternar conversas com Silas e reuniões com participantes informados pelo nome.
-- Históricos e rascunhos separados, persistidos em `localStorage`, na chave
-  `yavin.conversations.v1`; sem migração ou mudança do formato dos dados.
-- Conversas individuais enviam `POST /chat` para `VITE_API_URL`, cujo padrão é
-  `http://127.0.0.1:8000`. Payload: `message`, `sender_id`, `thread_id`.
-- Respostas usam o envelope `{ data, error }`. Estados de envio, falha e resposta
-  vazia são apresentados; o envio é bloqueado enquanto uma resposta está pendente.
-- Enter envia; Shift + Enter insere uma linha. A sugestão sobre energia é editável.
-- Reuniões registram mensagens apenas localmente. Nomes não provisionam agentes.
-- Uma única instância do painel atende mapa e laboratório. Recolher o drawer
-  preserva seleção, mensagens, rascunhos e respostas em andamento. Abrir transfere
-  foco ao painel; fechar devolve ao botão Conversar.
-- Retornar ao mapa preserva seleção, mensagens e rascunhos.
+**Atualização de desenvolvimento:** 07/11/2026. O frontend já usa os novos contratos
+abaixo; os serviços e rotas correspondentes ainda serão integrados pelo Idealizador.
+Sem essa etapa, a criação real pode apresentar falha ao carregar o catálogo ou
+iniciar a conversa. Não há fallback para criar conversas apenas locais e enviá-las.
 
-O drawer integra visualmente mapa e conversa; comandos que alterem o mapa e um
-agente Engenheiro permanecem possibilidades futuras, sem execução implementada.
+- **Iniciar conversa** carrega `GET /agents` e exige escolher um agente disponível.
+  O catálogo tem carregamento, erro com nova tentativa e estado vazio. Hoje somente
+  Silas deve ser disponibilizado pela API; outros nomes usados em QA são simulados.
+- A confirmação envia `POST /create-conversation` com `sender_id: "idealizador"`
+  e `participant_id` escolhido. Apenas a resposta `201` com metadados válidos cria
+  uma entrada de conversa no frontend.
+- `409` com código `CONVERSATION_ALREADY_ACTIVE` oferece **Abrir conversa existente**.
+  Reutiliza a entrada local pelo ID do servidor, sem misturar históricos anteriores.
+- O estado local mantém seu UUID e, separadamente, `serverConversationId` e
+  `participantId`. `POST /chat` envia apenas `conversation_id`, `sender_id` e
+  `message`; não envia UUID local nem `thread_id`.
+- Históricos e rascunhos continuam na chave `yavin.conversations.v1`. Os campos novos
+  são opcionais para compatibilidade. Conversas antigas sem ID de servidor ficam
+  disponíveis para consulta, com seu rascunho preservado e envio bloqueado.
+- O nome do agente selecionado acompanha rótulos, mensagens e compositor. Silas
+  conserva seu avatar; outros agentes recebem uma inicial, sem imagens inventadas.
+- Uma conversa retomada sem histórico local informa que o agente pode ter contexto
+  anterior. Não há endpoint de recuperação das mensagens neste incremento.
+- Erros de envio preservam o rascunho. `404` ou `409` no chat tornam a conversa
+  indisponível para novos envios e oferecem iniciar uma conversa. Uma resposta em
+  andamento permanece vinculada à conversa de origem mesmo ao trocar a seleção.
+- Enter envia e Shift + Enter insere uma linha. Envios e criações repetidos são
+  bloqueados enquanto pendentes; a unicidade real também será protegida pelo banco.
+- Reuniões continuam com participantes e mensagens locais; não provisionam agentes
+  nem chamam a rota de criação persistida.
+- Mapa e laboratório usam a mesma instância de painel. O clique em Silas abre sua
+  conversa persistida localmente conhecida, ou o formulário com Silas selecionado
+  a partir do catálogo; não cria registros no servidor apenas por abrir o drawer.
 
-A interface não verifica a disponibilidade da API antes do envio. O backend cria
-uma nova instância de `Agent` por requisição e injeta o checkpointer compartilhado
-pela aplicação. O `PostgresSaver` recupera o estado pelo `thread_id`; em 06/11/2026,
-a recuperação foi verificada após fechar e reabrir a conexão, sem chamada ao modelo.
-A validação conversacional integrada permanece pendente. A validação visual do
-redesign usou respostas controladas, sem chamar o modelo.
+A URL da API vem de `VITE_API_URL` e usa `http://127.0.0.1:8000` por padrão.
+As respostas preservam o envelope `{ data, error }`. O
+[plano aprovado](../dev/plano-persistencia-conversas.md) contém os formatos exatos;
+o [guia da infraestrutura](../src/infra/db/relational/README.md) descreve a integração.
+Comandos de agentes que alterem o mapa permanecem uma possibilidade futura.
+
+### Verificação deste incremento
+
+```sh
+npm test
+npm run build
+```
+
+Os testes de contrato usam o runner nativo do Node.js com suporte a TypeScript
+(Node 22.18+; verificados com Node 25). Não fazem chamadas reais à API ou ao modelo.
+O navegador também foi usado com respostas controladas: criação, conflito,
+seleção de outro agente, erros de catálogo e envio, preservação de rascunhos e
+isolamento da resposta ao trocar de conversa. O histórico local anterior ao QA
+é restaurado ao final. A integração HTTP real aguarda o backend.
 
 ## Mapa e acessibilidade
 

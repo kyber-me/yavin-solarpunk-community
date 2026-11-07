@@ -117,6 +117,11 @@ energéticas, execução multiagêntica e comandos que alterem o mapa são possi
 futuras. A recuperação de checkpoints foi verificada tecnicamente; a validação
 conversacional integrada continua em andamento.
 
+O fluxo de criação persistida de conversas está em integração: o frontend já
+permite selecionar um agente e exige confirmação do servidor antes do envio.
+A infraestrutura PostgreSQL está preparada; catálogo e rotas ainda precisam ser
+conectados a ela. Durante essa transição, a conversa real depende dessa conclusão.
+
 ### Base técnica
 
 | Componente | Tecnologias e função |

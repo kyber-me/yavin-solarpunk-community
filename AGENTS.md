@@ -187,6 +187,20 @@ em memória. Atualmente, o `.env` é carregado ao importar `src/agents/main.py`,
 efeito colateral do import. A política de conexões permanece provisória; qualquer
 alteração do backend exige consulta prévia ao Idealizador.
 
+## Criação persistida de conversas — incremento de 07/11/2026
+
+**Natureza:** estado de implementação e divisão de responsabilidades aprovada.
+
+O plano está em `dev/plano-persistencia-conversas.md`; a infraestrutura em
+`src/infra/db/relational/README.md`. Pool, repositório, migração e frontend foram
+implementados pelo assistente sob autorização específica. O pool não está conectado
+à API: o Idealizador fará a integração dos serviços, entidades, DTOs, catálogo e
+rotas. Não presumir que o fluxo real já funciona. O frontend exige `GET /agents`,
+criação confirmada por `POST /create-conversation` e `conversation_id` em `/chat`.
+Conversas locais antigas são preservadas para consulta. Checkpoints existentes
+não foram alterados. Uma conversa ativa por dupla sem direção é a regra inicial;
+encerramento, persistência de mensagens do domínio e reuniões ficam para depois.
+
 ## Escopo da documentação de desenvolvimento
 
 **Natureza:** orientação editorial de desenvolvimento, registrada em 06/11/2026.

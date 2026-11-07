@@ -54,6 +54,24 @@ sem autorização implícita para modificá-lo.
 
 ## P0 — Executar e validar o núcleo
 
+- [x] **Preparar infraestrutura PostgreSQL e frontend para criação de conversas.**
+  Entrega de desenvolvimento em 07/11/2026: pool limitado, repositório concreto,
+  lookup simétrico, migração SQL e testes em PostgreSQL descartável. Frontend busca
+  agentes pela API, cria antes de enviar, trata `409` e preserva registros locais
+  anteriores para consulta. [Plano completo](dev/plano-persistencia-conversas.md)
+  e [guia da infraestrutura](src/infra/db/relational/README.md). Testes de contrato
+  no frontend usam respostas controladas. Nenhuma migração aplicada no banco do
+  `.env`; serviços, entidades, DTOs e rotas preservados para o Idealizador.
+
+- [ ] **Integrar a criação persistida de conversas no backend.** Responsabilidade
+  do Idealizador, com mentoria: corrigir lookup/DTO e execução async versus threadpool,
+  fornecer pool/repositório aos serviços, implementar catálogo `GET /agents`,
+  habilitar GET no CORS e retornar `201`/`409` com metadados. `/chat` deve resolver
+  a thread a partir de `conversation_id`, validando participação e atividade, sem
+  criar conversa implicitamente. Aplicar a migração explicitamente em ambiente
+  de desenvolvimento e validar o fluxo completo com o frontend. Mensagens do
+  domínio, encerramento e reuniões conectadas permanecem para etapas futuras.
+
 - [x] **Manter os checkpoints de Silas em PostgreSQL.** Revisão de desenvolvimento
   em 06/11/2026: `PostgresSaver` compartilhado durante o ciclo de vida da API,
   `setup()` na inicialização e fechamento na parada. Recuperação confirmada após

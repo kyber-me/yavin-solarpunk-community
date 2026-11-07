@@ -1,8 +1,12 @@
 export type Mode = 'conversation' | 'meeting';
-export type Message = { id: string; author: string; content: string; createdAt: string };
+export type Message = { id: string; author: string; content: string; createdAt: string; kind?: 'user' | 'agent' | 'system' };
 export type Conversation = {
   id: string;
   mode: Mode;
+  serverConversationId?: string;
+  participantId?: string;
+  resumed?: boolean;
+  unavailableReason?: string;
   title: string;
   participants: string[];
   messages: Message[];
@@ -17,7 +21,7 @@ export function newConversation(mode: Mode, title: string, participants: string[
 }
 
 export function initialConversations(): Conversation[] {
-  return [newConversation('conversation', 'Primeira conversa', ['Silas'])];
+  return [];
 }
 
 function isConversation(value: unknown): value is Conversation {
@@ -26,11 +30,17 @@ function isConversation(value: unknown): value is Conversation {
   return typeof item.id === 'string' && typeof item.title === 'string' && typeof item.draft === 'string'
     && typeof item.createdAt === 'string' && Number.isFinite(Date.parse(item.createdAt))
     && (item.mode === 'conversation' || item.mode === 'meeting')
+    && (item.serverConversationId === undefined || (typeof item.serverConversationId === 'string' && !!item.serverConversationId.trim()))
+    && (item.participantId === undefined || (typeof item.participantId === 'string' && !!item.participantId.trim()))
+    && (item.serverConversationId === undefined || (item.mode === 'conversation' && typeof item.participantId === 'string'))
+    && (item.resumed === undefined || typeof item.resumed === 'boolean')
+    && (item.unavailableReason === undefined || typeof item.unavailableReason === 'string')
     && Array.isArray(item.participants) && item.participants.every(p => typeof p === 'string')
     && Array.isArray(item.messages) && item.messages.every(message =>
       message && typeof message.id === 'string' && typeof message.author === 'string'
       && typeof message.content === 'string' && typeof message.createdAt === 'string'
-      && Number.isFinite(Date.parse(message.createdAt)));
+      && Number.isFinite(Date.parse(message.createdAt))
+      && (message.kind === undefined || ['user', 'agent', 'system'].includes(message.kind)));
 }
 
 export function readConversations(): { conversations: Conversation[]; warning: string } {
