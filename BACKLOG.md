@@ -1,6 +1,6 @@
 # Backlog de Yavin
 
-**Atualizado em:** 06 de novembro de 2026
+**Atualizado em:** 07 de novembro de 2026
 **Estado:** pendências e prioridades sugeridas para o MVP; não define arquitetura definitiva.
 
 ## Recorte do MVP
@@ -112,6 +112,17 @@ sem autorização implícita para modificá-lo.
   quando a base atual estiver versionada.
 
 ## P1 — Sustentar uma investigação curta
+
+- [ ] **Aprofundar os mecanismos de classe em Python.** Natureza: planejamento
+  de estudo do Idealizador, registrado em 07/11/2026 a partir das dúvidas sobre
+  os serviços. Revisar herança, métodos de instância, `classmethod`, `staticmethod`,
+  `ABC` e `abstractmethod`; distinguir declaração da classe, instanciação e chamada
+  de métodos. Entender os limites da imposição de contratos em execução e da análise
+  estática com Pyright/Pylance, incluindo assinaturas e métodos assíncronos.
+  Explorar `__init_subclass__` como alternativa, avaliando sua necessidade antes de
+  adotá-lo. Concluído quando o Idealizador conseguir explicar essas diferenças e
+  justificar o modelo dos serviços com pequenos exemplos. Estudo acompanhado por
+  mentoria; não autoriza alterações no backend.
 
 - [ ] **Consolidar os encaminhamentos desta sessão em memória institucional.**
   Registrar as orientações de pesquisa e decisões pertinentes à comunidade em
