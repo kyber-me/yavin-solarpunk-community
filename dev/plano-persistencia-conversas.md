@@ -2,7 +2,76 @@
 
 **Natureza:** plano técnico aprovado pelo Idealizador; orientação de desenvolvimento e estudo.
 **Data:** 07/11/2026.
-**Estado:** implementação autorizada de infraestrutura e frontend; integração dos serviços e rotas a cargo do Idealizador.
+**Estado:** plano executado e posteriormente revisado sob autorizações pontuais;
+chat, mensagens e histórico integrados, schema aplicado e dois turnos reais validados.
+As revisões abaixo são históricas; para o estado de encerramento, usar
+[o ponto de retomada](retomada-2026-11-07.md). Não representam novas autorizações.
+
+## Estado de encerramento
+
+O schema inicial já foi aplicado, preservando os checkpoints anteriores. A política
+posterior do frontend eliminou registros locais: conversas e mensagens vêm apenas
+do PostgreSQL, rascunhos só em memória e reuniões bloqueadas. Servidores encerrados
+por solicitação do Idealizador. Fontes atuais: [guia da infraestrutura](../src/infra/db/relational/README.md),
+[histórico exclusivamente persistido](persistencia-frontend-2026-11-07.md) e
+[teste real](silas_test_responses/http-real-2026-11-07.md).
+
+## Consolidação do schema inicial e validação HTTP
+
+Data: 07/11/2026.
+Questão: evitar uma cadeia de alterações intermediárias antes da primeira aplicação.
+Opções consideradas: manter os quatro scripts ou consolidar o estado final.
+Decisão: substituir os scripts anteriores por `001_initial_schema.sql`, criando
+conversas e mensagens já com ULID puro e unicidade parcial da dupla ativa.
+Motivo: o Idealizador confirmou que nenhuma migração foi aplicada e só há dados
+do checkpointer, que a migração inicial não modifica.
+O que continua aberto: aplicação ao banco do projeto e validação com modelo real.
+Próximo passo: aplicar o schema inicial após aprovação. A partir da primeira
+aplicação mantida, usar novas migrações incrementais para evolução.
+
+Esta decisão substitui os caminhos de migração das revisões históricas abaixo.
+O fluxo HTTP com PostgreSQL, lifecycle e checkpoints reais e grafo simulado foi
+validado. Evidência e limites em [validação HTTP](validacao-http-2026-11-07.md).
+
+## Revisão aprovada — IDs sem prefixos
+
+Data: 07/11/2026.
+Questão: simplificar os IDs das entidades persistidas.
+Opções consideradas: manter prefixos por entidade ou usar somente ULID.
+Decisão: IDs de conversas e mensagens usam ULID puro, sem prefixo. A migração `004`
+substitui as restrições antigas e converte IDs legados e referências no mesmo commit.
+Motivo: eliminar convenção redundante; a tabela e o contexto já identificam a entidade.
+O que continua aberto: aplicação explícita ao banco do projeto e atualização de
+referências externas antigas. Identificadores provisórios dos participantes e
+checkpoints agênticos não são reescritos.
+Próximo passo: revisar e aplicar as migrações pendentes no ambiente escolhido.
+
+Esta revisão substitui o formato `Conv_<ULID>` mencionado no plano histórico abaixo.
+As gerações atuais de IDs de conversas, mensagens e agentes já usam `str(ULID())`.
+
+## Revisão aprovada — dupla ativa sem lookup persistida
+
+Data: 07/11/2026.
+Questão: simplificar a unicidade de conversas e acompanhar as rotas atuais.
+Opções consideradas: lookup JSON persistida, UNIQUE simples dos participantes ou
+índice único parcial sobre a dupla normalizada.
+Decisão: usar `LEAST(sender_id, participant_id)` e `GREATEST(sender_id, participant_id)`
+no índice `conversations_active_pair_uq`, com `WHERE active`; remover a coluna
+`look_up_key` pela migração `002_active_conversation_pair.sql`, após a `001`.
+Motivo: garantir uma conversa ativa por dupla sem direção, inclusive sob concorrência,
+sem manter um campo derivado. Histórico inativo continua permitido.
+O que continua aberto: demais pendências de integração da API, incluindo catálogo,
+chat por ID persistido e tradução HTTP do conflito.
+Próximo passo: aplicar explicitamente as migrações necessárias no banco escolhido
+pelo Idealizador e realizar outra rodada de revisão da integração.
+
+O repositório passa a oferecer `get_active_by_participants(sender_id, participant_id)`.
+As rotas consumidas pelo frontend são `POST /conversation/create` e
+`POST /conversation/talk`; os payloads acordados permanecem os mesmos.
+O assistente foi autorizado a adaptar infraestrutura, registro e construção do
+registro no serviço de criação para esta mudança. Não aplicar migrações ao banco
+real nesta entrega. O plano original abaixo fica preservado como histórico;
+esta revisão substitui suas referências à lookup e aos endereços antigos.
 
 ## Objetivo e responsabilidades
 

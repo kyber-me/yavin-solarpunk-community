@@ -45,9 +45,9 @@ solução precisa ser avaliada pelo que entrega, mas também por quem consegue
 compreendê-la, mantê-la e ter acesso aos seus benefícios. Autonomia, reparabilidade,
 produção local e uso responsável de recursos são questões de investigação.
 
-A [biblioteca conceitual](./src/agents/base_knowledge/manifestos/conceitos-fundamentais.md)
+A [biblioteca conceitual](./backend/src/agents/base_knowledge/manifestos/conceitos-fundamentais.md)
 reúne referências como swadeshi, jugaad e low-tech, em diálogo com o
-[manifesto solarpunk de referência](./src/agents/base_knowledge/manifestos/manifesto-solarpunk.md).
+[manifesto solarpunk de referência](./backend/src/agents/base_knowledge/manifestos/manifesto-solarpunk.md).
 Esses materiais alimentam a pesquisa; o manifesto autoral de Yavin permanece em elaboração.
 
 ## O que estamos investigando
@@ -73,7 +73,7 @@ Uma hipótese refutada ou uma limitação identificada pode ser uma contribuiç�
 Os resultados dependerão dos dados, cenários e modelos empregados; uma simulação
 bem-sucedida não comprova, por si só, viabilidade no mundo real.
 
-O [projeto de pesquisa](./src/agents/base_knowledge/projeto/PROJETO_DE_PESQUISA_YAVIN.md)
+O [projeto de pesquisa](./backend/src/agents/base_knowledge/projeto/PROJETO_DE_PESQUISA_YAVIN.md)
 detalha os objetivos, o método e os limites dessa investigação.
 
 ## Primeiro foco: energia
@@ -91,7 +91,7 @@ serão aprofundados quando necessários às investigações.
 
 Silas é o primeiro colaborador agêntico de Yavin. Seu papel é ajudar a investigar,
 questionar hipóteses e transformar ideias em experimentos verificáveis. Sua
-[identidade inicial](./src/agents/prompts/IDENTIDADE_ID_SILAS.md) orienta uma colaboração
+[identidade inicial](./backend/src/agents/prompts/IDENTIDADE_ID_SILAS.md) orienta uma colaboração
 curiosa, fundamentada e capaz de discordar, reconhecer incertezas e evitar conclusões
 prematuras.
 
@@ -105,22 +105,18 @@ Yavin está em desenvolvimento experimental. O repositório já reúne:
 
 - Uma interface de laboratório com mapa ilustrado, navegação, modo expandido e
   chat recolhível integrado ao mapa.
-- Conversas individuais com Silas por uma API local, com históricos e rascunhos
-  da interface salvos no navegador.
+- Conversas individuais com Silas por uma API local, com conversas e mensagens
+  persistidas em PostgreSQL e históricos recuperados do servidor.
 - Checkpoints do agente em PostgreSQL, permitindo recuperar o estado de uma
   conversa pelo seu `thread_id` entre execuções.
 - Uma base documental em Markdown com registros da fundação, referências culturais,
   identidade do agente e orientação da pesquisa.
 
-Reuniões na interface ainda registram mensagens apenas localmente. Simulações
-energéticas, execução multiagêntica e comandos que alterem o mapa são possibilidades
-futuras. A recuperação de checkpoints foi verificada tecnicamente; a validação
-conversacional integrada continua em andamento.
-
-O fluxo de criação persistida de conversas está em integração: o frontend já
-permite selecionar um agente e exige confirmação do servidor antes do envio.
-A infraestrutura PostgreSQL está preparada; catálogo e rotas ainda precisam ser
-conectados a ela. Durante essa transição, a conversa real depende dessa conclusão.
+A criação persistida e a recuperação de histórico estão integradas. Dois turnos
+reais com Silas confirmaram continuidade após reabrir as conexões; a interface
+recupera do banco as mensagens ao recarregar. Rascunhos existem só durante a sessão.
+Reuniões aguardam persistência. Simulações energéticas, execução multiagêntica e
+comandos que alterem o mapa permanecem possibilidades futuras.
 
 ### Base técnica
 
@@ -134,26 +130,28 @@ conectados a ela. Durante essa transição, a conversa real depende dessa conclu
 | Ambiente Python | Dependências e execução gerenciadas com `uv`. |
 
 A arquitetura está evoluindo com o protótipo. Os checkpoints preservam o estado do
-grafo do agente; o cache das entidades de conversa continua em memória. A interface
-também mantém seu próprio histórico local no navegador.
+grafo; conversas e mensagens do domínio têm tabelas próprias. O frontend consulta
+esses registros pela API, sem histórico em armazenamento local do navegador.
 
 ### Execução local
 
 Para executar o backend, são necessários Python 3.14 ou superior, `uv`, acesso a um
 PostgreSQL e uma chave da OpenAI para o modelo atualmente configurado. Configure
-`DB_URI` e `OPENAI_API_KEY` em um arquivo `.env` na raiz, com valores do seu ambiente.
-Na inicialização, o checkpointer prepara suas tabelas; a conexão precisa de permissão
+`DATABASE_URI` e `OPENAI_API_KEY` em `backend/.env`, com valores do seu ambiente.
+Em ambiente novo, aplique explicitamente `backend/src/infra/db/relational/migrations/001_initial_schema.sql`
+uma vez. Na inicialização, o checkpointer prepara suas tabelas; a conexão precisa de permissão
 para essa operação. Chamadas ao modelo utilizam a conta associada à chave.
 
-Na raiz do repositório:
+A partir da raiz do repositório:
 
 ```sh
+cd backend
 uv sync
 uv run python main.py
 ```
 
 A API atende em `http://127.0.0.1:8000`; a documentação dos endpoints fica em `/docs`.
-Para abrir a interface, com Node.js e npm instalados, use outro terminal:
+Para abrir a interface, com Node.js e npm instalados, use outro terminal na raiz do repositório:
 
 ```sh
 cd frontend
@@ -167,12 +165,12 @@ os controles do mapa e os detalhes da interface estão no
 
 ## Para conhecer melhor
 
-- [Projeto de pesquisa](./src/agents/base_knowledge/projeto/PROJETO_DE_PESQUISA_YAVIN.md):
+- [Projeto de pesquisa](./backend/src/agents/base_knowledge/projeto/PROJETO_DE_PESQUISA_YAVIN.md):
   problema, objetivos, recorte e limites.
-- [Ata de fundação](./src/agents/base_knowledge/atas/ATA_001_Fundacao_de_Yavin.md):
+- [Ata de fundação](./backend/src/agents/base_knowledge/atas/ATA_001_Fundacao_de_Yavin.md):
   diretrizes iniciais e questões abertas.
-- [Conversa de fundação](./src/agents/base_knowledge/transcriptions/CONVERSA_001_A_Fundacao_de_Yavin.md):
+- [Conversa de fundação](./backend/src/agents/base_knowledge/transcriptions/CONVERSA_001_A_Fundacao_de_Yavin.md):
   reconstrução editorial dos argumentos que deram origem ao projeto.
-- [Referências culturais](./src/agents/base_knowledge/manifestos/): estudos que
+- [Referências culturais](./backend/src/agents/base_knowledge/manifestos/): estudos que
   alimentam a orientação solarpunk.
 - [Backlog](./BACKLOG.md): andamento do desenvolvimento e próximos passos.

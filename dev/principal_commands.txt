@@ -1,0 +1,10 @@
+Natureza: referência operacional de desenvolvimento.
+Diretório de trabalho: backend/ (a partir da raiz, executar cd backend).
+
+Server
+- uv run python main.py - Iniciar server FastAPI
+
+AI Tools
+- langgraph dev - Inicia tracing do agente configurado
+
+Atenção: langgraph dev permanece experimental; a factory ainda retorna um checkpointer fechado.
