@@ -168,8 +168,8 @@ para o método de desenvolvimento agêntico, conforme o registro abaixo.
 ## P2 — Evoluir após a validação
 
 - [ ] **Avaliar a chegada ilustrada e a experiência de visitante.** Em 08/11/2026,
-  protótipo de frontend com visor interativo, som habilitado por padrão (silenciável,
-  sujeito às permissões de reprodução automática do navegador) e transição para
+  protótipo de frontend com visor interativo, som habilitado por padrão (sujeito
+  às permissões de reprodução automática do navegador) e transição para
   `#/visita`, sem controles de chat. Paisagem gerada pela API OpenAI após bloqueio
   de plano no Higgsfield; aprovada pelo Idealizador como direção também para as
   futuras artes do mapa. Referências preservadas no
@@ -181,6 +181,11 @@ para o método de desenvolvimento agêntico, conforme o registro abaixo.
   de backend ainda não definidos. Não há implementação de backend autorizada por
   este protótipo. Performance e mídia serão avaliadas após a direção visual.
   [Registro](frontend/sketches/chegada/README.md).
+
+- [ ] **Investigar o desligamento do som da chegada.** Em 08/11/2026, o Idealizador
+  relatou que o som não desliga ao usar o controle. Não é prioridade; causa e
+  condições ainda não foram investigadas. Concluído quando o controle silenciar
+  a ambiência e o comportamento for validado.
 
 - [ ] **Revisar a proposta de especialização de Silas por ciclos finitos de estudo.**
   Natureza: proposta para revisão futura, registrada em 05/11/2026; não autoriza

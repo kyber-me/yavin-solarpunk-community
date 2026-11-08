@@ -60,6 +60,9 @@ para a evolução das artes do mapa, conforme solicitado pelo Idealizador.
   Mantém a música e a opção de silenciar na transição entre chegada e visita.
   Suspende na aba oculta e encerra ao entrar no atelier. Não é uma gravação nem uma trilha final.
 
+**Relato posterior do Idealizador:** o som não desliga pelo controle. A causa e as
+condições ainda não foram investigadas; correção registrada no backlog, sem prioridade.
+
 A separação é de apresentação, não autenticação. As rotas antigas continuam acessíveis
 diretamente no protótipo local. Publicação real exige controles de backend.
 
