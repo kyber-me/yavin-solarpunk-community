@@ -15,6 +15,12 @@ completa de um ciclo contemporâneo do início ao relatório final. Não inventa
 registros faltantes, aprovações ou estados anteriores. Commits não autorizam
 novas alterações do backend nem iniciam serviços.
 
+**Árvore de trabalho em andamento:** em 08/11 há uma reorganização local do
+backend parcialmente no índice e parcialmente fora dele, ainda sem commit nem
+validação contemporânea. O inventário, as divergências observadas e os commits
+pendentes estão no [ponto de retomada](dev/retomada-2026-11-08.md). Consulte
+`git status` novamente antes de agir; preserve índice e alterações do Idealizador.
+
 ## Prioridade atual — método de desenvolvimento agêntico, 08/11/2026
 
 **Natureza:** orientação operacional de desenvolvimento.
@@ -283,10 +289,10 @@ no mapa: ilustração solarpunk expressiva, vegetação tropical, tecnologia cot
 e robôs com identidade. Referências, asset e prompt estão preservados em
 `frontend/sketches/direcao-artistica.md`. Consultar esse repertório ao propor novas
 artes; o Idealizador poderá acrescentar referências. A chegada deve ter pouco
-texto e dar presença à paisagem. Visor e gesto de entrada continuam em refinamento:
+texto e dar presença à paisagem. O visor e o gesto de entrada foram refinados:
 a primeira versão foi percebida como uma bússola sem relação clara com a cena.
 A tentativa seguinte em SVG também foi rejeitada por simular mal perspectiva e
-profundidade; a versão em avaliação usa uma luneta 3D local em Three.js, sem
+profundidade; a versão aprovada usa uma luneta 3D local em Three.js, sem
 converter o mapa. Seleção de texto na entrada foi bloqueada e a sensibilidade do
 parallax reduzida após avaliação. O título passou a “O futuro tem lugar”.
 A arte do topo da página Manifesto também foi aprovada explicitamente pelo
@@ -321,7 +327,8 @@ A estrutura inicial do backend está organizada em camadas provisórias:
 - `backend/src/services/` — serviços de aplicação;
 - `backend/src/infra/` — arquivos de infraestrutura e configuração em desenvolvimento;
 - `backend/src/agents/` — implementação agêntica, tools e prompts.
-- `backend/src/agents/tools.py` — ferramentas disponíveis aos agentes.
+- `backend/src/agents/tools/` — reorganização local das ferramentas em andamento;
+  conferir o ponto de retomada antes de presumir que os imports foram validados.
 
 Essa organização ainda não é uma arquitetura definitiva. Os arquivos JSON em
 `backend/src/infra/db/relational/draft/` (`citizens.json`, `places.json` e `tools.json`) são configurações em

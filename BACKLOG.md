@@ -5,9 +5,10 @@
 **Estado:** pendências e prioridades sugeridas para o MVP; não define arquitetura definitiva.
 
 Pendências ficam no início, por prioridade; entregas concluídas ficam no final.
-Ponto de retomada: [estado atual](dev/retomada-2026-11-08.md). Servidores parados;
-autorizações anteriores consumidas. A prioridade foi redirecionada em 08/11/2026
-para o método de desenvolvimento agêntico, conforme o registro abaixo.
+Ponto de retomada: [estado atual](dev/retomada-2026-11-08.md). Conferir o estado
+dos serviços e da árvore de trabalho; autorizações anteriores consumidas. A
+prioridade foi redirecionada em 08/11/2026 para o método de desenvolvimento
+agêntico, conforme o registro abaixo.
 
 ## Frente atual — método de desenvolvimento agêntico
 
@@ -43,6 +44,15 @@ para o método de desenvolvimento agêntico, conforme o registro abaixo.
   essas categorias ainda não estão implementadas.
 
 ## P0 — Executar e validar o núcleo
+
+- [ ] **Revisar a reorganização local do backend e seus commits pendentes.**
+  Há alterações no índice e fora dele, incluindo renomeações de serviços e DTO,
+  reorganização de tools, dependência Tavily, testes e documentação. A fotografia
+  e as divergências observadas estão no [ponto de retomada](dev/retomada-2026-11-08.md).
+  Revisar imports, nomes, comandos de inicialização e o destino apagado das notas;
+  validar o escopo apropriado e preparar commits separados por entrega. Alterações
+  de backend continuam sob responsabilidade do Idealizador e exigem autorização
+  pontual para implementação delegada. Não presumir que o índice parcial esteja pronto.
 
 - [ ] **Atualizar os testes legados de checkpoints após a reorganização.**
   `backend/tests/test_chat_checkpoint.py` ainda importa `TextMessage` removido, aponta mocks
@@ -266,19 +276,19 @@ Prioridades:
 **Natureza:** diagnóstico e planejamento sugerido, revisados em 08/11/2026;
 não definem novas decisões técnicas da simulação.
 
-A preparação de versionamento parte de `d9f1f31`, com alterações compartilhadas
-de persistência ainda não commitadas da rodada anterior. A rodada atual agrupa
-backend/migração, frontend, harness e documentação em commits por escopo; consultar
-`git log`/`git status` para os hashes e arquivos remanescentes, sem presumir árvore limpa.
+A migração, persistência, harness e a chegada visual já têm commits por escopo.
+Há uma reorganização posterior do backend ainda sem commit, com alterações tanto
+no índice quanto fora dele; consultar `git status` e o inventário de retomada.
 
-Chat, catálogo, criação, tratamento 409/422 e consultas de histórico estão
-integrados. A única migração inicial foi aplicada no banco do projeto preservando
+Antes da reorganização local em andamento, chat, catálogo, criação, tratamento
+409/422 e consultas de histórico foram integrados. A única migração inicial foi aplicada no banco do projeto preservando
 os 15 checkpoints anteriores; dois turnos reais confirmaram contexto após reabrir
 as conexões. O frontend recupera exclusivamente registros do banco. Os oito testes
 do frontend, build e baterias específicas do backend passaram; a suíte global não
 foi declarada aprovada e tem testes legados desatualizados.
 
-API e Vite foram encerrados a pedido do Idealizador; portas 8000 e 5173 livres.
+API e Vite foram encerrados na sessão histórica; o frontend foi usado depois para
+avaliar a chegada. Conferir o estado atual dos serviços antes de presumir portas livres.
 Não reiniciar, executar modelos ou modificar backend apenas por retomar a sessão.
 Não há implementação já autorizada para a próxima etapa.
 
@@ -602,14 +612,15 @@ Registros de conclusão preservados; pendências atuais estão nas seções inic
   carregamento da identidade precisam ser conferidos após a reorganização.
 
 - [x] **Recuperar `backend/src/agents/agent.py` após sobrescrita com as tools.** Restaurada
-  a última implementação de `Citizen` lida nesta conversa; tools preservadas em
-  `backend/src/agents/tools.py`. Raiz ajustada à localização atual do arquivo.
+  a última implementação de `Citizen` lida nesta conversa; tools preservadas então em
+  `backend/src/agents/tools.py` (caminho histórico, desde então reorganizado).
+  Raiz ajustada à localização atual do arquivo.
   Importação de `Citizen` e registro das tools conferidos sem chamar o modelo.
   A revisão dos imports antigos e a recuperação dos documentos ausentes permanecem
   fora desta restauração pontual.
 
 - [x] **Restaurar o arquivo de tools do agente.** Recuperado de conteúdo lido
-  anteriormente na conversa em `backend/src/agents/tools.py`, com `test`,
+  anteriormente na conversa em `backend/src/agents/tools.py` (caminho histórico), com `test`,
   `common`, `get_agent_state` e as listas usadas pelos imports atuais. Imports,
   registro e execução de `common` e `test` verificados sem chamada ao modelo.
 

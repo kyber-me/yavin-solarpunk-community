@@ -9,8 +9,8 @@ Questão: estabelecer uma linguagem artística para a chegada e para a evoluçã
 Opções consideradas: paisagem ilustrada, arquitetura orgânica, objetos tecnológicos expressivos e referências brasileiras de integração entre arquitetura e vegetação.
 Decisão: seguir a direção da paisagem de chegada v1 e da arte do manifesto v1, aprovadas pelo Idealizador; manter as referências abaixo como repertório para imagens, objetos, robôs e futuras artes do mapa. Preservar a essência que está se formando.
 Motivo: ilustração acolhedora, fresca e expressiva, capaz de combinar tecnologia, vida cotidiana e imaginação solarpunk.
-O que continua aberto: integração do gesto de entrada com a paisagem, futuras referências trazidas pelo Idealizador e aplicação incremental desta linguagem às artes do mapa.
-Próximo passo: avaliar a luneta 3D e o parallax refinado; consultar este repertório ao propor novas artes.
+O que continua aberto: futuras referências trazidas pelo Idealizador e aplicação incremental desta linguagem às artes do mapa.
+Próximo passo: consultar este repertório ao propor novas artes para Yavin.
 
 ## Âncora visual aprovada
 
