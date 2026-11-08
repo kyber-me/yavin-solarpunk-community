@@ -2,8 +2,11 @@ from pathlib import Path
 from typing import Any
 
 from dotenv import load_dotenv
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 load_dotenv(PROJECT_ROOT / ".env")
+
+from langchain_core.tools import BaseTool
 
 from langchain.agents import AgentState, create_agent  # pyright: ignore[reportUnknownVariableType]
 from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
@@ -13,11 +16,11 @@ from langgraph.graph.state import CompiledStateGraph  # pyright: ignore[reportMi
 from langgraph.types import StateSnapshot
 from ulid import ULID
 
-from src.agents.tools import common_tools as common
-from src.agents.tools import testing_tools as testing
+from src.agents.tools.research.web_search import web_search
+from src.agents.tools.common.agent_state import get_agent_state
 
 BASE_KNOWLEDGE_PATH = PROJECT_ROOT / "src" / "agents" / "base_knowledge"
-TOOLS = [*common, *testing]
+TOOLS: list[BaseTool] = [web_search(), get_agent_state]
 
 # Explore concept
 class Attributes:

@@ -1,6 +1,6 @@
 """Explicit adaptation between the message model and persistence data."""
 from src.infra.db.relational.message_record import MessageRecord
-from src.types.dtos.chat_service_request import Message
+from src.types.dtos.send_message_service_request import Message
 
 
 # Usamos "*" isso porque conversation_id e sender_id são ambos strings:

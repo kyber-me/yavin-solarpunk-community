@@ -5,7 +5,7 @@ from ulid import ULID
 from fastapi import Request
 
 from src.services.service_interface import IService
-from src.services.agent_catalog import is_agent_available
+from src.services.agent_catalog_service import is_agent_available
 from src.types.dtos.create_conversation_request import CreateConversationRequest
 from src.types.app_error import AppError
 

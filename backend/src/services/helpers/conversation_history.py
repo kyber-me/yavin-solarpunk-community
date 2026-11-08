@@ -3,7 +3,7 @@ from fastapi import Request
 
 from src.infra.db.relational.conversation_repository import PostgresConversationRepository
 from src.infra.db.relational.message_repository import PostgresMessageRepository
-from src.services.agent_catalog import get_agent_catalog
+from src.services.agent_catalog_service import get_agent_catalog
 from src.types.app_error import AppError
 from src.types.dtos.conversation_history import (
     ConversationPage, ConversationSummary, MessagePage, StoredMessage,

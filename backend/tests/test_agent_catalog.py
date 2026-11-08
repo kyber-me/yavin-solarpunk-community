@@ -9,7 +9,7 @@ from main import app
 
 class AgentCatalogTests(unittest.TestCase):
     def test_catalog_returns_only_silas_without_constructing_agent(self):
-        with patch('src.services.chat_service.Agent') as agent:
+        with patch('src.services.send_message_service.py.Agent') as agent:
             response = TestClient(app).get('/agents')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {

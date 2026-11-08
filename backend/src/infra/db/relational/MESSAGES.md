@@ -56,14 +56,14 @@ ou participação na conversa: o serviço deve validar essas regras antes de gra
 
 ```python
 from src.infra.db.relational.message_repository import PostgresMessageRepository
-from src.services.message_mapper import message_to_record
-from src.types.dtos.chat_service_request import Message
+from services.helpers.message_mapper import message_to_record
+from src.types.dtos.send_message_service_request import Message
 
 # conversation e sender_id precisam ter sido validados pelo serviço.
 # Gerar o modelo no servidor evita aceitar IDs e datas arbitrários do cliente.
 message = Message(content=content)
 record = message_to_record(
-    message, conversation_id=conversation.id, sender_id=sender_id,
+  message, conversation_id=conversation.id, sender_id=sender_id,
 )
 repository = PostgresMessageRepository(pool)
 saved = repository.create(record)

@@ -11,15 +11,15 @@ from starlette.concurrency import run_in_threadpool
 
 from src.agents.infra.open_checkpointer_helper import open_checkpointer
 from src.infra.db.relational.conversation_pool import open_conversation_pool
-from src.services.chat_service import ChatService
+from src.services.send_message_service import SendMessageService
 from src.services.create_conversation_service import CreateConversationService
-from src.services.agent_catalog import get_agent_catalog
+from src.services.agent_catalog_service import get_agent_catalog
 from src.types.app_error import AppError
 from src.types.dtos.api_response import ApiError, ApiResponse
-from src.types.dtos.chat_service_request import ChatServiceRequest
+from src.types.dtos.send_message_service_request import ChatServiceRequest
 from src.types.dtos.create_conversation_request import CreateConversationRequest
 from src.types.dtos.agent_catalog import AgentCatalog
-from src.services.conversation_history import list_conversations, list_messages
+from services.helpers.conversation_history import list_conversations, list_messages
 from src.types.dtos.conversation_history import ConversationPage, MessagePage
 
 from dotenv import load_dotenv
@@ -74,7 +74,7 @@ async def list_agents():
 @app.post("/conversation/talk", response_model=ApiResponse[dict[Any, Any]])
 async def chat(payload: ChatServiceRequest, request: Request):
     result = await run_in_threadpool(
-        ChatService.run, payload, request
+        SendMessageService.run, payload, request
     )
 
     return ApiResponse(data=result)

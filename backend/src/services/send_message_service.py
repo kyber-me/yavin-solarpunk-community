@@ -1,7 +1,5 @@
 from pathlib import Path
 from fastapi import Request
-# from typing import Any
-# from ulid import ULID
 
 from src.infra.db.relational.conversation_repository import PostgresConversationRepository
 from src.infra.db.relational.message_record import MessageRecord
@@ -9,14 +7,14 @@ from src.infra.db.relational.message_repository import PostgresMessageRepository
 from src.agents.agent import Agent
 from src.services.service_interface import IService
 from src.types.app_error import AppError
-from src.types.dtos.chat_service_request import ChatServiceRequest, Message
-from src.services.message_mapper import message_to_record
+from src.types.dtos.send_message_service_request import SendMessageRequest, Message
+from services.helpers.message_mapper import message_to_record
 # from src.infra.cache.cache import CHAT_CACHE
 
 
 current_path = Path(
     __file__
-)  # /Users/tiagocuri/Repos/Yavin/backend/src/services/chat_service.py
+)  # /Users/tiagocuri/Repos/Yavin/backend/src/services/send_message_service.py
 
 # project_path_module = Path(__name__)  # "src.services.chat_service"
 
@@ -24,10 +22,10 @@ PROJECT_ROOT = current_path.resolve().parents[2]  # /Users/tiagocuri/Repos/Yavin
 PROJECT_SOURCE = current_path.resolve().parents[1]  # /Users/tiagocuri/Repos/Yavin/backend/src
 
 
-class ChatService(IService):
+class SendMessageService(IService):
     @classmethod
     def run(
-        cls, dto: ChatServiceRequest, request: Request
+        cls, dto: SendMessageRequest, request: Request
     ) -> dict[str, str]:
 
         content = dto.message
@@ -39,7 +37,7 @@ class ChatService(IService):
                 status_code=400,
             )
 
-        # If conversation does not exist in cache, search in the database
+        # If conversation does not exist in cache, research in the database
         # If not found raise an error
         # ---------------------------------------------------------------
         # Rapidly look-up for an existent conversation by id
@@ -79,7 +77,6 @@ class ChatService(IService):
         # the system returns an error but the original message from the sender is kept (?)
 
         message_repo = PostgresMessageRepository(request.app.state.conversation_pool)
-        # return {"content": result["messages"][-1].content}
         response: dict[str, str] | None
         try:
             result = message_repo.create(message_record) # What happens if it fails?

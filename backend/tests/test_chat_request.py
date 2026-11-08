@@ -7,8 +7,8 @@ from fastapi import FastAPI, Request
 from fastapi.testclient import TestClient
 
 from main import app
-from src.services.chat_service import ChatService
-from src.types.dtos.chat_service_request import ChatServiceRequest, Message
+from src.services.send_message_service import ChatService
+from src.types.dtos.send_message_service_request import ChatServiceRequest, Message
 
 
 class ChatRequestTests(unittest.TestCase):
@@ -41,8 +41,8 @@ class ChatRequestTests(unittest.TestCase):
         request = Request({'type': 'http', 'app': application})
         dto = ChatServiceRequest(conversation_id='Conv_test', sender_id='idealizador', message='Olá')
         # Stop at the adaptation boundary to isolate this stage from persistence.
-        with patch('src.services.chat_service.PostgresConversationRepository') as repository, patch(
-            'src.services.chat_service.message_to_record', side_effect=RuntimeError('adaptation boundary')
+        with patch('src.services.send_message_service.py.PostgresConversationRepository') as repository, patch(
+                'src.services.send_message_service.py.message_to_record', side_effect=RuntimeError('adaptation boundary')
         ) as mapper:
             repository.return_value.get_by_id.return_value = SimpleNamespace(
                 sender_id='idealizador', participant_id='silas', active=True,
@@ -70,10 +70,10 @@ class ChatRequestTests(unittest.TestCase):
         for conversation, status, code in cases:
             with self.subTest(status=status, conversation=conversation), patch.object(
                 app.state, 'conversation_pool', object(), create=True
-            ), patch('src.services.chat_service.PostgresConversationRepository') as repository, patch(
-                'src.services.chat_service.PostgresMessageRepository'
-            ) as messages, patch('src.services.chat_service.Agent') as agent, patch(
-                'src.services.chat_service.message_to_record'
+            ), patch('src.services.send_message_service.py.PostgresConversationRepository') as repository, patch(
+                'src.services.send_message_service.py.PostgresMessageRepository'
+            ) as messages, patch('src.services.send_message_service.py.Agent') as agent, patch(
+                'src.services.send_message_service.py.message_to_record'
             ) as mapper:
                 repository.return_value.get_by_id.return_value = conversation
                 response = TestClient(app).post('/conversation/talk', json={

@@ -7,9 +7,9 @@ from unittest.mock import patch
 from fastapi import FastAPI, Request
 
 from src.infra.db.relational.message_record import MessageRecord
-from src.services.chat_service import ChatService
+from src.services.send_message_service import ChatService
 from src.types.app_error import AppError
-from src.types.dtos.chat_service_request import ChatServiceRequest
+from src.types.dtos.send_message_service_request import ChatServiceRequest
 
 
 class ChatServiceMessageTests(unittest.TestCase):
@@ -20,11 +20,12 @@ class ChatServiceMessageTests(unittest.TestCase):
         self.request = Request({'type': 'http', 'app': application})
         self.dto = ChatServiceRequest(conversation_id='Conv_test', sender_id='idealizador', message='Olá')
         self.conversation = SimpleNamespace(sender_id='idealizador', participant_id='silas', thread_id='thread_test', active=True)
-        self.conversations = self.enterContext(patch('src.services.chat_service.PostgresConversationRepository'))
+        self.conversations = self.enterContext(patch(
+            'src.services.send_message_service.py.PostgresConversationRepository'))
         self.conversations.return_value.get_by_id.return_value = self.conversation
-        self.messages = self.enterContext(patch('src.services.chat_service.PostgresMessageRepository')).return_value
+        self.messages = self.enterContext(patch('src.services.send_message_service.py.PostgresMessageRepository')).return_value
         self.messages.create.side_effect = lambda record: record
-        self.agent = self.enterContext(patch('src.services.chat_service.Agent')).return_value
+        self.agent = self.enterContext(patch('src.services.send_message_service.py.Agent')).return_value
         self.agent.invoke.return_value = {'content': 'Resposta'}
 
     def test_response_uses_other_participant_in_either_pair_orientation(self):

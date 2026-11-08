@@ -15,8 +15,8 @@ from src.infra.db.relational.conversation_pool import open_conversation_pool
 from src.infra.db.relational.conversation_record import ConversationRecord
 from src.infra.db.relational.conversation_repository import PostgresConversationRepository
 from src.infra.db.relational.message_repository import PostgresMessageRepository
-from src.services.message_mapper import message_from_record, message_to_record
-from src.types.dtos.chat_service_request import Message
+from services.helpers.message_mapper import message_from_record, message_to_record
+from src.types.dtos.send_message_service_request import Message
 
 
 class MessageMappingTests(unittest.TestCase):

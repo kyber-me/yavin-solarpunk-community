@@ -11,7 +11,7 @@ class Message(BaseModel):
     updated_at: AwareDatetime | None = Field(default=None)
     deleted_at: AwareDatetime | None = Field(default=None)
 
-class ChatServiceRequest(BaseModel):
+class SendMessageRequest(BaseModel):
     sender_id: str
     conversation_id: str
     message: str = Field(min_length=1)
