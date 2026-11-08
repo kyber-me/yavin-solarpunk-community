@@ -38,6 +38,7 @@ htmlcov/
 .pyright/
 
 # Local tooling and editor settings
+.langgraph_api/
 .idea/
 .vscode/*
 !.vscode/launch.json
@@ -72,3 +73,6 @@ logs/
 
 # macOS
 .DS_Store
+
+# Local generated backend graph, caches and provenance
+/dev/graphs/backend/

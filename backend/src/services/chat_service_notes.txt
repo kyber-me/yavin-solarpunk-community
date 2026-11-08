@@ -1,0 +1,7 @@
+# 1 - O ChatService pode ser utilizado apenas quando há conversas em andamento (é mais barato enviar mensagens via agente por telefone virtual?)
+
+# 2 - Como identificar que há uma conversa em andamento entre 2 agentes? (humanos ou máquinas). O Frontend é responsável por enviar informações do `sender` (há como burlar o id do sender? Dificilmente. Seria preciso conhecer um id válido. É importante não expor id's.)
+
+
+# 3. Em caso de tentativa de estabelecer contato com um id que não pertence à aquele usuário, precisamos conferir se: usuário está conectado ao sistema. Se não, configura potencial fraude. Se sim, uma conversa seria iniciada por um usuário X com um outro agente Y
+# se passando por uma outra pessoa Z.

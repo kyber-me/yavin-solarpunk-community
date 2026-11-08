@@ -1,0 +1,9 @@
+{
+    "dependencies": [
+        "."
+    ],
+    "graphs": {
+        "agent": "./src/agents/langsmith/agent_factory.py:build_agent"
+    },
+    "env": ".env"
+}
