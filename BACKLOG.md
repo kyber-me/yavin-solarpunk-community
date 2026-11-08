@@ -167,6 +167,21 @@ para o método de desenvolvimento agêntico, conforme o registro abaixo.
 
 ## P2 — Evoluir após a validação
 
+- [ ] **Avaliar a chegada ilustrada e a experiência de visitante.** Em 08/11/2026,
+  protótipo de frontend com visor interativo, som habilitado por padrão (silenciável,
+  sujeito às permissões de reprodução automática do navegador) e transição para
+  `#/visita`, sem controles de chat. Paisagem gerada pela API OpenAI após bloqueio
+  de plano no Higgsfield; aprovada pelo Idealizador como direção também para as
+  futuras artes do mapa. Referências preservadas no
+  [guia artístico](frontend/sketches/direcao-artistica.md). Visor e relação com a
+  paisagem em refinamento: versão atual com luneta 3D, direção por arraste/toque,
+  ampliação e ação de entrada separadas. Texto “O futuro tem lugar”; seleção na
+  chegada bloqueada e parallax reduzido em cerca de 20% após avaliação. O mapa é uma prévia visual estática; publicação de
+  estado, visibilidade de conversas e autorização de acesso dependem de contratos
+  de backend ainda não definidos. Não há implementação de backend autorizada por
+  este protótipo. Performance e mídia serão avaliadas após a direção visual.
+  [Registro](frontend/sketches/chegada/README.md).
+
 - [ ] **Revisar a proposta de especialização de Silas por ciclos finitos de estudo.**
   Natureza: proposta para revisão futura, registrada em 05/11/2026; não autoriza
   execução nem alteração da identidade. Dar a Silas espaço para escolher uma
@@ -286,6 +301,15 @@ respostas controladas; esta validação não comprova integração real com a AP
 não incluiu nova inspeção no navegador.
 
 ## Entregas e correções já realizadas
+
+- [x] **Disponibilizar o Manifesto Solarpunk no menu superior.** Em 08/11/2026,
+  página de leitura em `#/manifesto`, com texto importado do Markdown de referência,
+  negritos, itálicos, listas, links e notas preservados. Frase solicitada em destaque
+  próprio, arte editorial original e leitura selecionável. Higgsfield recusou a
+  geração por plano; após autorização específica, arte gerada pela API OpenAI.
+  Build, oito testes existentes e navegação desktop/celular aprovados; arte do
+  topo aprovada pelo Idealizador como parte da identidade de Yavin,
+  com orientação de preservar sua essência. [Registro](frontend/sketches/manifesto/README.md).
 
 - [x] **Preparar relatório final após aprovação técnica.** Skill local
   `relatar-implementacao`, schema de `relatorio-final.json` e transição a partir

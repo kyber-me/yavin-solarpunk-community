@@ -20,7 +20,20 @@ npm run build
 
 ## Composição e navegação
 
-- Página inicial editorial, com chamada para abrir a bancada, referência visual da
+- **Protótipo de chegada — 08/11/2026:** `/` abre o observatório de futuros,
+  com luneta interativa e som habilitado por padrão, silenciável e sujeito às
+  regras do navegador. `Entrar em Yavin` leva a `#/visita`,
+  uma prévia do mapa sem chat. A paisagem foi gerada e aprovada como direção
+  artística também para futuras artes do mapa. Visor e interação continuam em
+  refinamento. [Direção e referências](sketches/direcao-artistica.md) ·
+  [Estado e limites](sketches/chegada/README.md).
+- O atelier continua acessível diretamente em `#/mapa` e `#/laboratorio`.
+  Essa separação visual local não implementa autenticação ou estado público no backend.
+- O menu superior inclui **Manifesto**, em `#/manifesto`: leitura do documento
+  de referência original, com arte própria, negritos e itálicos preservados e
+  destaque para “Somos solarpunks porque as únicas outras alternativas são a
+  negação ou o desespero.” [Registro](sketches/manifesto/README.md).
+- Entrada do atelier editorial, com chamada para abrir a bancada, referência visual da
   oficina solar urbana e primeiro campo de investigação: energia.
 - Mapa interativo em um módulo próprio; edifício e título levam ao laboratório.
 - Cabeçalho e navegação lateral entre `#/mapa` e `#/laboratorio`; no celular,
@@ -123,7 +136,8 @@ se adapta também à altura reduzida da janela.
 - [Registro e capturas do redesign](sketches/redesign-oficina-v2.md).
 
 Barlow Condensed, Space Grotesk e DM Mono são carregadas pelo Google Fonts, com
-fallbacks locais. Nenhuma biblioteca de interface ou dependência nova foi adicionada.
+fallbacks locais. A luneta da chegada usa Three.js com renderização transparente,
+geometria e iluminação locais. O mapa existente permanece em 2D.
 
 ## Histórico e estudos visuais
 

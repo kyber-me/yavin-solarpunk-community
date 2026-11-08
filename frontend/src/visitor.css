@@ -1,0 +1,21 @@
+.visitor-shell { height: 100svh; display: flex; flex-direction: column; color: #254335; background: #e6e7d9; }
+.visitor-shell::after { content: ''; position: fixed; inset: 0; z-index: 10; pointer-events: none; background: #0b241d; animation: visitor-unveil 1.2s ease-out forwards; }
+.visitor-header { display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 86px; padding: 16px 4%; background: #f6f2e5; border-bottom: 1px solid #25433533; }
+.visitor-brand { font-size: 34px; font-weight: 600; letter-spacing: -.075em; }.visitor-brand>span { color: #a56a35; }
+.visitor-header>p { font-size: 12px; color: #576852; }.visitor-header>a:last-child { font-size: 11px; min-height: 44px; display: flex; align-items: center; gap: 16px; }
+.visitor-header .arrival-sound { color: #254335; border-color: #25433566; background: transparent; margin-left: 0; }
+.visitor-header .sound-bars i { background: #6d7650; }
+.visitor-header .arrival-sound:hover { background: #dbe2d0; }
+.visitor-links { display: flex; align-items: center; gap: 22px; font-size: 11px; }.visitor-links>a { min-height: 44px; display: flex; align-items: center; gap: 10px; }
+.visitor-shell .map-view { flex: 1; }
+.visitor-shell .module-heading { background: #e7e9dc; color: #3c5545; min-height: 53px; padding-inline: 4%; }
+.visitor-shell .module-heading h2 { font: 10px var(--mono); }.visitor-shell .module-heading h2>span { color: #89723d; }
+.visitor-shell .module-heading>span { color: #6a7562; }
+.visitor-shell .map-stage { background: radial-gradient(ellipse at center,#f2efdb,#d8e1cf); }
+.visitor-shell .map-grid { opacity: .5; }.visitor-shell .map-location { width: min(90%,1050px); }
+.visitor-shell .map-footer { background: #e7e9dc; padding-inline: 4%; }
+.visitor-shell .map-citizen-static { cursor: default; }.visitor-shell .map-citizen-static>span { border: 0; background: #f8f2df; }
+@keyframes visitor-unveil { from { opacity: 1; } to { opacity: 0; } }
+@media(max-width:640px) { .visitor-header { min-height: 72px; gap: 10px; }.visitor-header>p { display: none; }.visitor-header .arrival-sound { padding-inline: 9px; font-size: 9px; gap: 6px; }.visitor-header>a:last-child { font-size: 9px; gap: 5px; }.visitor-shell .module-heading>span { display: none; } }
+@media(prefers-reduced-motion:reduce) { .visitor-shell::after { animation: none; opacity: 0; } }
+@media(max-width:640px) { .visitor-links { gap: 12px; font-size: 9px; }.visitor-links>a { gap: 4px; }.visitor-header { flex-wrap: wrap; }.visitor-header .arrival-sound { margin-left: auto; } }

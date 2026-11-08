@@ -3,6 +3,10 @@ import { createRoot } from 'react-dom/client';
 import { ConversationPanel } from './components/ConversationPanel';
 import { MapView } from './components/MapView';
 import { WorkshopReference } from './components/WorkshopReference';
+import { Arrival } from './components/Arrival';
+import { VisitorMap } from './components/VisitorMap';
+import { useArrivalSound } from './arrivalSound';
+import { ManifestoPage } from './components/ManifestoPage';
 import './styles.css';
 import './map.css';
 
@@ -12,7 +16,7 @@ function subscribeToRoute(onChange: () => void) {
 }
 const getRoute = () => window.location.hash === '#/laboratorio' ? 'laboratory' : 'map';
 
-function App() {
+function Workspace({ active }: { active: boolean }) {
   const route = useSyncExternalStore(subscribeToRoute, getRoute);
   const inLaboratory = route === 'laboratory';
   const [mapExpanded, setMapExpanded] = useState(false);
@@ -24,23 +28,24 @@ function App() {
   const previousRoute = useRef(route);
 
   useEffect(() => {
+    if (!active) return;
     document.title = inLaboratory ? 'Bancada de conversa · Yavin' : 'Yavin · Oficina de futuros possíveis';
     if (previousRoute.current !== route) {
       if (inLaboratory) document.getElementById('panel-title')?.focus();
       else mapHeading.current?.focus();
     }
     previousRoute.current = route;
-  }, [route, inLaboratory]);
+  }, [route, inLaboratory, active]);
 
   useEffect(() => {
-    if (inLaboratory) return;
+    if (!active || inLaboratory) return;
     if (chatOpen) document.getElementById('panel-title')?.focus({ preventScroll: true });
     else if (previousChatOpen.current) {
       chatButton.current?.focus({ preventScroll: true });
       chatButton.current?.scrollIntoView({ block: 'nearest' });
     }
     previousChatOpen.current = chatOpen;
-  }, [chatOpen, inLaboratory, silasChatRequest]);
+  }, [chatOpen, inLaboratory, silasChatRequest, active]);
 
   return <div className={`app-shell ${inLaboratory ? 'in-laboratory' : mapExpanded ? 'map-expanded' : ''}`}>
     <a className="skip-link" href={inLaboratory ? '#panel-title' : '#map-title'} onClick={event => {
@@ -50,7 +55,7 @@ function App() {
     <header className="workspace-header">
       <a className="wordmark" href="#/mapa" aria-label="Yavin, início"><svg viewBox="0 0 40 40" fill="none" aria-hidden="true"><circle cx="20" cy="20" r="7" fill="currentColor" /><path d="M20 0v9m0 22v9M0 20h9m22 0h9M6 6l7 7m14 14 7 7M6 34l7-7M27 13l7-7" stroke="currentColor" strokeWidth="3" /></svg>YAVIN<span className="brand-period">.</span></a>
       <span className="workspace-caption">Oficina de futuros possíveis</span>
-      <nav className="header-navigation" aria-label="Navegação principal"><a href="#/mapa" aria-current={!inLaboratory ? 'page' : undefined}>Território</a><a href="#/laboratorio" aria-current={inLaboratory ? 'page' : undefined}>Laboratório <span aria-hidden="true">↗</span></a></nav>
+      <nav className="header-navigation" aria-label="Navegação principal"><a href="#/mapa" aria-current={!inLaboratory ? 'page' : undefined}>Território</a><a href="#/laboratorio" aria-current={inLaboratory ? 'page' : undefined}>Laboratório <span aria-hidden="true">↗</span></a><a href="#/manifesto">Manifesto</a></nav>
       <span className="preview-badge">PRÉVIA LOCAL</span>
     </header>
     <nav className="workspace-rail" aria-label="Espaços de trabalho">
@@ -78,6 +83,37 @@ function App() {
       </div>
     </div>
   </div>;
+}
+
+const getExperience = () => {
+  if (window.location.hash === '#/mapa' || window.location.hash === '#/laboratorio') return 'atelier';
+  if (window.location.hash === '#/visita') return 'visit';
+  if (window.location.hash === '#/manifesto') return 'manifesto';
+  return 'arrival';
+};
+
+function App() {
+  const experience = useSyncExternalStore(subscribeToRoute, getExperience);
+  const sound = useArrivalSound(experience !== 'atelier');
+  const [atelierVisited, setAtelierVisited] = useState(experience === 'atelier');
+  const previousExperience = useRef(experience);
+  useEffect(() => {
+    if (experience === 'atelier') setAtelierVisited(true);
+    else document.title = experience === 'visit' ? 'Visite Yavin · Território em formação' : experience === 'manifesto' ? 'Manifesto Solarpunk · Yavin' : 'Yavin · O futuro tem lugar';
+    if (previousExperience.current !== experience) {
+      window.scrollTo(0, 0);
+      if (experience === 'arrival') document.getElementById('arrival-title')?.focus();
+      if (experience === 'visit') document.getElementById('visitor-territory-title')?.focus();
+      if (experience === 'manifesto') document.getElementById('manifesto-title')?.focus();
+    }
+    previousExperience.current = experience;
+  }, [experience]);
+  return <>
+    {experience === 'arrival' && <Arrival sound={sound} />}
+    {experience === 'visit' && <VisitorMap sound={sound} />}
+    {experience === 'manifesto' && <ManifestoPage sound={sound} />}
+    {(atelierVisited || experience === 'atelier') && <div hidden={experience !== 'atelier'}><Workspace active={experience === 'atelier'} /></div>}
+  </>;
 }
 
 createRoot(document.getElementById('root')!).render(<StrictMode><App /></StrictMode>);

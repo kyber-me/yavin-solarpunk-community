@@ -277,6 +277,27 @@ mapa, junto à estação. Clicar na figura abre a conversa individual no drawer.
 O personagem acompanha pan e zoom; não possui movimentação ou simulação autônoma.
 Arte, prompts e registro estão em `frontend/sketches/silas/README.md`.
 
+**Direção artística aprovada em 08/11/2026:** o Idealizador aprovou a paisagem
+ilustrada da chegada e estendeu essa direção às futuras implementações visuais
+no mapa: ilustração solarpunk expressiva, vegetação tropical, tecnologia cotidiana
+e robôs com identidade. Referências, asset e prompt estão preservados em
+`frontend/sketches/direcao-artistica.md`. Consultar esse repertório ao propor novas
+artes; o Idealizador poderá acrescentar referências. A chegada deve ter pouco
+texto e dar presença à paisagem. Visor e gesto de entrada continuam em refinamento:
+a primeira versão foi percebida como uma bússola sem relação clara com a cena.
+A tentativa seguinte em SVG também foi rejeitada por simular mal perspectiva e
+profundidade; a versão em avaliação usa uma luneta 3D local em Three.js, sem
+converter o mapa. Seleção de texto na entrada foi bloqueada e a sensibilidade do
+parallax reduzida após avaliação. O título passou a “O futuro tem lugar”.
+A arte do topo da página Manifesto também foi aprovada explicitamente pelo
+Idealizador como parte dessa identidade, com a orientação de preservar sua
+essência. Paisagem e arte do manifesto são as duas âncoras do guia artístico.
+O guia reúne também linguagem por elemento, procedência e propostas de animação;
+ele é suporte de desenvolvimento, fora da base de conhecimento da simulação.
+O Idealizador pediu animações discretas que preservem todos os componentes da
+paisagem aprovada. Manter a imagem estática original; as propostas ainda aguardam
+avaliação e vídeo gerado não garante preservação integral entre quadros.
+
 O README contém a marca ASCII aprovada pelo Idealizador em 05/11/2026, com
 símbolo solar e o nome YAVIN em sete linhas e até 63 colunas, usando apenas
 caracteres ASCII. O núcleo solar é arredondado e os raios foram ampliados.
