@@ -223,10 +223,12 @@ primeira validação. A concepção visual pode avançar em paralelo, conforme a
 [AGENTS.md](AGENTS.md).
 O ciclo visual já foi entregue e recebeu avaliação positiva: identidade editorial,
 mapa com estação científica, modo expandido, chat em drawer e representação de Silas.
-O frontend já exige catálogo e criação persistida de conversas; a API ainda não
-atende ao contrato completo, portanto o fluxo real permanece em integração.
-Checkpoints do agente têm recuperação técnica verificada, mas a validação
-conversacional integrada continua pendente. Reuniões ainda são locais.
+Catálogo, criação persistida de conversas e consultas de histórico estão integrados
+entre API e frontend. A interface exibe apenas conversas e mensagens do banco;
+rascunhos ficam em memória. Dois turnos reais por HTTP confirmaram continuidade
+após reabrir as conexões, e o histórico foi recuperado pela SPA após recarregar.
+Ainda faltam validar o envio real pelo compositor e as perguntas de referência de
+Silas. Reuniões estão bloqueadas até haver persistência.
 
 Prioridades:
 
