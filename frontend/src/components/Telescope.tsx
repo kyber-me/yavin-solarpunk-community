@@ -1,4 +1,5 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import type { AmbientSource } from '../arrivalEffects';
 import { TelescopeObject } from './TelescopeObject';
 import './telescope.css';
 
@@ -7,12 +8,27 @@ export function boundAim(aim: Aim): Aim {
   return { x: Math.max(.04, Math.min(.96, aim.x)), y: Math.max(.06, Math.min(.94, aim.y)) };
 }
 
-export function Telescope({ aim, onAim, entering }: { aim: Aim; onAim: (aim: Aim) => void; entering: boolean }) {
+export function Telescope({ aim, onAim, entering, ambient }: { aim: Aim; onAim: (aim: Aim) => void; entering: boolean; ambient: AmbientSource }) {
   const [zoom, setZoom] = useState(3);
   const [dragging, setDragging] = useState(false);
   const drag = useRef<{ pointer: number; x: number; y: number; aim: Aim } | null>(null);
+  const effectsPreview = useRef<HTMLCanvasElement>(null);
   const imageWidth = zoom * 370;
   const imageHeight = imageWidth * 1152 / 2048;
+
+  useEffect(() => {
+    function copyFrame() {
+      const source = ambient.canvas.current;
+      const preview = effectsPreview.current;
+      const ctx = preview?.getContext('2d');
+      if (!source || !preview || !ctx) return;
+      ctx.clearRect(0, 0, preview.width, preview.height);
+      ctx.drawImage(source, 0, 0);
+    }
+    ambient.listeners.add(copyFrame);
+    copyFrame();
+    return () => { ambient.listeners.delete(copyFrame); };
+  }, [ambient]);
 
   return <div className={`telescope${dragging ? ' is-aiming' : ''}`}>
     <div className="telescope-aim" tabIndex={0} role="region" aria-label="Direcionar luneta" aria-describedby="telescope-help"
@@ -42,9 +58,10 @@ export function Telescope({ aim, onAim, entering }: { aim: Aim; onAim: (aim: Aim
         if (event.key === 'Home') { event.preventDefault(); onAim({ x: .66, y: .47 }); }
         else if (offsets[event.key]) { event.preventDefault(); onAim(boundAim({ x: aim.x + offsets[event.key].x, y: aim.y + offsets[event.key].y })); }
       }}>
-      <TelescopeObject aim={aim} zoom={zoom} />
+      <TelescopeObject aim={aim} zoom={zoom} ambient={ambient} />
       <div className="telescope-observation" aria-hidden="true">
         <img src="/images/yavin-chegada-v1.png" alt="" draggable={false} style={{ width: imageWidth, height: imageHeight, transform: `translate(${-aim.x * 100}%, ${-aim.y * 100}%)` }} />
+        <canvas ref={effectsPreview} className="telescope-observation-effects" width="1024" height="576" style={{ width: imageWidth, height: imageHeight, transform: `translate(${-aim.x * 100}%, ${-aim.y * 100}%)` }} />
         <span />
       </div>
     </div>

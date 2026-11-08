@@ -65,23 +65,27 @@ real ou simulada será organizada.
   Respeitar movimento reduzido e oferecer controle de som; a ambiência atual é um
   experimento, não uma trilha definitiva aprovada.
 
-### Movimento da paisagem — propostas para avaliação
+### Movimento da paisagem — direção aprovada
 
 O Idealizador pediu animações básicas e discretas que preservem **todos os elementos
 da paisagem aprovada**. A imagem estática continua sendo o original de referência.
-Ainda não há animação nova aprovada ou gerada. Opções para discutir:
+Ele aprovou visualmente o resultado de água, luz e lente em 08/11:
 
-1. Reflexos suaves na água, mantendo edifícios, pessoas, robôs e vegetação fixos.
-2. Variação leve de luz e sombra, como uma nuvem passando sobre a cena, sem alterar
-   a composição; uma camada independente pode ser desligada sem modificar o original.
-3. Movimento mínimo em folhas do primeiro plano, caso uma máscara ou camada separada
-   permita controlar a área sem deformar os demais elementos.
+1. Reflexos suaves na água e pequena cachoeira animada.
+2. Variação leve de luz e reflexos segmentados nos vidros do telhado.
+3. Movimento mínimo em folhas do primeiro plano permanece uma possibilidade para
+   discussão; não foi implementado nem aprovado.
 
 Camadas locais preservam o arquivo original; a imagem exibida com efeitos pode mudar
 visualmente durante a animação. Vídeo gerado a partir da imagem pode redesenhar ou
 alterar detalhes entre quadros, portanto não garante a preservação integral: qualquer
 teste exige comparação visual antes de uso, arquivo separado e possibilidade de
 retornar ao original. O parallax atual já movimenta a imagem como um único plano.
+Os efeitos são desenhados por `frontend/src/arrivalEffects.ts` em canvas transparente,
+sem geração de vídeo. O mesmo quadro aparece na cena, na lupa e na ocular 3D.
+A lente sugere convexidade pelo acabamento, mantendo a paisagem observada sem
+distorção. Os efeitos são ocultados quando o visitante prefere movimento reduzido.
+[Registro](chegada/README.md).
 
 ## Repertório preservado
 
@@ -130,5 +134,5 @@ tentativa por exigir plano Basic ou superior; a imagem aprovada foi gerada pela 
 [Estudo inicial](chegada/paisagem-v1.prompt.txt) ·
 [Registro de implementação](chegada/README.md).
 
-A aprovação da paisagem não equivale à aprovação da composição inteira ou do
-visor. O gesto de entrada continua em refinamento.
+A paisagem e o conjunto visual atual da chegada foram aprovados pelo Idealizador.
+Essa aprovação não define os contratos de estado público ou visibilidade da visita.

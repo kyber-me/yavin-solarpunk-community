@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import type { Aim } from './Telescope';
+import type { AmbientSource } from '../arrivalEffects';
 
-export function TelescopeObject({ aim, zoom }: { aim: Aim; zoom: number }) {
+export function TelescopeObject({ aim, zoom, ambient }: { aim: Aim; zoom: number; ambient: AmbientSource }) {
   const host = useRef<HTMLDivElement>(null);
   const model = useRef<{ update: (aim: Aim, zoom: number) => void } | null>(null);
   const [unavailable, setUnavailable] = useState(false);
@@ -148,6 +149,12 @@ export function TelescopeObject({ aim, zoom }: { aim: Aim; zoom: number }) {
     ground.castShadow = false;
     let disposed = false;
     let texture: THREE.Texture | undefined;
+    const ocularCanvas = document.createElement('canvas');
+    ocularCanvas.width = 512;
+    ocularCanvas.height = 288;
+    const ocularContext = ocularCanvas.getContext('2d');
+    const landscape = new Image();
+    let landscapeLoaded = false;
     let currentAim = aim;
     let currentZoom = zoom;
     const render = () => { if (!disposed) renderer.render(scene, camera); };
@@ -163,15 +170,27 @@ export function TelescopeObject({ aim, zoom }: { aim: Aim; zoom: number }) {
       }
       render();
     }
-    new THREE.TextureLoader().load('/images/yavin-chegada-v1.png', loaded => {
-      if (disposed) { loaded.dispose(); return; }
-      texture = loaded;
+    function paintOcular() {
+      if (disposed || !landscapeLoaded || !ocularContext || !texture) return;
+      ocularContext.clearRect(0, 0, ocularCanvas.width, ocularCanvas.height);
+      ocularContext.drawImage(landscape, 0, 0, ocularCanvas.width, ocularCanvas.height);
+      if (ambient.canvas.current) ocularContext.drawImage(ambient.canvas.current, 0, 0, ocularCanvas.width, ocularCanvas.height);
+      texture.needsUpdate = true;
+      render();
+    }
+    ambient.listeners.add(paintOcular);
+    landscape.onload = () => {
+      if (disposed) return;
+      landscapeLoaded = true;
+      texture = new THREE.CanvasTexture(ocularCanvas);
       texture.colorSpace = THREE.SRGBColorSpace;
       const ocularMaterial = new THREE.MeshBasicMaterial({ map: texture, color: 0xc9dbc9 });
       materials.push(ocularMaterial);
       ocular.material = ocularMaterial;
       update(currentAim, currentZoom);
-    });
+      paintOcular();
+    };
+    landscape.src = '/images/yavin-chegada-v1.png';
     function resize() {
       const { width, height } = element!.getBoundingClientRect();
       if (!width || !height) return;
@@ -187,6 +206,8 @@ export function TelescopeObject({ aim, zoom }: { aim: Aim; zoom: number }) {
     resize();
     return () => {
       disposed = true;
+      ambient.listeners.delete(paintOcular);
+      landscape.onload = null;
       observer.disconnect();
       model.current = null;
       geometries.forEach(geometry => geometry.dispose());
@@ -198,7 +219,7 @@ export function TelescopeObject({ aim, zoom }: { aim: Aim; zoom: number }) {
       renderer.forceContextLoss();
       renderer.domElement.remove();
     };
-  }, []);
+  }, [ambient]);
   useEffect(() => { model.current?.update(aim, zoom); }, [aim, zoom]);
   return <div ref={host} className="telescope-object">{unavailable && <span className="telescope-unavailable">A visualização da luneta não está disponível neste navegador.</span>}</div>;
 }

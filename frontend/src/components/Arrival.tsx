@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
+import { paintArrivalEffects } from '../arrivalEffects';
 import type { ArrivalSound } from '../arrivalSound';
 import { SoundControl } from './SoundControl';
 import { Telescope, boundAim, type Aim } from './Telescope';
@@ -9,6 +10,8 @@ export function Arrival({ sound }: { sound: ArrivalSound }) {
   const [imageFailed, setImageFailed] = useState(false);
   const [aim, setAim] = useState<Aim>({ x: .66, y: .47 });
   const scene = useRef<HTMLElement>(null);
+  const effectsCanvas = useRef<HTMLCanvasElement>(null);
+  const ambient = useMemo(() => ({ canvas: effectsCanvas, listeners: new Set<() => void>() }), []);
   const view = useRef({ x: 0, y: 0 });
   const touchOrigin = useRef<{ x: number; y: number; viewX: number; viewY: number } | null>(null);
   const transitionTimer = useRef<number | undefined>(undefined);
@@ -18,6 +21,39 @@ export function Arrival({ sound }: { sound: ArrivalSound }) {
       window.clearTimeout(transitionTimer.current);
     };
   }, []);
+
+  useEffect(() => {
+    const canvas = effectsCanvas.current;
+    if (!canvas) return;
+    const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let frame = 0;
+    let lastPaint = -Infinity;
+    const notify = () => ambient.listeners.forEach(listener => listener());
+    function tick(time: number) {
+      if (time - lastPaint >= 1000 / 30) {
+        paintArrivalEffects(canvas!, time);
+        notify();
+        lastPaint = time;
+      }
+      frame = window.requestAnimationFrame(tick);
+    }
+    function applyPreference() {
+      window.cancelAnimationFrame(frame);
+      if (preference.matches) {
+        const context = canvas!.getContext('2d');
+        if (context) {
+          context.save();
+          context.setTransform(1, 0, 0, 1, 0, 0);
+          context.clearRect(0, 0, canvas!.width, canvas!.height);
+          context.restore();
+        }
+        notify();
+      } else frame = window.requestAnimationFrame(tick);
+    }
+    applyPreference();
+    preference.addEventListener('change', applyPreference);
+    return () => { window.cancelAnimationFrame(frame); preference.removeEventListener('change', applyPreference); };
+  }, [ambient, imageFailed]);
 
   function enter() {
     if (entering) return;
@@ -62,6 +98,7 @@ export function Arrival({ sound }: { sound: ArrivalSound }) {
     onPointerLeave={event => { touchOrigin.current = null; if (event.pointerType === 'mouse') moveView(0, 0); }}>
     <div className="arrival-landscape" aria-hidden="true">
       <img src="/images/yavin-chegada-v1.png" alt="" draggable={false} onLoad={() => setImageFailed(false)} onError={() => setImageFailed(true)} />
+      {!imageFailed && <canvas ref={effectsCanvas} className="arrival-ambient-effects" width="1024" height="576" />}
     </div>
     <div className="arrival-atmosphere" aria-hidden="true" />
     <div className="arrival-grain" aria-hidden="true" />
@@ -75,7 +112,7 @@ export function Arrival({ sound }: { sound: ArrivalSound }) {
     </div>
     <div className="arrival-pollen" aria-hidden="true">{Array.from({ length: 12 }, (_, index) => <i key={index} style={{ '--seed': index } as CSSProperties} />)}</div>
     <div className="arrival-invitation">
-      <Telescope aim={aim} onAim={setAim} entering={entering} />
+      <Telescope aim={aim} onAim={setAim} entering={entering} ambient={ambient} />
     </div>
     <button className="arrival-enter" type="button" onClick={enter} disabled={entering} aria-label="Entrar em Yavin">{entering ? 'Entrando…' : 'Entrar'} <span aria-hidden="true">↗</span></button>
     <p className="sr-only" role="status">{entering ? 'Entrando no mapa de Yavin.' : sound.error}</p>

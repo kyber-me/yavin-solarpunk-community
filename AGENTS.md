@@ -295,8 +295,12 @@ essência. Paisagem e arte do manifesto são as duas âncoras do guia artístico
 O guia reúne também linguagem por elemento, procedência e propostas de animação;
 ele é suporte de desenvolvimento, fora da base de conhecimento da simulação.
 O Idealizador pediu animações discretas que preservem todos os componentes da
-paisagem aprovada. Manter a imagem estática original; as propostas ainda aguardam
-avaliação e vídeo gerado não garante preservação integral entre quadros.
+paisagem aprovada. Água, pequena cachoeira, luz e reflexos nos vidros são desenhados
+em canvas transparente; o mesmo quadro aparece na lupa e na ocular 3D. A lente
+sugere convexidade sem deformar a imagem observada. O Idealizador aprovou
+visualmente esse conjunto em 08/11. Manter a imagem estática original; animação
+por Higgsfield ficou para uma evolução futura. Vídeo gerado não garante
+preservação integral entre quadros.
 
 O README contém a marca ASCII aprovada pelo Idealizador em 05/11/2026, com
 símbolo solar e o nome YAVIN em sete linhas e até 63 colunas, usando apenas

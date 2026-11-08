@@ -173,13 +173,17 @@ para o método de desenvolvimento agêntico, conforme o registro abaixo.
   `#/visita`, sem controles de chat. Paisagem gerada pela API OpenAI após bloqueio
   de plano no Higgsfield; aprovada pelo Idealizador como direção também para as
   futuras artes do mapa. Referências preservadas no
-  [guia artístico](frontend/sketches/direcao-artistica.md). Visor e relação com a
-  paisagem em refinamento: versão atual com luneta 3D, direção por arraste/toque,
+  [guia artístico](frontend/sketches/direcao-artistica.md). A relação do visor com
+  a paisagem foi aprovada na versão atual: luneta 3D, direção por arraste/toque,
   ampliação e ação de entrada separadas. Texto “O futuro tem lugar”; seleção na
   chegada bloqueada e parallax reduzido em cerca de 20% após avaliação. O mapa é uma prévia visual estática; publicação de
   estado, visibilidade de conversas e autorização de acesso dependem de contratos
   de backend ainda não definidos. Não há implementação de backend autorizada por
-  este protótipo. Performance e mídia serão avaliadas após a direção visual.
+  este protótipo. Água, pequena cachoeira, luz e reflexos nos vidros usam canvas
+  transparente, com o mesmo quadro na cena, lupa e ocular 3D. A lente sugere
+  convexidade sem distorcer a vista. O Idealizador aprovou visualmente o resultado
+  em 08/11; a imagem original foi preservada. Animação por Higgsfield, performance
+  e mídia ficaram para evolução futura.
   [Registro](frontend/sketches/chegada/README.md).
 
 - [ ] **Investigar o desligamento do som da chegada.** Em 08/11/2026, o Idealizador

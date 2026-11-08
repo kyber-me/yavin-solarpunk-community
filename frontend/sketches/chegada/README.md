@@ -2,15 +2,15 @@
 
 **Natureza:** proposta visual e registro de protótipo de frontend, sujeita à avaliação.
 **Data:** 08/11/2026.
-**Estado:** paisagem gerada e aprovada pelo Idealizador como direção artística; interação do visor em refinamento.
+**Estado:** paisagem, cachoeira, reflexos nos vidros e lente convexa aprovados visualmente pelo Idealizador; publicação do estado da visita pendente.
 
 Data: 08/11/2026.
 Questão: criar uma chegada imersiva para visitantes, distinta do atelier do Idealizador.
 Opções consideradas: botão sobre uma paisagem; visor de observação; dispositivo solar; sinalizador.
 Decisão: experimentar o visor de observação, com paisagem ilustrada e ambiência opcional.
 Motivo: o gesto de olhar se relaciona à investigação e à experiência de observar Yavin.
-O que continua aberto: integração do visor à paisagem, trilha definitiva e contratos de publicação do backend.
-Próximo passo: avaliar o refinamento do gesto de entrada e do parallax.
+O que continua aberto: trilha definitiva e contratos de publicação do backend.
+Próximo passo: definir o estado público da visita com o Idealizador em etapa própria.
 
 A [direção artística e as referências](../direcao-artistica.md) estão preservadas
 para a evolução das artes do mapa, conforme solicitado pelo Idealizador.
@@ -32,7 +32,7 @@ para a evolução das artes do mapa, conforme solicitado pelo Idealizador.
   região com texto. O título principal, a marca, o CTA e o controle de som permanecem.
 - A lente frontal foi percebida como bússola; a tentativa de perspectiva em SVG
   também foi rejeitada. A versão atual usa uma luneta 3D local em Three.js, com
-  câmera, iluminação, orientação e sombra reais. Sua aceitação visual permanece aberta.
+  câmera, iluminação, orientação e sombra reais. O conjunto visual atual foi aprovado.
 - Arraste a luneta ou use as setas para direcionar; Home retorna à estação.
   Tocar em uma parte da paisagem também aponta para ela, considerando o recorte
   e a transformação da imagem. A ampliação varia entre 2× e 6×. A ocular e a
@@ -46,6 +46,12 @@ para a evolução das artes do mapa, conforme solicitado pelo Idealizador.
 - Parallax com até 34 px horizontais e 22 px verticais, resposta de 0,4 s e
   arraste por toque. A sensibilidade foi reduzida em cerca de 20% após avaliação
   do Idealizador. O fundo continua sendo a imagem aprovada, sem alteração do asset.
+- Cachoeira discreta, reflexos na água, passagem de luz pelos vidros do telhado e
+  variação suave de luz são desenhados em canvas transparente sobre a paisagem.
+  O mesmo quadro alimenta a lupa e a ocular 3D em tempo real. A lente recebeu
+  brilho, borda e sombreamento para sugerir uma superfície convexa, sem deformar
+  a imagem observada. O Idealizador aprovou visualmente o resultado em 08/11.
+  O PNG estático permanece intacto; movimento reduzido oculta os efeitos.
 - Seleção e arraste nativo bloqueados apenas na chegada, evitando que o gesto
   selecione título e controles. A leitura do manifesto permanece selecionável.
 - Rodapé branco e seus textos removidos da visita a pedido do Idealizador;
@@ -109,6 +115,9 @@ panorâmica e área sombreada para o título.
   contexto suspenso pelo navegador até o primeiro gesto, reprodução iniciada nesse
   gesto, mesmo contexto mantido ao entrar no mapa; silenciar encerra o contexto e
   permanece ao voltar ao mirante. Reativação e encerramento no atelier conferidos.
+- Efeitos de água e luz conferidos na chegada e na lente; movimento reduzido
+  limpa a camada animada. Hash SHA-256 do original conferido antes e depois,
+  sem mudança.
 
 Performance, formatos e tamanhos de mídia serão avaliados depois da direção visual,
 conforme solicitado pelo Idealizador. Three.js e seus tipos foram adicionados ao

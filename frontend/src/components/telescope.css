@@ -3,9 +3,11 @@
 .telescope-object { position: absolute; inset: 0; pointer-events: none; }
 .telescope-object canvas { display: block; width: 100%; height: 100%; }
 .telescope-unavailable { display: block; margin: 100px 30px 0; font-size: 11px; line-height: 1.6; }
-.telescope-observation { position: absolute; top: -45px; left: -55px; width: 170px; height: 170px; overflow: hidden; border-radius: 50%; background: #173c30; border: 2px solid #d1bd8a; box-shadow: 0 10px 45px #08291c77; pointer-events: none; opacity: 0; transform: scale(.9); transition: opacity .3s,transform .3s; }
-.telescope-observation img { position: absolute; top: 50%; left: 50%; max-width: none; }
-.telescope-observation>span { position: absolute; inset: 0; border-radius: 50%; box-shadow: inset 0 0 20px 8px #0b322bb3,inset 0 0 0 5px #0c322a66; background: linear-gradient(120deg,transparent 15%,#ffebae25 22%,transparent 40%); }
+.telescope-observation { position: absolute; top: -45px; left: -55px; width: 170px; height: 170px; overflow: hidden; border-radius: 50%; background: #173c30; border: 2px solid #d1bd8a; box-shadow: 0 10px 45px #08291c77,0 2px 5px #0b2b21aa; pointer-events: none; opacity: 0; transform: scale(.9); transition: opacity .3s,transform .3s; }
+.telescope-observation img,.telescope-observation-effects { position: absolute; top: 50%; left: 50%; max-width: none; }
+.telescope-observation>span { position: absolute; inset: 0; border-radius: 50%; box-shadow: inset 0 1px 4px #fffbe8b3,inset 0 -4px 8px #0a2c29a6,inset 0 0 0 5px #0c322a55,inset 0 0 23px 7px #0b322b99; background: radial-gradient(ellipse at 30% 17%,#fffef185,transparent 19%),radial-gradient(ellipse at 50% 43%,transparent 43%,#d2e6ce1a 71%,#153e3380 100%),linear-gradient(135deg,#fffde52e,transparent 33%,transparent 70%,#b9d6c521); }
+.telescope-observation>span::before { content: ''; position: absolute; top: 7%; left: 13%; width: 35%; height: 13%; border-radius: 50%; transform: rotate(-36deg); background: linear-gradient(90deg,transparent,#fffef0b8 45%,#fffde255 75%,transparent); filter: blur(1px); }
+.telescope-observation>span::after { content: ''; position: absolute; right: 10%; bottom: 14%; width: 17%; height: 8%; border-radius: 50%; transform: rotate(-42deg); background: #d8ecea45; filter: blur(2px); }
 .telescope:hover .telescope-observation,.telescope:focus-within .telescope-observation,.telescope.is-aiming .telescope-observation { opacity: 1; transform: scale(1); }
 .telescope-aim:focus-visible { outline: 1px solid #edce8c; outline-offset: -20px; }
 .telescope.is-aiming .telescope-aim { cursor: grabbing; }
@@ -15,3 +17,4 @@
 .telescope-zoom button:hover { background: #fff0c820; }.telescope-zoom button:disabled { opacity: .35; }
 .telescope-zoom output { min-width: 33px; text-align: center; font: 10px var(--mono); }
 @media(max-width:500px) { .telescope { width: 340px; }.telescope-actions { gap: 10px; }.telescope-observation { top: -65px; left: 50px; width: 145px; height: 145px; } }
+@media(prefers-reduced-motion:reduce) { .telescope-observation-effects { display: none; } }
