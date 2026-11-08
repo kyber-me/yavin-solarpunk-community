@@ -62,7 +62,7 @@ Na raiz, abra um terminal e execute somente quando desejar iniciar a API:
 ```sh
 cd backend
 uv sync --frozen
-uv run python main.py
+uv run python agent_state.py
 ```
 
 Para testes sem banco externo, a partir de `backend/`:

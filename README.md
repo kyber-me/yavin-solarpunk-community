@@ -147,7 +147,7 @@ A partir da raiz do repositório:
 ```sh
 cd backend
 uv sync
-uv run python main.py
+uv run python agent_state.py
 ```
 
 A API atende em `http://127.0.0.1:8000`; a documentação dos endpoints fica em `/docs`.
@@ -173,4 +173,4 @@ os controles do mapa e os detalhes da interface estão no
   reconstrução editorial dos argumentos que deram origem ao projeto.
 - [Referências culturais](./backend/src/agents/base_knowledge/manifestos/): estudos que
   alimentam a orientação solarpunk.
-- [Backlog](./BACKLOG.md): andamento do desenvolvimento e próximos passos.
+- [Backlog no Notion](https://app.notion.com/p/b1b5fc362a94481cbe25b45786fc7769): andamento do desenvolvimento e próximos passos.

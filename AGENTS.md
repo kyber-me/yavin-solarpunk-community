@@ -7,19 +7,31 @@ dos agentes da simulação.
 ## Retomada atual — 08/11/2026
 
 **Natureza:** orientação operacional de desenvolvimento.
-Leia [o ponto de retomada atual](dev/retomada-2026-11-08.md) e o backlog antes de
-propor a próxima implementação. O registro de 07/11 é histórico. Backend já está
-em `backend/`; a prioridade atual é o harness, não a orquestração de Silas.
+Leia [o ponto de retomada atual](dev/retomada-2026-11-08.md) e consulte as tarefas
+relevantes do backlog no Notion antes de propor implementação. O registro de 07/11
+é histórico. Backend já está em `backend/`; a prioridade atual é o harness,
+não a orquestração de Silas.
 As quatro skills e seus schemas são protocolos disponíveis, ainda sem execução
 completa de um ciclo contemporâneo do início ao relatório final. Não inventar
 registros faltantes, aprovações ou estados anteriores. Commits não autorizam
 novas alterações do backend nem iniciam serviços.
 
-**Árvore de trabalho em andamento:** em 08/11 há uma reorganização local do
-backend parcialmente no índice e parcialmente fora dele, ainda sem commit nem
-validação contemporânea. O inventário, as divergências observadas e os commits
-pendentes estão no [ponto de retomada](dev/retomada-2026-11-08.md). Consulte
-`git status` novamente antes de agir; preserve índice e alterações do Idealizador.
+**Árvore de trabalho em andamento:** a reorganização local do backend foi
+registrada como WIP em `f66f273`, sem corrigir as divergências conhecidas.
+`compileall` passou, mas `import main` falhou com `ModuleNotFoundError: services`.
+O inventário anterior e os limites de validação estão no
+[ponto de retomada](dev/retomada-2026-11-08.md). Consulte `git status`
+novamente antes de agir; preserve o índice e as alterações do Idealizador.
+
+**Backlog e base documental no Notion:** o
+[backlog](https://app.notion.com/p/b1b5fc362a94481cbe25b45786fc7769) é a fonte
+ativa das tarefas. O retrato anterior está arquivado em
+[`dev/BACKLOG-2026-11-08.md`](dev/BACKLOG-2026-11-08.md). A
+[Base de Conhecimento](https://app.notion.com/p/412778d5150b81d0af8dc57187aa8e52)
+contém cópias conferidas dos cinco documentos de `backend/src/agents/base_knowledge/`;
+os originais continuam no Git. O acesso de Silas ao Notion não foi implementado
+nem autorizado por essa transferência. A seleção para uso pelo agente permanece
+separada da catalogação documental. Ver detalhes e limites no ponto de retomada.
 
 ## Prioridade atual — método de desenvolvimento agêntico, 08/11/2026
 
@@ -88,8 +100,8 @@ de estados e interface continuam como incrementos posteriores.
 O projeto Python está em `backend/`: código, testes, `main.py`, `pyproject.toml`,
 `uv.lock`, `.python-version`, `langgraph.json`, `.env` local e estado `.langgraph_api/`.
 Execute comandos Python/uv a partir de `backend/`; o ambiente ativo é `backend/.venv/`.
-Os imports continuam `src.*`, relativos à pasta do backend. Frontend, instruções,
-backlog e documentação de desenvolvimento permanecem na raiz.
+Os imports continuam `src.*`, relativos à pasta do backend. Frontend, instruções
+e documentação de desenvolvimento permanecem na raiz; o backlog ativo está no Notion.
 Leia [a migração e suas verificações](dev/migracao-backend-2026-11-08.md) junto
 ao registro histórico abaixo; comandos e caminhos antigos devem ser interpretados
 conforme essa mudança. Não reaplicar migrações de banco.
@@ -105,7 +117,7 @@ encerrados a pedido do Idealizador, portas 8000/5173 livres. Não reiniciá-los 
 simplesmente retomar contexto. O Idealizador quer focar em lógica de orquestração;
 primeiro discutir o menor incremento. Autorizações de implementação anteriores
 foram pontuais e consumidas: não existe autorização permanente ou etapa já aprovada
-para implementar na próxima sessão. O backlog conserva pendências no topo.
+para implementar na próxima sessão. A ordem das pendências neste registro é histórica.
 
 ## Contexto
 
@@ -149,7 +161,7 @@ foram recuperados de cópias e registros locais. A proveniência está em
 `backend/src/agents/prompts/IDENTIDADE_ID_SILAS.md`.
 
 1. [`README.md`](./README.md) — apresentação pública, orientação da pesquisa e síntese técnica.
-2. [`BACKLOG.md`](./BACKLOG.md) — prioridades, pendências e critérios de conclusão.
+2. [Backlog de Yavin no Notion](https://app.notion.com/p/b1b5fc362a94481cbe25b45786fc7769) — pendências, prioridades e critérios; consultar por demanda. [`dev/BACKLOG-2026-11-08.md`](./dev/BACKLOG-2026-11-08.md) preserva o histórico e o retrato anterior à migração, sem sincronização automática.
 3. [`backend/src/agents/base_knowledge/atas/ATA_001_Fundacao_de_Yavin.md`](./backend/src/agents/base_knowledge/atas/ATA_001_Fundacao_de_Yavin.md) —
    conclusões e questões abertas da fundação.
 4. [`backend/src/agents/base_knowledge/transcriptions/CONVERSA_001_A_Fundacao_de_Yavin.md`](./backend/src/agents/base_knowledge/transcriptions/CONVERSA_001_A_Fundacao_de_Yavin.md) —
@@ -357,7 +369,7 @@ backend/src/agents/prompts/IDENTIDADE_ID_SILAS.md
 ```
 
 `backend/src/agents/base_knowledge/` é reservado à documentação da comunidade simulada. Este `AGENTS.md`,
-`README.md` e `BACKLOG.md` são suporte ao desenvolvimento e não devem ser incluídos
+`README.md` e o backlog são suporte ao desenvolvimento e não devem ser incluídos
 automaticamente no contexto dos agentes da simulação.
 
 O `backend/main.py` é um entrypoint provisório da API e ainda não representa uma
@@ -382,7 +394,7 @@ implementados pelo assistente sob autorização específica. O Idealizador conec
 lifespan e iniciou a integração dos serviços e rotas. `GET /agents` retorna apenas
 Silas com o identificador estável provisório `silas`; GET e POST são permitidos no
 CORS para as duas origens locais. Listagem e criação usam o catálogo mínimo de
-`backend/src/services/agent_catalog.py`; participante indisponível é rejeitado com `422`
+`backend/src/services/agent_catalog_service.py`; participante indisponível é rejeitado com `422`
 antes de acessar o repositório. O fluxo HTTP passou com PostgreSQL e checkpoints
 reais em banco descartável e modelo simulado, incluindo retomada e isolamento.
 O schema inicial já foi aplicado ao banco do projeto, preservando os 15 checkpoints
@@ -407,7 +419,7 @@ As consultas são `GET /conversations` por `sender_id` e
 
 **Incremento de mensagens autorizado em 07/11/2026:** camada simples entregue com
 `Message` Pydantic (no DTO atual), `MessageRecord`, adaptador em
-`backend/src/services/message_mapper.py` e repositório síncrono. Reutiliza o pool de
+`backend/src/services/helpers/message_mapper.py` e repositório síncrono. Reutiliza o pool de
 conversas com row factory por cursor. O serviço já grava entrada e resposta com
 autoria, UTC e verificação de participação e atividade. O fluxo passou com grafo
 simulado e com dois turnos reais. A migração inicial foi aplicada ao banco do projeto. Guia e limites em `backend/src/infra/db/relational/MESSAGES.md`.
@@ -427,7 +439,8 @@ O README da raiz é a entrada pública do projeto: propósito, orientação sola
 método de pesquisa, capacidades atuais e síntese técnica. Instruções de retomada,
 fronteiras de responsabilidade, particularidades de carregamento e recuperação de
 arquivos pertencem a este `AGENTS.md` e aos registros de desenvolvimento citados.
-Prioridades e critérios de conclusão pertencem ao `BACKLOG.md`. Detalhes da interface,
+Prioridades e critérios de conclusão ativos pertencem ao backlog no Notion; `dev/BACKLOG-2026-11-08.md`
+preserva o retrato e histórico anteriores à migração. Detalhes da interface,
 controles e estudos visuais pertencem ao `frontend/README.md` e a
 `frontend/sketches/`. O histórico de tentativas rejeitadas continua nos registros
 visuais, sem ocupar a apresentação pública. Não é necessário um README interno
@@ -437,11 +450,12 @@ adicional; estes documentos já cobrem as respectivas responsabilidades.
 
 Antes de implementar:
 
-1. leia este arquivo, `dev/retomada-2026-11-07.md`, o README e o backlog;
+1. leia este arquivo, o ponto de retomada atual e o README; consulte no Notion apenas as tarefas relevantes;
 2. confira os documentos de fundação relacionados à tarefa;
 3. identifique a menor decisão ou mudança necessária;
 4. preserve o escopo e valide a alteração;
-5. atualize o backlog quando uma tarefa for concluída ou seu estado mudar.
+5. atualize o backlog no Notion quando uma tarefa for concluída ou seu estado mudar;
+   se o Notion estiver indisponível, informe que a atualização está pendente.
 
 Ao registrar uma nova decisão, use:
 
