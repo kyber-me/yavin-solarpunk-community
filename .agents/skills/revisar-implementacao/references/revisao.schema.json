@@ -1,0 +1,888 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Revisão de implementação — v1 histórica ou v2 vinculada à entrega",
+  "oneOf": [
+    {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Revisão independente de implementação no backend",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "task_id",
+        "rodada",
+        "registrado_em",
+        "classificacao_ref",
+        "planejamento_ref",
+        "evidencias_execucao",
+        "revisor",
+        "snapshot",
+        "escopo",
+        "criterios",
+        "achados",
+        "verificacoes",
+        "recomendacao",
+        "justificativa",
+        "observacoes"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "task_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rodada": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "registrado_em": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "classificacao_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "planejamento_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidencias_execucao": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "revisor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "agente_id",
+            "modelo",
+            "contexto",
+            "observacoes"
+          ],
+          "properties": {
+            "agente_id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "modelo": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "contexto": {
+              "enum": [
+                "novo",
+                "herdado",
+                "nao_verificado"
+              ]
+            },
+            "observacoes": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "snapshot": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "revisao_git",
+            "arquivos",
+            "alteracoes_durante_revisao"
+          ],
+          "properties": {
+            "revisao_git": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "arquivos": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "arquivo",
+                  "sha256"
+                ],
+                "properties": {
+                  "arquivo": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                }
+              }
+            },
+            "alteracoes_durante_revisao": {
+              "type": "boolean"
+            }
+          }
+        },
+        "escopo": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "arquivos_revisados",
+            "fora_do_escopo",
+            "limitacoes"
+          ],
+          "properties": {
+            "arquivos_revisados": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 1
+            },
+            "fora_do_escopo": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "limitacoes": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "criterios": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "estado",
+              "evidencia"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "estado": {
+                "enum": [
+                  "atendido",
+                  "nao_atendido",
+                  "nao_verificado"
+                ]
+              },
+              "evidencia": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "achados": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "titulo",
+              "categoria",
+              "gravidade",
+              "bloqueante",
+              "origem",
+              "local",
+              "problema",
+              "causa",
+              "consequencia",
+              "evidencia",
+              "correcao_minima",
+              "criterios_relacionados",
+              "referencias"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "titulo": {
+                "type": "string",
+                "minLength": 1
+              },
+              "categoria": {
+                "enum": [
+                  "funcional",
+                  "manutencao",
+                  "desempenho",
+                  "refatoracao",
+                  "estilo"
+                ]
+              },
+              "gravidade": {
+                "enum": [
+                  "critica",
+                  "alta",
+                  "media",
+                  "baixa"
+                ]
+              },
+              "bloqueante": {
+                "type": "boolean"
+              },
+              "origem": {
+                "enum": [
+                  "introduzido",
+                  "preexistente",
+                  "nao_determinado"
+                ]
+              },
+              "local": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "arquivo",
+                  "linha",
+                  "simbolo"
+                ],
+                "properties": {
+                  "arquivo": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "linha": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 1
+                  },
+                  "simbolo": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              },
+              "problema": {
+                "type": "string",
+                "minLength": 1
+              },
+              "causa": {
+                "type": "string",
+                "minLength": 1
+              },
+              "consequencia": {
+                "type": "string",
+                "minLength": 1
+              },
+              "evidencia": {
+                "type": "string",
+                "minLength": 1
+              },
+              "correcao_minima": {
+                "type": "string",
+                "minLength": 1
+              },
+              "criterios_relacionados": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "referencias": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        },
+        "verificacoes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "descricao",
+              "comando",
+              "estado",
+              "origem",
+              "evidencia"
+            ],
+            "properties": {
+              "descricao": {
+                "type": "string",
+                "minLength": 1
+              },
+              "comando": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "estado": {
+                "enum": [
+                  "aprovada",
+                  "falhou",
+                  "nao_executada"
+                ]
+              },
+              "origem": {
+                "enum": [
+                  "revisor",
+                  "implementador"
+                ]
+              },
+              "evidencia": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "recomendacao": {
+          "enum": [
+            "aprovar",
+            "solicitar_correcoes",
+            "inconclusiva"
+          ]
+        },
+        "justificativa": {
+          "type": "string",
+          "minLength": 1
+        },
+        "observacoes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "recomendacao": {
+                "const": "aprovar"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "revisor": {
+                "properties": {
+                  "contexto": {
+                    "const": "novo"
+                  }
+                }
+              },
+              "snapshot": {
+                "properties": {
+                  "alteracoes_durante_revisao": {
+                    "const": false
+                  }
+                }
+              },
+              "criterios": {
+                "items": {
+                  "properties": {
+                    "estado": {
+                      "const": "atendido"
+                    }
+                  }
+                }
+              },
+              "achados": {
+                "items": {
+                  "properties": {
+                    "bloqueante": {
+                      "const": false
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Revisão independente de implementação no backend",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "task_id",
+        "rodada",
+        "registrado_em",
+        "classificacao_ref",
+        "planejamento_ref",
+        "evidencias_execucao",
+        "revisor",
+        "snapshot",
+        "escopo",
+        "criterios",
+        "achados",
+        "verificacoes",
+        "recomendacao",
+        "justificativa",
+        "observacoes",
+        "implementation_id",
+        "review_id",
+        "parent_implementation_id"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": 2
+        },
+        "task_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rodada": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "registrado_em": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "classificacao_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "planejamento_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidencias_execucao": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "revisor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "agente_id",
+            "modelo",
+            "contexto",
+            "observacoes"
+          ],
+          "properties": {
+            "agente_id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "modelo": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "contexto": {
+              "enum": [
+                "novo",
+                "herdado",
+                "nao_verificado"
+              ]
+            },
+            "observacoes": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "snapshot": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "revisao_git",
+            "arquivos",
+            "alteracoes_durante_revisao"
+          ],
+          "properties": {
+            "revisao_git": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "arquivos": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "arquivo",
+                  "sha256"
+                ],
+                "properties": {
+                  "arquivo": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                }
+              }
+            },
+            "alteracoes_durante_revisao": {
+              "type": "boolean"
+            }
+          }
+        },
+        "escopo": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "arquivos_revisados",
+            "fora_do_escopo",
+            "limitacoes"
+          ],
+          "properties": {
+            "arquivos_revisados": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 1
+            },
+            "fora_do_escopo": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "limitacoes": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "criterios": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "estado",
+              "evidencia"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "estado": {
+                "enum": [
+                  "atendido",
+                  "nao_atendido",
+                  "nao_verificado"
+                ]
+              },
+              "evidencia": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "achados": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "titulo",
+              "categoria",
+              "gravidade",
+              "bloqueante",
+              "origem",
+              "local",
+              "problema",
+              "causa",
+              "consequencia",
+              "evidencia",
+              "correcao_minima",
+              "criterios_relacionados",
+              "referencias"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "titulo": {
+                "type": "string",
+                "minLength": 1
+              },
+              "categoria": {
+                "enum": [
+                  "funcional",
+                  "manutencao",
+                  "desempenho",
+                  "refatoracao",
+                  "estilo"
+                ]
+              },
+              "gravidade": {
+                "enum": [
+                  "critica",
+                  "alta",
+                  "media",
+                  "baixa"
+                ]
+              },
+              "bloqueante": {
+                "type": "boolean"
+              },
+              "origem": {
+                "enum": [
+                  "introduzido",
+                  "preexistente",
+                  "nao_determinado"
+                ]
+              },
+              "local": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "arquivo",
+                  "linha",
+                  "simbolo"
+                ],
+                "properties": {
+                  "arquivo": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "linha": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 1
+                  },
+                  "simbolo": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              },
+              "problema": {
+                "type": "string",
+                "minLength": 1
+              },
+              "causa": {
+                "type": "string",
+                "minLength": 1
+              },
+              "consequencia": {
+                "type": "string",
+                "minLength": 1
+              },
+              "evidencia": {
+                "type": "string",
+                "minLength": 1
+              },
+              "correcao_minima": {
+                "type": "string",
+                "minLength": 1
+              },
+              "criterios_relacionados": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "referencias": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        },
+        "verificacoes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "descricao",
+              "comando",
+              "estado",
+              "origem",
+              "evidencia"
+            ],
+            "properties": {
+              "descricao": {
+                "type": "string",
+                "minLength": 1
+              },
+              "comando": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "estado": {
+                "enum": [
+                  "aprovada",
+                  "falhou",
+                  "nao_executada"
+                ]
+              },
+              "origem": {
+                "enum": [
+                  "revisor",
+                  "implementador"
+                ]
+              },
+              "evidencia": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "recomendacao": {
+          "enum": [
+            "aprovar",
+            "solicitar_correcoes",
+            "inconclusiva"
+          ]
+        },
+        "justificativa": {
+          "type": "string",
+          "minLength": 1
+        },
+        "observacoes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "implementation_id": {
+          "type": "string",
+          "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$"
+        },
+        "review_id": {
+          "type": "string",
+          "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$"
+        },
+        "parent_implementation_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "recomendacao": {
+                "const": "aprovar"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "revisor": {
+                "properties": {
+                  "contexto": {
+                    "const": "novo"
+                  }
+                }
+              },
+              "snapshot": {
+                "properties": {
+                  "alteracoes_durante_revisao": {
+                    "const": false
+                  }
+                }
+              },
+              "criterios": {
+                "items": {
+                  "properties": {
+                    "estado": {
+                      "const": "atendido"
+                    }
+                  }
+                }
+              },
+              "achados": {
+                "items": {
+                  "properties": {
+                    "bloqueante": {
+                      "const": false
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

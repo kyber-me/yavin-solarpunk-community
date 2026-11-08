@@ -1,0 +1,540 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Relatório final de implementação aprovada",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "report_id",
+    "task_id",
+    "implementation_id",
+    "review_id",
+    "gerado_em",
+    "titulo",
+    "resumo",
+    "status_tecnico",
+    "revisao_humana",
+    "referencias",
+    "snapshot",
+    "arquivos_alterados",
+    "fases",
+    "criterios",
+    "validacoes",
+    "anotacoes",
+    "fluxo",
+    "observacoes"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "report_id": {
+      "$ref": "#/$defs/ulid"
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "implementation_id": {
+      "$ref": "#/$defs/ulid"
+    },
+    "review_id": {
+      "$ref": "#/$defs/ulid"
+    },
+    "gerado_em": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "titulo": {
+      "type": "string",
+      "minLength": 1
+    },
+    "resumo": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status_tecnico": {
+      "const": "aprovado"
+    },
+    "revisao_humana": {
+      "const": "pendente"
+    },
+    "referencias": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "classificacao",
+        "planejamento",
+        "revisao",
+        "loop",
+        "evidencias_execucao"
+      ],
+      "properties": {
+        "classificacao": {
+          "type": "string",
+          "minLength": 1
+        },
+        "planejamento": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revisao": {
+          "type": "string",
+          "minLength": 1
+        },
+        "loop": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidencias_execucao": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        }
+      }
+    },
+    "snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "revisao_git",
+        "arquivos"
+      ],
+      "properties": {
+        "revisao_git": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "arquivos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "arquivo",
+              "sha256"
+            ],
+            "properties": {
+              "arquivo": {
+                "type": "string",
+                "minLength": 1
+              },
+              "sha256": {
+                "$ref": "#/$defs/hash"
+              }
+            }
+          },
+          "minItems": 1
+        }
+      }
+    },
+    "arquivos_alterados": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "caminho",
+          "caminho_anterior",
+          "tipo",
+          "resumo",
+          "fases",
+          "evidencias",
+          "diff_ref"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "caminho": {
+            "type": "string",
+            "minLength": 1
+          },
+          "caminho_anterior": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "tipo": {
+            "enum": [
+              "adicionado",
+              "modificado",
+              "removido",
+              "renomeado"
+            ]
+          },
+          "resumo": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fases": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1
+          },
+          "evidencias": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1
+          },
+          "diff_ref": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "minItems": 1
+    },
+    "fases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "titulo",
+          "resumo_executado",
+          "tarefas",
+          "arquivos",
+          "evidencias"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "titulo": {
+            "type": "string",
+            "minLength": 1
+          },
+          "resumo_executado": {
+            "type": "string",
+            "minLength": 1
+          },
+          "tarefas": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1
+          },
+          "arquivos": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1
+          },
+          "evidencias": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1
+          }
+        }
+      },
+      "minItems": 1
+    },
+    "criterios": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "estado",
+          "evidencia"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "estado": {
+            "const": "atendido"
+          },
+          "evidencia": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "minItems": 1
+    },
+    "validacoes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "descricao",
+          "estado",
+          "origem",
+          "evidencia"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "descricao": {
+            "type": "string",
+            "minLength": 1
+          },
+          "estado": {
+            "enum": [
+              "aprovada",
+              "falhou",
+              "nao_executada"
+            ]
+          },
+          "origem": {
+            "enum": [
+              "revisor",
+              "executor"
+            ]
+          },
+          "evidencia": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "anotacoes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "tipo",
+          "texto",
+          "arquivos",
+          "evidencias"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "tipo": {
+            "enum": [
+              "explicacao",
+              "limitacao",
+              "pendencia",
+              "sugestao"
+            ]
+          },
+          "texto": {
+            "type": "string",
+            "minLength": 1
+          },
+          "arquivos": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "evidencias": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "fluxo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "disponivel",
+        "motivo",
+        "nos",
+        "arestas"
+      ],
+      "properties": {
+        "disponivel": {
+          "type": "boolean"
+        },
+        "motivo": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "nos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "rotulo",
+              "arquivo",
+              "simbolo"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "rotulo": {
+                "type": "string",
+                "minLength": 1
+              },
+              "arquivo": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "simbolo": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        },
+        "arestas": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "origem",
+              "destino",
+              "relacao",
+              "evidencias"
+            ],
+            "properties": {
+              "origem": {
+                "type": "string",
+                "minLength": 1
+              },
+              "destino": {
+                "type": "string",
+                "minLength": 1
+              },
+              "relacao": {
+                "type": "string",
+                "minLength": 1
+              },
+              "evidencias": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "minItems": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "observacoes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "$defs": {
+    "ulid": {
+      "type": "string",
+      "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$"
+    },
+    "hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "fluxo": {
+            "properties": {
+              "disponivel": {
+                "const": false
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "fluxo": {
+            "properties": {
+              "motivo": {
+                "type": "string",
+                "minLength": 1
+              },
+              "nos": {
+                "maxItems": 0
+              },
+              "arestas": {
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "fluxo": {
+            "properties": {
+              "disponivel": {
+                "const": true
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "fluxo": {
+            "properties": {
+              "nos": {
+                "minItems": 1
+              },
+              "arestas": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

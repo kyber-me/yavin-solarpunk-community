@@ -1,0 +1,256 @@
+{
+  "schema_version": 1,
+  "task_id": "005655-migracao-backend",
+  "registrado_em": "2026-11-08T01:06:00.998408-03:00",
+  "planejado_em": null,
+  "origem_registro": "retrospectiva",
+  "classificacao_ref": "classificacao.json",
+  "nivel": 3,
+  "tipo_planejamento": "decomposto",
+  "modo_plan": {
+    "estado": "nao_utilizado",
+    "justificativa": "Nesta sessão o agente apresentou uma sequência em mensagens; o modo Plan não foi formalmente ativado."
+  },
+  "objetivo": "Isolar o projeto Python em backend/ preservando contratos HTTP, dados locais e comportamento existente.",
+  "escopo": {
+    "inclui": [
+      "Mover código, testes e configuração Python para backend/.",
+      "Mover .env e estado local do LangGraph sem expor seu conteúdo.",
+      "Recriar ambiente pelo lock, ajustar caminhos ativos e regenerar grafo."
+    ],
+    "exclui": [
+      "Alterar contratos HTTP ou lógica de negócio.",
+      "Aplicar migrações de banco, chamar modelos ou iniciar serviços.",
+      "Corrigir testes legados, vida útil da factory ou redesenhar arquitetura.",
+      "Reescrever o index Git ou descartar alterações locais."
+    ]
+  },
+  "criterios_aceitacao": [
+    {
+      "id": "C1",
+      "descricao": "Árvore Python isolada em backend/ com arquivos locais preservados.",
+      "verificacao": "Comparar existência e hashes com snapshot anterior, justificando ajustes de caminhos."
+    },
+    {
+      "id": "C2",
+      "descricao": "Imports, configuração, contexto e ambiente funcionam a partir de backend/.",
+      "verificacao": "Sincronização frozen, inspeção da factory e imports com recursos externos bloqueados."
+    },
+    {
+      "id": "C3",
+      "descricao": "Contrato HTTP permanece idêntico.",
+      "verificacao": "Comparação integral do OpenAPI antes/depois sem lifespan."
+    },
+    {
+      "id": "C4",
+      "descricao": "A bateria sem banco não apresenta regressões em relação à linha de base.",
+      "verificacao": "Comparar testes aprovados, ignorados e falhas anteriores/posteriores."
+    },
+    {
+      "id": "C5",
+      "descricao": "Referências ativas e grafo refletem a nova raiz do backend.",
+      "verificacao": "Verificar links, manifest de 36 fontes, endpoints das relações e consulta de ChatService."
+    }
+  ],
+  "fases": [
+    {
+      "id": "F1",
+      "titulo": "Mapeamento e linha de base",
+      "objetivo": "Identificar o alcance e estabelecer evidências anteriores à movimentação.",
+      "depende_de": [],
+      "tarefas": [
+        {
+          "id": "T1",
+          "descricao": "Investigar dependências, raízes e comandos existentes.",
+          "arquivos": [
+            "src/",
+            "tests/",
+            "main.py",
+            "langgraph.json",
+            "dev/graphs/backend/graph.json"
+          ],
+          "criterios_aceitacao": [
+            "C1",
+            "C2"
+          ],
+          "validacoes": [
+            "Consultar Agent no Graphify e comparar relações ao código.",
+            "Conferir hashes do grafo e caminhos relativos a __file__."
+          ]
+        },
+        {
+          "id": "T2",
+          "descricao": "Capturar snapshot de arquivos, contrato e testes sem recursos externos.",
+          "arquivos": [
+            "src/",
+            "tests/",
+            "main.py",
+            ".env",
+            "uv.lock",
+            ".langgraph_api/"
+          ],
+          "criterios_aceitacao": [
+            "C1",
+            "C3",
+            "C4"
+          ],
+          "validacoes": [
+            "Capturar hashes sem registrar conteúdo sensível.",
+            "Obter OpenAPI sem lifespan e executar bateria sem URI de banco."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F2",
+      "titulo": "Movimentação e ambiente",
+      "objetivo": "Separar o projeto Python preservando estado e dependências.",
+      "depende_de": [
+        "F1"
+      ],
+      "tarefas": [
+        {
+          "id": "T3",
+          "descricao": "Mover árvore Python, configurações e estado local.",
+          "arquivos": [
+            "backend/src/",
+            "backend/tests/",
+            "backend/main.py",
+            "backend/pyproject.toml",
+            "backend/uv.lock",
+            "backend/langgraph.json",
+            "backend/.python-version",
+            "backend/.env",
+            "backend/.langgraph_api/"
+          ],
+          "criterios_aceitacao": [
+            "C1"
+          ],
+          "validacoes": [
+            "Conferir cada arquivo de origem no destino e comparar conteúdo ao snapshot."
+          ]
+        },
+        {
+          "id": "T4",
+          "descricao": "Recriar ambiente do backend com o lock existente.",
+          "arquivos": [
+            "backend/.venv/",
+            "backend/uv.lock"
+          ],
+          "criterios_aceitacao": [
+            "C1",
+            "C2"
+          ],
+          "validacoes": [
+            "Executar uv sync --frozen com o Python existente.",
+            "Conferir hash do lock; preservar ambiente legado."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F3",
+      "titulo": "Ajustes e validação",
+      "objetivo": "Alinhar caminhos e verificar que a mudança de localização preserva o contrato.",
+      "depende_de": [
+        "F2"
+      ],
+      "tarefas": [
+        {
+          "id": "T5",
+          "descricao": "Ajustar dotenv, README do projeto Python, import experimental e caminho da factory.",
+          "arquivos": [
+            "backend/main.py",
+            "backend/pyproject.toml",
+            "backend/langgraph.json",
+            "backend/src/main.py",
+            "backend/src/services/chat_service.py"
+          ],
+          "criterios_aceitacao": [
+            "C2"
+          ],
+          "validacoes": [
+            "Validar sintaxe sem executar o entrypoint experimental.",
+            "Conferir raízes, identidade e documentos; importar API/factory bloqueando recursos externos."
+          ]
+        },
+        {
+          "id": "T6",
+          "descricao": "Comparar contrato e bateria de regressão com a linha de base.",
+          "arquivos": [
+            "backend/main.py",
+            "backend/tests/"
+          ],
+          "criterios_aceitacao": [
+            "C3",
+            "C4"
+          ],
+          "validacoes": [
+            "Comparar OpenAPI integralmente.",
+            "Executar unittest sem banco e distinguir a falha legada de novas regressões."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F4",
+      "titulo": "Documentação e grafo",
+      "objetivo": "Disponibilizar comandos e referências coerentes com o monorepo.",
+      "depende_de": [
+        "F3"
+      ],
+      "tarefas": [
+        {
+          "id": "T7",
+          "descricao": "Atualizar guias ativos e avisar que os registros antigos usam caminhos históricos.",
+          "arquivos": [
+            "README.md",
+            "AGENTS.md",
+            "BACKLOG.md",
+            "frontend/README.md",
+            "backend/src/infra/db/relational/README.md",
+            "backend/src/infra/db/relational/MESSAGES.md",
+            "dev/principal_commands.txt",
+            "dev/retomada-2026-11-07.md",
+            "dev/migracao-backend-2026-11-08.md",
+            ".gitignore"
+          ],
+          "criterios_aceitacao": [
+            "C1",
+            "C2",
+            "C5"
+          ],
+          "validacoes": [
+            "Conferir links ativos, comandos relativos a backend/ e exclusão de .env/estado local do Git."
+          ]
+        },
+        {
+          "id": "T8",
+          "descricao": "Regenerar o grafo estrutural e sua proveniência.",
+          "arquivos": [
+            "dev/graphs/backend/",
+            "dev/graphs/README.md"
+          ],
+          "criterios_aceitacao": [
+            "C5"
+          ],
+          "validacoes": [
+            "Extrair apenas código/schema, sem modelo, e agrupar sem nomeação por LLM.",
+            "Conferir manifest, relações, consulta de ChatService e hashes atuais."
+          ]
+        }
+      ]
+    }
+  ],
+  "incertezas": [
+    "O teste legado de checkpoints já falha; esta migração não o corrige.",
+    "A factory LangGraph já retorna um checkpointer fechado; corrigir seu caminho não resolve essa pendência.",
+    "Validação com banco/modelo reais está fora deste recorte."
+  ],
+  "observacoes": [
+    "Reconstrução retrospectiva da sequência anunciada e das intervenções registradas nesta sessão e em dev/migracao-backend-2026-11-08.md.",
+    "Detalhamento de subtarefas e critérios consolidado após a execução; não representa um plano formal previamente aprovado.",
+    "Caminhos em F1 representam a árvore anterior à migração. Outros caminhos podem representar destinos novos.",
+    "Este arquivo documenta o plano; resultados observados e limites permanecem no relatório de migração."
+  ]
+}

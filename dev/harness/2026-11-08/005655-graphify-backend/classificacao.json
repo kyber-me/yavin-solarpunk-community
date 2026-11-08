@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "task_id": "005655-graphify-backend",
+  "registrado_em": "2026-11-08T00:56:55.898341-03:00",
+  "avaliado_em": null,
+  "origem_registro": "retrospectiva",
+  "revisao_git": "d9f1f311747c4473a7966616235bab94ca61ea25",
+  "tarefa": "Disponibilizar Graphify e gerar grafo estrutural do backend",
+  "complexidade": 2,
+  "risco": 1,
+  "nivel": 2,
+  "justificativas": {
+    "complexidade": "Configuração do recorte e verificação da ferramenta e do grafo.",
+    "risco": "Análise estática reversível, sem executar aplicação ou acessar banco."
+  },
+  "evidencias": [
+    {
+      "arquivo": "dev/graphs/README.md",
+      "simbolo": null,
+      "observacao": "Caminho atual; consultar os registros da sessão para o contexto anterior à migração."
+    }
+  ],
+  "incertezas": [],
+  "classificacao_provisoria": false,
+  "graphify": {
+    "utilizado": false,
+    "motivo": "Ferramenta ainda estava sendo disponibilizada para a tarefa.",
+    "versao_ferramenta": null,
+    "revisao_codigo": null,
+    "estado_arquivos": null,
+    "atualidade": "nao_verificada",
+    "limitacoes": []
+  },
+  "observacoes": [
+    "Classificação recuperada da mensagem apresentada nesta sessão antes da implementação; persistida posteriormente por nova diretiva do Idealizador. Horário original não registrado.",
+    "A revisão Git não representa sozinha os arquivos locais."
+  ]
+}

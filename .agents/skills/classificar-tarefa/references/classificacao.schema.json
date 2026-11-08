@@ -1,0 +1,189 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Classificação de tarefa delegada no backend",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "task_id",
+    "registrado_em",
+    "avaliado_em",
+    "origem_registro",
+    "revisao_git",
+    "tarefa",
+    "complexidade",
+    "risco",
+    "nivel",
+    "justificativas",
+    "evidencias",
+    "incertezas",
+    "classificacao_provisoria",
+    "graphify",
+    "observacoes"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "registrado_em": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "avaliado_em": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "origem_registro": {
+      "enum": [
+        "contemporanea",
+        "retrospectiva"
+      ]
+    },
+    "revisao_git": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "tarefa": {
+      "type": "string",
+      "minLength": 1
+    },
+    "complexidade": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "risco": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "nivel": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "justificativas": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "complexidade",
+        "risco"
+      ],
+      "properties": {
+        "complexidade": {
+          "type": "string",
+          "minLength": 1
+        },
+        "risco": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "evidencias": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "arquivo",
+          "simbolo",
+          "observacao"
+        ],
+        "properties": {
+          "arquivo": {
+            "type": "string",
+            "minLength": 1
+          },
+          "simbolo": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "observacao": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "incertezas": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "classificacao_provisoria": {
+      "type": "boolean"
+    },
+    "graphify": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "utilizado",
+        "motivo",
+        "versao_ferramenta",
+        "revisao_codigo",
+        "estado_arquivos",
+        "atualidade",
+        "limitacoes"
+      ],
+      "properties": {
+        "utilizado": {
+          "type": "boolean"
+        },
+        "motivo": {
+          "type": "string"
+        },
+        "versao_ferramenta": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "revisao_codigo": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "estado_arquivos": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "atualidade": {
+          "enum": [
+            "confirmada",
+            "desatualizada",
+            "nao_verificada"
+          ]
+        },
+        "limitacoes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "observacoes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

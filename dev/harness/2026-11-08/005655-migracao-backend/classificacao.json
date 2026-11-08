@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "task_id": "005655-migracao-backend",
+  "registrado_em": "2026-11-08T00:56:55.898341-03:00",
+  "avaliado_em": null,
+  "origem_registro": "retrospectiva",
+  "revisao_git": "d9f1f311747c4473a7966616235bab94ca61ea25",
+  "tarefa": "Migrar o projeto Python para backend/ e ajustar caminhos",
+  "complexidade": 3,
+  "risco": 3,
+  "nivel": 3,
+  "justificativas": {
+    "complexidade": "Coordena código, ambiente Python, configuração, testes e documentação.",
+    "risco": "Pode quebrar inicialização, carregamento de contexto e consumidores de contratos."
+  },
+  "evidencias": [
+    {
+      "arquivo": "backend/main.py",
+      "simbolo": null,
+      "observacao": "Caminho atual; consultar os registros da sessão para o contexto anterior à migração."
+    }
+  ],
+  "incertezas": [],
+  "classificacao_provisoria": false,
+  "graphify": {
+    "utilizado": true,
+    "motivo": "Consulta de Agent e conferência dos hashes antes das movimentações.",
+    "versao_ferramenta": "0.9.71",
+    "revisao_codigo": "d9f1f311747c4473a7966616235bab94ca61ea25",
+    "estado_arquivos": "Árvore com alterações locais; hashes conferidos antes da migração.",
+    "atualidade": "confirmada",
+    "limitacoes": [
+      "Análise estática; relações inferidas exigem leitura."
+    ]
+  },
+  "observacoes": [
+    "Classificação recuperada da mensagem apresentada nesta sessão antes da implementação; persistida posteriormente por nova diretiva do Idealizador. Horário original não registrado.",
+    "A revisão Git não representa sozinha os arquivos locais."
+  ]
+}
