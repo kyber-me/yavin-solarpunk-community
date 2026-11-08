@@ -74,5 +74,6 @@ logs/
 # macOS
 .DS_Store
 
-# Local generated backend graph, caches and provenance
-/dev/graphs/backend/
+# Local development graphs, caches, transcripts and notes
+/dev/graphs/
+/dev/local/

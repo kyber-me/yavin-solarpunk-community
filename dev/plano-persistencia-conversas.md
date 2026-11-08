@@ -14,7 +14,7 @@ posterior do frontend eliminou registros locais: conversas e mensagens vêm apen
 do PostgreSQL, rascunhos só em memória e reuniões bloqueadas. Servidores encerrados
 por solicitação do Idealizador. Fontes atuais: [guia da infraestrutura](../src/infra/db/relational/README.md),
 [histórico exclusivamente persistido](persistencia-frontend-2026-11-07.md) e
-[teste real](silas_test_responses/http-real-2026-11-07.md).
+[teste real](local/silas_test_responses/http-real-2026-11-07.md).
 
 ## Consolidação do schema inicial e validação HTTP
 

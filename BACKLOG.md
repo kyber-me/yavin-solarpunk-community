@@ -63,7 +63,7 @@ para o método de desenvolvimento agêntico, conforme o registro abaixo.
   e exclusão de histórico local verificadas no navegador. Falta validar envio real
   a partir da SPA e realizar as perguntas de referência de Silas; QA do compositor
   desta rodada usou resposta controlada para não gerar novas chamadas ao modelo.
-  Evidência em `dev/silas_test_responses/http-real-2026-11-07.md`.
+  Evidência em `dev/local/silas_test_responses`.
 
 - [ ] **Concluir a revisão dos campos temporais de chat.** O `Message` atual exige
   timestamps com fuso e cria em UTC; seu registro persiste essas datas. O registro
@@ -92,7 +92,7 @@ para o método de desenvolvimento agêntico, conforme o registro abaixo.
 - [ ] **Validar o comportamento de Silas com perguntas de referência.** Verificar
   identidade, propósito de Yavin, primeira investigação e distinção entre proposta e
   decisão. Incluir uma pergunta sobre algo ainda indefinido, como localização. Guardar
-  perguntas e resultados em `dev/silas_test_responses/`. Concluído quando Silas
+  perguntas e resultados em `dev/local/silas_test_responses`. Concluído quando Silas
   demonstrar contexto correto e reconhecer o que permanece aberto.
 
 ## P1 — Sustentar uma investigação curta
@@ -493,7 +493,7 @@ Registros de conclusão preservados; pendências atuais estão nas seções inic
 
 - [x] **Recuperar a base documental ausente após a reorganização.** Os cinco
   documentos foram recuperados em `backend/src/agents/base_knowledge/`, usando cópias
-  anteriores, mensagens de contexto em `dev/messages.pretty.json` e registros de
+  anteriores, mensagens de contexto em `dev/local/messages.pretty.json` e registros de
   leitura/criação das sessões. Origem e ajustes documentados em
   [`dev/recuperacao-memoria-2026-11-05.md`](dev/recuperacao-memoria-2026-11-05.md).
   A inclusão de `projeto/` no carregador permanece uma tarefa separada.

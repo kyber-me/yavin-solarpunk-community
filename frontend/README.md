@@ -81,7 +81,7 @@ verificados no ambiente real: quatro mensagens do banco após recarregar, remoç
 entrada local antiga, reuniões bloqueadas e retomada pelo conflito `409`.
 A migração inicial foi aplicada com preservação dos 15 checkpoints anteriores;
 dois turnos reais com Silas recuperaram contexto após reabrir as conexões.
-Evidência em `dev/silas_test_responses/http-real-2026-11-07.md`.
+Evidência em `../dev/local/silas_test_responses`.
 
 ## Mapa e acessibilidade
 

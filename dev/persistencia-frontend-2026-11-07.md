@@ -39,7 +39,7 @@ e depois da migração. Não foram aplicados DROP ou limpeza nas tabelas do chec
 
 Dois turnos reais pela API, com fechamento e reabertura do lifespan entre eles,
 produziram quatro mensagens persistidas. O segundo recuperou a palavra-chave do
-primeiro. Registro: [teste real](silas_test_responses/http-real-2026-11-07.md).
+primeiro. Registro: [teste real](local/silas_test_responses/http-real-2026-11-07.md).
 
 ## Evidência de validação
 

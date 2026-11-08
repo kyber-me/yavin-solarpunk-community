@@ -7,7 +7,7 @@
 Os arquivos foram recuperados de cópias e registros locais, sem reconstrução de
 falas ou criação de conteúdo substituto. A Lixeira do macOS permaneceu inacessível.
 Os quatro documentos anteriores ao projeto de pesquisa foram comparados com as
-mensagens documentais de `dev/messages.pretty.json`; o conteúdo é equivalente
+mensagens documentais de `local/messages.pretty.json`; o conteúdo é equivalente
 desconsiderando espaços. A extração excluiu mensagens humanas e respostas do agente.
 
 ## Origem dos arquivos
