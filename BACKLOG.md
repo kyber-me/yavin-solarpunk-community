@@ -197,9 +197,11 @@ agêntico, conforme o registro abaixo.
   [Registro](frontend/sketches/chegada/README.md).
 
 - [ ] **Investigar o desligamento do som da chegada.** Em 08/11/2026, o Idealizador
-  relatou que o som não desliga ao usar o controle. Não é prioridade; causa e
-  condições ainda não foram investigadas. Concluído quando o controle silenciar
-  a ambiência e o comportamento for validado.
+  relatou que o som não desliga ao usar o controle. No teste posterior em Chromium,
+  os contextos de áudio ficaram fechados após desativar na chegada, no mapa (pelo
+  teclado) e no manifesto; a falha não foi reproduzida. Identificar navegador e
+  condições do relato, inclusive se o rótulo muda e se há outras abas abertas;
+  confirmar o silêncio audível no ambiente afetado. A causa permanece aberta.
 
 - [ ] **Revisar a proposta de especialização de Silas por ciclos finitos de estudo.**
   Natureza: proposta para revisão futura, registrada em 05/11/2026; não autoriza

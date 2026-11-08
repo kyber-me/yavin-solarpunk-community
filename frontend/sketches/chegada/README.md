@@ -66,8 +66,12 @@ para a evolução das artes do mapa, conforme solicitado pelo Idealizador.
   Mantém a música e a opção de silenciar na transição entre chegada e visita.
   Suspende na aba oculta e encerra ao entrar no atelier. Não é uma gravação nem uma trilha final.
 
-**Relato posterior do Idealizador:** o som não desliga pelo controle. A causa e as
-condições ainda não foram investigadas; correção registrada no backlog, sem prioridade.
+**Relato do Idealizador:** o som não desliga pelo controle. Em investigação posterior
+no Chromium, o contexto de áudio passou de `running` para `closed` ao desativar na
+chegada, no mapa por teclado e no manifesto; após interação adicional no mapa
+continuou fechado. O rótulo passou a “Som desligado”. A falha não foi reproduzida,
+e o teste verificou o estado dos contextos, sem validação de escuta no ambiente do
+Idealizador. Navegador, condições e causa permanecem em aberto no backlog.
 
 A separação é de apresentação, não autenticação. As rotas antigas continuam acessíveis
 diretamente no protótipo local. Publicação real exige controles de backend.
