@@ -199,9 +199,11 @@ agêntico, conforme o registro abaixo.
 - [ ] **Investigar o desligamento do som da chegada.** Em 08/11/2026, o Idealizador
   relatou que o som não desliga ao usar o controle. No teste posterior em Chromium,
   os contextos de áudio ficaram fechados após desativar na chegada, no mapa (pelo
-  teclado) e no manifesto; a falha não foi reproduzida. Identificar navegador e
-  condições do relato, inclusive se o rótulo muda e se há outras abas abertas;
-  confirmar o silêncio audível no ambiente afetado. A causa permanece aberta.
+  teclado) e no manifesto; a falha não foi reproduzida. O Idealizador usa ego-lite,
+  o mesmo navegador do teste em sessão separada. Identificar as condições do relato,
+  inclusive se o rótulo muda e se há outras abas abertas. Após encerrar o ego-lite,
+  que continuava em segundo plano com os servidores parados, o Idealizador confirmou
+  que a música parou. A aba ou contexto responsável ainda não foi identificado.
 
 - [ ] **Revisar a proposta de especialização de Silas por ciclos finitos de estudo.**
   Natureza: proposta para revisão futura, registrada em 05/11/2026; não autoriza
