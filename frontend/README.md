@@ -1,5 +1,7 @@
 # Yavin · Oficina de futuros possíveis
 
+**Natureza:** guia de desenvolvimento e referência da interface.
+
 SPA local em React + TypeScript + Vite. A segunda proposta de redesign foi implementada
 em 05/11/2026 e recebeu avaliação positiva do Idealizador quanto à identidade. A estação científica v3
 continua sendo a arte aprovada. Refinamentos de composição continuam sendo feitos incrementalmente.
@@ -33,59 +35,53 @@ npm run build
 
 ## Conversas e integração
 
-**Atualização de desenvolvimento:** 07/11/2026. O frontend já usa os novos contratos
-abaixo; os serviços e rotas correspondentes ainda serão integrados pelo Idealizador.
-Sem essa etapa, a criação real pode apresentar falha ao carregar o catálogo ou
-iniciar a conversa. Não há fallback para criar conversas apenas locais e enviá-las.
+**Atualização de desenvolvimento:** 07/11/2026. O PostgreSQL é a fonte dos históricos.
+O frontend não lê nem grava conversas, mensagens ou rascunhos no `localStorage`.
+A chave antiga `yavin.conversations.v1` é removida ao abrir; registros locais antigos
+não são importados nem exibidos. Rascunhos existem apenas na memória da página.
 
-- **Iniciar conversa** carrega `GET /agents` e exige escolher um agente disponível.
-  O catálogo tem carregamento, erro com nova tentativa e estado vazio. Hoje somente
-  Silas deve ser disponibilizado pela API; outros nomes usados em QA são simulados.
-- A confirmação envia `POST /create-conversation` com `sender_id: "idealizador"`
-  e `participant_id` escolhido. Apenas a resposta `201` com metadados válidos cria
-  uma entrada de conversa no frontend.
-- `409` com código `CONVERSATION_ALREADY_ACTIVE` oferece **Abrir conversa existente**.
-  Reutiliza a entrada local pelo ID do servidor, sem misturar históricos anteriores.
-- O estado local mantém seu UUID e, separadamente, `serverConversationId` e
-  `participantId`. `POST /chat` envia apenas `conversation_id`, `sender_id` e
-  `message`; não envia UUID local nem `thread_id`.
-- Históricos e rascunhos continuam na chave `yavin.conversations.v1`. Os campos novos
-  são opcionais para compatibilidade. Conversas antigas sem ID de servidor ficam
-  disponíveis para consulta, com seu rascunho preservado e envio bloqueado.
-- O nome do agente selecionado acompanha rótulos, mensagens e compositor. Silas
-  conserva seu avatar; outros agentes recebem uma inicial, sem imagens inventadas.
-- Uma conversa retomada sem histórico local informa que o agente pode ter contexto
-  anterior. Não há endpoint de recuperação das mensagens neste incremento.
-- Erros de envio preservam o rascunho. `404` ou `409` no chat tornam a conversa
-  indisponível para novos envios e oferecem iniciar uma conversa. Uma resposta em
-  andamento permanece vinculada à conversa de origem mesmo ao trocar a seleção.
-- Enter envia e Shift + Enter insere uma linha. Envios e criações repetidos são
-  bloqueados enquanto pendentes; a unicidade real também será protegida pelo banco.
-- Reuniões continuam com participantes e mensagens locais; não provisionam agentes
-  nem chamam a rota de criação persistida.
-- Mapa e laboratório usam a mesma instância de painel. O clique em Silas abre sua
-  conversa persistida localmente conhecida, ou o formulário com Silas selecionado
-  a partir do catálogo; não cria registros no servidor apenas por abrir o drawer.
+O backend define os contratos, sempre no envelope `{ data, error }`:
+
+- `GET /agents`: catálogo de participantes disponíveis; atualmente apenas Silas.
+- `POST /conversation/create`: cria antes de permitir envio; `201` confirma o
+  registro, `409 / CONVERSATION_ALREADY_ACTIVE` oferece abrir a conversa existente.
+- `GET /conversations?sender_id=idealizador`: lista as conversas persistidas da dupla
+  de que o remetente participa, incluindo inativas para consulta.
+- `GET /conversations/{id}/messages?sender_id=idealizador`: verifica participação
+  e devolve mensagens persistidas com seus IDs, autores e timestamps reais.
+- As consultas usam `limit` (até 100) e `offset`; a interface segue `next_offset`
+  até recuperar o histórico completo. Falhas não usam histórico local como fallback.
+- `POST /conversation/talk`: recebe `conversation_id`, `sender_id` e `message` como
+  texto. Após sucesso ou falha, a interface consulta o histórico novamente: a entrada
+  pode ter sido gravada mesmo se o agente falhar. Não cria mensagens provisórias.
+
+A seleção, rascunhos e erros são estado de sessão. Recarregar busca os registros no
+servidor. Títulos são derivados do participante; não há título personalizado salvo
+somente no navegador. Conversas encerradas são consultáveis, com envio bloqueado.
+Reuniões ficam indisponíveis até existir persistência; não criam registros locais.
+
+O projeto Python está em `../backend/`. Para executar a API em outro terminal,
+use `cd backend` a partir da raiz e `uv run python main.py`. A migração de pasta
+não altera os contratos HTTP.
 
 A URL da API vem de `VITE_API_URL` e usa `http://127.0.0.1:8000` por padrão.
-As respostas preservam o envelope `{ data, error }`. O
-[plano aprovado](../dev/plano-persistencia-conversas.md) contém os formatos exatos;
-o [guia da infraestrutura](../src/infra/db/relational/README.md) descreve a integração.
-Comandos de agentes que alterem o mapa permanecem uma possibilidade futura.
+Mapa e laboratório mantêm a mesma instância do painel. Enter envia e Shift + Enter
+insere uma linha; uma resposta em andamento permanece vinculada à conversa de origem.
 
-### Verificação deste incremento
+### Verificação
 
 ```sh
 npm test
 npm run build
 ```
 
-Os testes de contrato usam o runner nativo do Node.js com suporte a TypeScript
-(Node 22.18+; verificados com Node 25). Não fazem chamadas reais à API ou ao modelo.
-O navegador também foi usado com respostas controladas: criação, conflito,
-seleção de outro agente, erros de catálogo e envio, preservação de rascunhos e
-isolamento da resposta ao trocar de conversa. O histórico local anterior ao QA
-é restaurado ao final. A integração HTTP real aguarda o backend.
+Oito testes do frontend e build aprovados. Testes HTTP e PostgreSQL descartável
+cobrem leitura, paginação, isolamento, recarga e rejeição de acesso. Com Ego Browser,
+verificados no ambiente real: quatro mensagens do banco após recarregar, remoção de
+entrada local antiga, reuniões bloqueadas e retomada pelo conflito `409`.
+A migração inicial foi aplicada com preservação dos 15 checkpoints anteriores;
+dois turnos reais com Silas recuperaram contexto após reabrir as conexões.
+Evidência em `dev/silas_test_responses/http-real-2026-11-07.md`.
 
 ## Mapa e acessibilidade
 
@@ -119,7 +115,8 @@ se adapta também à altura reduzida da janela.
 - `src/components/MapView.tsx`: entrada editorial e mapa.
 - `src/components/ConversationPanel.tsx`: diretório, mensagens e integração.
 - `src/components/WorkshopReference.tsx`: imagem de referência e legenda.
-- `src/conversations.ts`: tipos, recuperação e chave de armazenamento.
+- `src/conversations.ts`: tipos de apresentação e remoção da chave local legada.
+- `src/chatApi.ts`: contratos e leitura paginada das conversas/mensagens no servidor.
 - `src/useMapPan.ts`: câmera e gestos do mapa.
 - `src/styles.css` e `src/map.css`: tokens, componentes e composição responsiva.
 - [Origem dos assets](src/assets/README.md).
@@ -154,3 +151,19 @@ quanto à identidade; sua composição, capturas e verificações estão no
 A foto principal do README público utiliza o mesmo asset
 `src/assets/oficina-solar.jpg` da interface, sem duplicar o arquivo. Sua origem e
 natureza de referência visual estão descritas no [registro dos assets](src/assets/README.md).
+
+## Retomada após a sessão de 07/11/2026
+
+API (8000) e Vite (5173) foram encerrados por solicitação do Idealizador; as portas
+foram conferidas livres. A aba de resultado foi deixada para consulta, mas o site
+não responde até os servidores serem iniciados novamente. Não há tarefa rodando
+em segundo plano a ser retomada pelo assistente.
+
+O envio real de dois turnos foi feito por HTTP em processo; o navegador verificou
+recarga/retomada do histórico e fez QA controlado do compositor, sem novas chamadas
+ao modelo. Envio real pelo compositor ainda é uma pendência, distinta da validação
+já concluída do backend. Consulte [o ponto de retomada](../dev/retomada-2026-11-07.md).
+
+Para os erros de Keychain observados no ambiente, testes e build passaram com
+`NODE_OPTIONS='--use-bundled-ca --no-use-system-ca'` apenas no comando; TLS segue
+habilitado e nenhuma configuração permanente do Node foi alterada.

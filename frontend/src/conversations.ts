@@ -3,9 +3,8 @@ export type Message = { id: string; author: string; content: string; createdAt: 
 export type Conversation = {
   id: string;
   mode: Mode;
-  serverConversationId?: string;
-  participantId?: string;
-  resumed?: boolean;
+  serverConversationId: string;
+  participantId: string;
   unavailableReason?: string;
   title: string;
   participants: string[];
@@ -14,43 +13,7 @@ export type Conversation = {
   createdAt: string;
 };
 
-export const STORAGE_KEY = 'yavin.conversations.v1';
-
-export function newConversation(mode: Mode, title: string, participants: string[]): Conversation {
-  return { id: crypto.randomUUID(), mode, title, participants, messages: [], draft: '', createdAt: new Date().toISOString() };
-}
-
-export function initialConversations(): Conversation[] {
-  return [];
-}
-
-function isConversation(value: unknown): value is Conversation {
-  if (!value || typeof value !== 'object') return false;
-  const item = value as Record<string, unknown>;
-  return typeof item.id === 'string' && typeof item.title === 'string' && typeof item.draft === 'string'
-    && typeof item.createdAt === 'string' && Number.isFinite(Date.parse(item.createdAt))
-    && (item.mode === 'conversation' || item.mode === 'meeting')
-    && (item.serverConversationId === undefined || (typeof item.serverConversationId === 'string' && !!item.serverConversationId.trim()))
-    && (item.participantId === undefined || (typeof item.participantId === 'string' && !!item.participantId.trim()))
-    && (item.serverConversationId === undefined || (item.mode === 'conversation' && typeof item.participantId === 'string'))
-    && (item.resumed === undefined || typeof item.resumed === 'boolean')
-    && (item.unavailableReason === undefined || typeof item.unavailableReason === 'string')
-    && Array.isArray(item.participants) && item.participants.every(p => typeof p === 'string')
-    && Array.isArray(item.messages) && item.messages.every(message =>
-      message && typeof message.id === 'string' && typeof message.author === 'string'
-      && typeof message.content === 'string' && typeof message.createdAt === 'string'
-      && Number.isFinite(Date.parse(message.createdAt))
-      && (message.kind === undefined || ['user', 'agent', 'system'].includes(message.kind)));
-}
-
-export function readConversations(): { conversations: Conversation[]; warning: string } {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return { conversations: initialConversations(), warning: '' };
-    const parsed: unknown = JSON.parse(raw);
-    if (!Array.isArray(parsed) || !parsed.every(isConversation)) throw new Error('Invalid history');
-    return { conversations: parsed.length ? parsed : initialConversations(), warning: '' };
-  } catch {
-    return { conversations: initialConversations(), warning: 'O histórico local não pôde ser recuperado. Suas novas conversas continuam disponíveis nesta sessão.' };
-  }
+// Remove only Yavin's retired local history; never read or import its records.
+export function discardLocalHistory(): void {
+  try { localStorage.removeItem('yavin.conversations.v1'); } catch { /* History always comes from the API. */ }
 }

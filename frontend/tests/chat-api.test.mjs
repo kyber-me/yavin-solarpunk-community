@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { createConversation, listAgents, sendMessage, ChatApiError } from '../src/chatApi.ts';
-import { readConversations, STORAGE_KEY } from '../src/conversations.ts';
+import { createConversation, listAgents, sendMessage, listConversations, listMessages, ChatApiError } from '../src/chatApi.ts';
+import { discardLocalHistory } from '../src/conversations.ts';
 
 const info = { conversation_id: 'Conv_server', participant_id: 'opaque-agent', created_at: '2026-11-07T12:00:00Z' };
 const reply = (status, body) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
@@ -20,6 +20,7 @@ test('catalog uses opaque IDs, validates payload and propagates API errors', asy
 test('creation confirms server metadata and sends only sender and selected participant', async t => {
   const fetch = t.mock.method(globalThis, 'fetch', async () => reply(201, { data: info }));
   assert.deepEqual(await createConversation('opaque-agent'), { existing: false, conversation: info });
+  assert.match(fetch.mock.calls[0].arguments[0], /\/conversation\/create$/);
   assert.deepEqual(JSON.parse(fetch.mock.calls[0].arguments[1].body), { sender_id: 'idealizador', participant_id: 'opaque-agent' });
   fetch.mock.mockImplementation(async () => reply(201, { data: { ...info, participant_id: 'wrong' } }));
   await assert.rejects(createConversation('opaque-agent'), /outro participante/);
@@ -41,6 +42,7 @@ test('only the agreed 409 code is offered as an existing conversation', async t 
 test('chat uses conversation ID, never local thread ID, and preserves server errors', async t => {
   const fetch = t.mock.method(globalThis, 'fetch', async () => reply(200, { data: { content: 'Resposta' } }));
   assert.equal(await sendMessage('Conv_server', 'Olá'), 'Resposta');
+  assert.match(fetch.mock.calls[0].arguments[0], /\/conversation\/talk$/);
   assert.deepEqual(JSON.parse(fetch.mock.calls[0].arguments[1].body), { conversation_id: 'Conv_server', sender_id: 'idealizador', message: 'Olá' });
   fetch.mock.mockImplementation(async () => reply(404, { error: { message: 'Conversa ausente' } }));
   await assert.rejects(sendMessage('Conv_server', 'Olá'), error => error.status === 404 && error.message === 'Conversa ausente');
@@ -55,18 +57,43 @@ test('network failures are explicit and invalid answers are rejected', async t =
   fetch.mock.restore();
 });
 
-test('legacy messages and drafts survive; a fresh browser has no fake conversation', () => {
-  const legacy = [{ id: 'old-local', mode: 'conversation', title: 'Anterior', participants: ['Silas'], messages: [{ id: 'm1', author: 'Você', content: 'Histórico', createdAt: info.created_at }], draft: 'Rascunho', createdAt: info.created_at }];
-  const storage = { getItem: key => key === STORAGE_KEY ? JSON.stringify(legacy) : null };
+test('legacy local history is removed without reading or importing it', () => {
+  const removed = [];
   const original = Object.getOwnPropertyDescriptor(globalThis, 'localStorage');
-  Object.defineProperty(globalThis, 'localStorage', { configurable: true, value: storage });
-  try {
-  assert.deepEqual(readConversations().conversations, legacy);
-  assert.equal(readConversations().conversations[0].serverConversationId, undefined);
-  storage.getItem = () => null;
-  assert.deepEqual(readConversations().conversations, []);
-  } finally {
+  Object.defineProperty(globalThis, 'localStorage', { configurable: true, value: {
+    getItem() { throw new Error('Legacy records must never be read'); },
+    setItem() { throw new Error('History must never be stored locally'); },
+    removeItem(key) { removed.push(key); },
+  } });
+  try { discardLocalHistory(); assert.deepEqual(removed, ['yavin.conversations.v1']); }
+  finally {
     if (original) Object.defineProperty(globalThis, 'localStorage', original);
     else delete globalThis.localStorage;
   }
+});
+
+test('conversation history uses persisted records and follows server pagination', async t => {
+  const record = { ...info, participant_name: 'Silas', active: true };
+  const fetch = t.mock.method(globalThis, 'fetch', async url => {
+    const offset = new URL(url).searchParams.get('offset');
+    return reply(200, { data: { conversations: offset === '0' ? [record] : [], next_offset: offset === '0' ? 100 : null } });
+  });
+  assert.deepEqual(await listConversations(), [record]);
+  assert.equal(fetch.mock.calls.length, 2);
+  assert.match(fetch.mock.calls[0].arguments[0], /\/conversations\?sender_id=idealizador/);
+  fetch.mock.mockImplementation(async () => reply(503, { error: { message: 'Banco indisponível' } }));
+  await assert.rejects(listConversations(), /Banco indisponível/);
+  fetch.mock.restore();
+});
+
+test('messages use server IDs and dates and reject malformed or inaccessible history', async t => {
+  const message = { id: 'server-message', sender_id: 'silas', content: 'Persistida', created_at: info.created_at };
+  const fetch = t.mock.method(globalThis, 'fetch', async () => reply(200, { data: { messages: [message], next_offset: null } }));
+  assert.deepEqual(await listMessages('server-id'), [message]);
+  assert.match(fetch.mock.calls[0].arguments[0], /\/conversations\/server-id\/messages\?/);
+  fetch.mock.mockImplementation(async () => reply(200, { data: { messages: [{ ...message, created_at: 'invalid' }], next_offset: null } }));
+  await assert.rejects(listMessages('server-id'), /mensagem inválida/);
+  fetch.mock.mockImplementation(async () => reply(403, { error: { message: 'Sem acesso' } }));
+  await assert.rejects(listMessages('server-id'), error => error.status === 403);
+  fetch.mock.restore();
 });

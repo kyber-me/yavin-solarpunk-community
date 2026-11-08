@@ -1,20 +1,16 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { createConversation, listAgents, type AgentOption, type ConversationMetadata } from '../chatApi';
-import type { Mode } from '../conversations';
 
 type Props = {
-  mode: Mode;
   preferSilas: boolean;
-  onCreate: (title: string, participants: string[], remote?: { agent: AgentOption; metadata: ConversationMetadata; resumed: boolean }) => void;
+  onCreate: (title: string, participants: string[], remote: { agent: AgentOption; metadata: ConversationMetadata; resumed: boolean }) => void;
   onCancel: () => void;
 };
 
-export function CreateConversationForm({ mode, preferSilas, onCreate, onCancel }: Props) {
-  const [title, setTitle] = useState('');
-  const [names, setNames] = useState('');
+export function CreateConversationForm({ preferSilas, onCreate, onCancel }: Props) {
   const [agents, setAgents] = useState<AgentOption[]>([]);
   const [participantId, setParticipantId] = useState('');
-  const [loading, setLoading] = useState(mode === 'conversation');
+  const [loading, setLoading] = useState(true);
   const [catalogError, setCatalogError] = useState('');
   const [error, setError] = useState('');
   const [attempt, setAttempt] = useState(0);
@@ -29,7 +25,6 @@ export function CreateConversationForm({ mode, preferSilas, onCreate, onCancel }
   }, []);
 
   useEffect(() => {
-    if (mode !== 'conversation') return;
     const controller = new AbortController();
     setLoading(true);
     setCatalogError('');
@@ -47,19 +42,12 @@ export function CreateConversationForm({ mode, preferSilas, onCreate, onCancel }
       })
       .finally(() => { if (!controller.signal.aborted) setLoading(false); });
     return () => controller.abort();
-  }, [mode, attempt, preferSilas]);
+  }, [attempt, preferSilas]);
 
   async function submit(event: FormEvent) {
     event.preventDefault();
     if (inFlight.current) return;
     setError('');
-    if (mode === 'meeting') {
-      const participants = ['Silas', ...names.split(',').map(name => name.trim()).filter(Boolean)]
-        .filter((name, index, values) => values.findIndex(item => item.toLocaleLowerCase() === name.toLocaleLowerCase()) === index);
-      if (participants.length < 2) { setError('Inclua pelo menos mais um agente além de Silas.'); return; }
-      onCreate(title.trim() || 'Nova reunião', participants);
-      return;
-    }
     const agent = agents.find(item => item.id === participantId);
     if (!agent || existing) return;
     inFlight.current = true;
@@ -68,7 +56,7 @@ export function CreateConversationForm({ mode, preferSilas, onCreate, onCancel }
       const result = await createConversation(agent.id);
       if (!mounted.current) return;
       if (result.existing) setExisting({ agent, metadata: result.conversation });
-      else onCreate(title.trim() || `Conversa com ${agent.name}`, [agent.name], {
+      else onCreate(`Conversa com ${agent.name}`, [agent.name], {
         agent, metadata: result.conversation, resumed: false,
       });
     } catch (reason) {
@@ -80,13 +68,6 @@ export function CreateConversationForm({ mode, preferSilas, onCreate, onCancel }
   }
 
   return <form className="create-form" onSubmit={submit} aria-busy={loading || pending}>
-    <label htmlFor="conversation-title">{mode === 'meeting' ? 'Nome da reunião' : 'Nome da conversa (opcional)'}</label>
-    <input id="conversation-title" autoFocus maxLength={80} disabled={pending} value={title} onChange={event => setTitle(event.target.value)} placeholder={mode === 'meeting' ? 'O que vamos investigar?' : 'Sobre o que vamos conversar?'} />
-    {mode === 'meeting' ? <>
-      <label htmlFor="participant-names">Outros agentes</label>
-      <input id="participant-names" value={names} maxLength={240} onChange={event => { setNames(event.target.value); setError(''); }} placeholder="Nomes separados por vírgula" aria-describedby="participants-help" aria-invalid={!!error} />
-      <small id="participants-help">Silas já está incluído. Participantes e mensagens desta reunião são apenas locais.</small>
-    </> : <>
       <label htmlFor="conversation-agent">Com quem vamos conversar?</label>
       <select id="conversation-agent" required value={participantId} disabled={loading || pending || !agents.length || !!existing}
         onChange={event => { setParticipantId(event.target.value); setError(''); }}>
@@ -99,15 +80,14 @@ export function CreateConversationForm({ mode, preferSilas, onCreate, onCancel }
       {!loading && (catalogError || !agents.length) && <button type="button" className="text-button" onClick={() => setAttempt(value => value + 1)}>Tentar novamente</button>}
       {existing && <div className="existing-conversation" role="status">
         <p>Já existe uma conversa ativa com {existing.agent.name}.</p>
-        <button type="button" className="primary-button" onClick={() => onCreate(title.trim() || `Conversa com ${existing.agent.name}`,
+        <button type="button" className="primary-button" onClick={() => onCreate(`Conversa com ${existing.agent.name}`,
           [existing.agent.name], { ...existing, resumed: true })}>Abrir conversa existente</button>
       </div>}
-    </>}
     {error && <p role="alert" className="form-error">{error}</p>}
     <div className="form-actions">
       <button type="button" className="text-button" disabled={pending} onClick={onCancel}>Cancelar</button>
-      {!existing && <button className="primary-button" type="submit" disabled={mode === 'conversation' && (pending || loading || !participantId)}>
-        {pending ? 'Iniciando…' : mode === 'meeting' ? 'Criar reunião' : 'Iniciar conversa'}
+      {!existing && <button className="primary-button" type="submit" disabled={pending || loading || !participantId}>
+        {pending ? 'Iniciando…' : 'Iniciar conversa'}
       </button>}
     </div>
   </form>;

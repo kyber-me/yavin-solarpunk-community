@@ -65,7 +65,7 @@ export async function listAgents(signal?: AbortSignal): Promise<AgentOption[]> {
 }
 
 export async function createConversation(participantId: string): Promise<CreationResult> {
-  const { response, data, error } = await request('/create-conversation', {
+  const { response, data, error } = await request('/conversation/create', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ sender_id: SENDER_ID, participant_id: participantId }),
   });
@@ -81,7 +81,7 @@ export async function createConversation(participantId: string): Promise<Creatio
 }
 
 export async function sendMessage(conversationId: string, content: string): Promise<string> {
-  const { response, data, error } = await request('/chat', {
+  const { response, data, error } = await request('/conversation/talk', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ conversation_id: conversationId, sender_id: SENDER_ID, message: content }),
     signal: AbortSignal.timeout(120000),
@@ -90,4 +90,46 @@ export async function sendMessage(conversationId: string, content: string): Prom
   const answer = object(data)?.content;
   if (typeof answer !== 'string' || !answer.trim()) throw new Error('O agente retornou uma resposta vazia ou inválida.');
   return answer;
+}
+
+export type PersistedConversation = ConversationMetadata & { participant_name: string; active: boolean };
+export type PersistedMessage = { id: string; sender_id: string; content: string; created_at: string };
+
+async function readPages<T>(path: string, key: string, validate: (item: unknown) => T, signal?: AbortSignal): Promise<T[]> {
+  const items: T[] = [];
+  const operationSignal = signal ? AbortSignal.any([signal, AbortSignal.timeout(30000)]) : AbortSignal.timeout(30000);
+  let offset = 0;
+  while (true) {
+    const query = new URLSearchParams({ sender_id: SENDER_ID, limit: '100', offset: String(offset) });
+    const { response, data, error } = await request(`${path}?${query}`, { signal: operationSignal, cache: 'no-store' });
+    if (!response.ok || error) fail(response.status, error, 'Não foi possível carregar o histórico do servidor.');
+    const page = object(data);
+    if (!page || !Array.isArray(page[key])) throw new Error('A API retornou um histórico inválido.');
+    items.push(...page[key].map(validate));
+    if (page.next_offset === null) return items;
+    if (typeof page.next_offset !== 'number' || !Number.isInteger(page.next_offset) || page.next_offset <= offset) {
+      throw new Error('A API retornou uma paginação inválida.');
+    }
+    offset = page.next_offset;
+  }
+}
+
+export function listConversations(signal?: AbortSignal): Promise<PersistedConversation[]> {
+  return readPages('/conversations', 'conversations', value => {
+    const item = object(value);
+    const info = metadata(value);
+    if (!item || typeof item.participant_name !== 'string' || !item.participant_name.trim()
+      || typeof item.active !== 'boolean') throw new Error('A API retornou uma conversa inválida.');
+    return { ...info, participant_name: item.participant_name, active: item.active };
+  }, signal);
+}
+
+export function listMessages(conversationId: string, signal?: AbortSignal): Promise<PersistedMessage[]> {
+  return readPages(`/conversations/${encodeURIComponent(conversationId)}/messages`, 'messages', value => {
+    const item = object(value);
+    if (!item || typeof item.id !== 'string' || !item.id.trim() || typeof item.sender_id !== 'string'
+      || typeof item.content !== 'string' || typeof item.created_at !== 'string'
+      || !Number.isFinite(Date.parse(item.created_at))) throw new Error('A API retornou uma mensagem inválida.');
+    return item as PersistedMessage;
+  }, signal);
 }
