@@ -3,8 +3,8 @@ from src.persistence.db.relational.message_record import MessageRecord
 from src.types.dtos.send_message_service_request import Message
 
 
-# Usamos "*" isso porque conversation_id e sender_id são ambos strings:
-# exigir seus nomes torna a chamada mais legível e reduz o risco de inverter os valores.
+# We use "*" because conversation_id and sender_id are both strings:
+# requiring their names makes the call more readable and reduces the risk of swapping the values.
 def message_to_record(
     message: Message, *, conversation_id: str, sender_id: str
 ) -> MessageRecord:

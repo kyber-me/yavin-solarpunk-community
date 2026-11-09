@@ -2,11 +2,8 @@
 import logging
 import os
 
-from langchain_core.messages import BaseMessage
 from notion_client import Client
-
 from src.global_vars import BASE_KNOWLEDGE_PATH
-
 
 LOG = logging.getLogger(__name__)
 LOCAL = {
@@ -65,14 +62,14 @@ def load_general_documents(pages: dict[str, str]) -> list[str]:
     return documents
 
 
-def retrieval_knowledge(include_manifesto: bool = True) -> list[str]:
+def retrieval_knowledge() -> list[str]:
+    print("Retrieving knowledge locally...")
+    LOG.warning("Retrieving knowledge locally...")
 
-    base_knowledge = [
-        BASE_KNOWLEDGE_PATH / "manifestos" if include_manifesto else BASE_KNOWLEDGE_PATH / "manifestos" / "conceitos-fundamentais.md"]
-
+    base_knowledge_paths = [BASE_KNOWLEDGE_PATH / "manifestos", BASE_KNOWLEDGE_PATH / "projeto"]
     messages: list[str] = []
     try:
-        for b in base_knowledge:
+        for b in base_knowledge_paths:
             if b.exists():
                 if b.is_dir():
                     for f in b.iterdir():

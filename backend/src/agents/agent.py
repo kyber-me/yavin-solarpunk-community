@@ -39,38 +39,27 @@ class Agent:
     agent: CompiledStateGraph
     # roles: list[str]  # Create an `Enum` for roles (and permissions)
 
+    # silas = Agent(
+    #     agent_record.name, None,
+    #     checkpointer,
+    #     identity_content=agent_record.identity,
+    #     general_documents=general_documents,
+    #     agent_id=agent_record.id)
     def __init__(
         self,
         name: str,
-        specialized_instructions_path: Path | None,
         checkpointer: PostgresSaver,
-        identity_content: str | None = None,
+        identity_content: str,
         general_documents: list[str] | None = None,
         agent_id: str | None = None,
     ) -> None:
         self.id = agent_id or str(ULID())
         self.name = name
         self.general_documents = general_documents
-
-        # It is really necessary to catch an Exception here?
-        try:
-            instructions: str | None = None
-            if identity_content is not None:
-                instructions = identity_content
-            elif not specialized_instructions_path:
-                pass
-            else:
-                with open(specialized_instructions_path, "r") as f:
-                    instructions = f.read()
-
-        except Exception as e:  # noqa: BLE001
-            print(e)
-            raise Exception  # noqa: TRY002
-
         self.agent = create_agent(
             model="gpt-4o-mini",
             tools=TOOLS,
-            system_prompt=instructions,
+            system_prompt=identity_content,
             checkpointer=checkpointer,
             name=name,
         )
@@ -78,13 +67,14 @@ class Agent:
     def invoke(self, message: str, thread_id: str | None) -> dict[str, Any]:
         if not thread_id:
             raise ValueError("thread_id is required")
+
         config: RunnableConfig = {"configurable": {"thread_id": thread_id}}
         state = self.agent.get_state(config)
         # Try to understand (why `Sequence`) this need
         messages: Sequence[BaseMessage] = (
+            # general_documents: `PROJETO_DE_PESQUISA_YAVIN.md` e `manifesto-solarpunk.md`
             [HumanMessage(message)] if state.values.get("messages") else (
-                [SystemMessage(content) for content in self.general_documents] +
-                [SystemMessage(k) for k in retrieval_knowledge(include_manifesto=False)] + [HumanMessage(message)]
+                [SystemMessage(content) for content in self.general_documents] + [HumanMessage(message)]
                 if self.general_documents is not None else [SystemMessage(k) for k in retrieval_knowledge()] + [HumanMessage(message)]
             )
         )
@@ -94,7 +84,6 @@ class Agent:
         )
 
         return {"content": result["messages"][-1].content}
-
 
     def get_state(
         self, thread_id: str, checkpoint_id: str = "", get_full_history: bool = False
