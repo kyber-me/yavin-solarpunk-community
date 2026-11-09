@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "task_id": "2026-11-08/162407-agentes-base-conhecimento",
+  "registrado_em": "2026-11-08T16:32:04-03:00",
+  "avaliado_em": "2026-11-08T16:32:04-03:00",
+  "origem_registro": "contemporanea",
+  "revisao_git": "e3448a2ad3e367b8cf9d22173e7359881ca5e83a",
+  "tarefa": "Estruturar membros com agentes, carregar documentos obrigatorios do Notion e persistir agentes e documentos com identidade vinculada por FK",
+  "complexidade": 4,
+  "risco": 4,
+  "nivel": 4,
+  "justificativas": {
+    "complexidade": "Exige coordenar Member, carregamento e composicao de contexto de Agent, leitura do Notion, novas tabelas e repositorios, catalogo e servicos de conversa. A identidade hoje e lida de arquivo e o catalogo usa identificador fixo, enquanto Agent cria ULID a cada instancia; ha decisoes de mapeamento e ciclo de vida ainda abertas. A integracao deve ser verificada por etapas.",
+    "risco": "O reset integral autorizado como direcao elimina a necessidade de reconciliar conversas e checkpoints legados, mas a recriacao de tabelas, agentes e documentos continua afetando o fluxo central. Erros podem deixar registros inconsistentes ou indisponibilizar o chat e o carregamento obrigatorio; a exclusao de dados existentes exige delimitar o banco alvo e verificar o resultado antes de executar. Nao ha evidencia de perda acidental inevitavel ou exposicao que justifique nota 5."
+  },
+  "evidencias": [
+    {
+      "arquivo": "backend/src/domain/member/member.py",
+      "simbolo": "Member",
+      "observacao": "Classe local em andamento com agent opcional; arquivo adicionado vazio ao indice e modificado na arvore de trabalho."
+    },
+    {
+      "arquivo": "backend/src/agents/agent.py",
+      "simbolo": "Agent",
+      "observacao": "Cria ULID no construtor, le identidade de caminho local e injeta arquivos Markdown de atas, manifestos e transcricoes no primeiro turno; projeto nao e carregado."
+    },
+    {
+      "arquivo": "backend/src/services/agent_catalog_service.py",
+      "simbolo": "_AVAILABLE_AGENTS",
+      "observacao": "Catalogo em memoria usa o ID publico fixo silas; validacao de participante depende dele."
+    },
+    {
+      "arquivo": "backend/src/services/send_message_service.py",
+      "simbolo": "SendMessageService.run",
+      "observacao": "Instancia Silas por requisicao com identidade em arquivo e usa checkpointer compartilhado."
+    },
+    {
+      "arquivo": "backend/src/services/create_conversation_service.py",
+      "simbolo": "CreateConversationService.run",
+      "observacao": "Consulta disponibilidade no catalogo antes de criar conversa persistida."
+    },
+    {
+      "arquivo": "backend/src/infra/db/relational/migrations/001_initial_schema.sql",
+      "simbolo": "yavin.conversations",
+      "observacao": "Schema aplicado tem conversas e mensagens, sem tabelas de agentes e documentos; IDs de participantes sao TEXT sem FK."
+    },
+    {
+      "arquivo": "frontend/src/chatApi.ts",
+      "simbolo": null,
+      "observacao": "Frontend consome GET /agents e o formato de catalogo; mudanca de identificadores ou disponibilidade afeta a criacao de conversas."
+    }
+  ],
+  "incertezas": [
+    "Ainda nao esta definido se o registro de documento guarda conteudo, referencia ao Notion, versao ou combinacao deles; isso afeta sincronizacao e recuperacao.",
+    "A relacao entre Member, registro persistido de agente, instancia executavel de Agent e ID publico silas precisa ser definida para os novos registros.",
+    "O fallback aprovado usa os documentos locais atuais quando o Notion estiver indisponivel; falta definir deteccao de falha, frescor e observabilidade.",
+    "O banco alvo e o procedimento do reset integral, inclusive checkpoints, devem ser delimitados e verificados antes da execucao.",
+    "O backlog anterior propunha leitura direta de Markdown nesta etapa, enquanto a solicitacao atual exige Notion com fallback local; o plano deve explicitar a mudanca de escopo."
+  ],
+  "classificacao_provisoria": true,
+  "graphify": {
+    "utilizado": true,
+    "motivo": "Consulta localizada de Agent ao grafo existente, com relacoes relevantes confirmadas por leitura do codigo atual.",
+    "versao_ferramenta": "0.9.71",
+    "revisao_codigo": "d9f1f311747c4473a7966616235bab94ca61ea25",
+    "estado_arquivos": "Provenance do grafo e anterior ao commit e3448a2 e nao inclui Member; caminhos de servicos foram reorganizados. No momento da gravacao, Member esta adicionado vazio ao indice e modificado na arvore; ha exclusoes staged em registros antigos do harness, preservadas.",
+    "atualidade": "desatualizada",
+    "limitacoes": [
+      "Grafo estrutural nao cobre Notion nem o contrato HTTP do frontend; as arestas do grafo antigo nao comprovam o estado atual."
+    ]
+  },
+  "observacoes": [
+    "Classificacao da solicitacao atual, sem autorizacao para implementar backend ou aplicar migracao.",
+    "Consultadas tarefas relacionadas do backlog Notion: integracao SDK e selecao do contexto documental; ambas descrevem escopos anteriores mais estreitos.",
+    "Nao foram executados modulos do backend, servicos, modelos ou operacoes no banco.",
+    "Reclassificacao apos diretrizes do Idealizador: considerar reset integral do banco, inclusive checkpoints, sem necessidade de preservar os dados atuais.",
+    "Notion sera fonte principal dos documentos obrigatorios; arquivos locais atuais serao fallback quando indisponivel.",
+    "Reset e mudancas no backend ainda nao foram executados; o alvo e a sequencia operacional pertencem ao planejamento."
+  ]
+}

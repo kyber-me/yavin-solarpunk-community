@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "task_id": "2026-11-08/185003-public-description-agents",
+  "registrado_em": "2026-11-08T19:00:12-03:00",
+  "anterior_ref": "loop-001.json",
+  "limite_tentativas": 3,
+  "estado": "aprovado_tecnicamente",
+  "classificacao_ref": "classificacao.json",
+  "planejamento_ref": "planejamento.json",
+  "autorizacao_ref": "conversa: Implement the approved plan apos modo Plan",
+  "tentativas": [
+    {
+      "numero": 1,
+      "implementation_id": "01M6YJP5N4M2P609Q6A51NYKYF",
+      "parent_implementation_id": null,
+      "fase": "revisada",
+      "revisao_ref": "revisao-001.json",
+      "evidencias_execucao": [
+        "Migração 003 aplicada em banco descartável e no banco local localhost:5432/yavin; ULID de Silas preservado e descrição NULL",
+        "CHECK rejeitou texto somente em branco em transação revertida; GET /agents retornou public_description null sem identidade",
+        "Teste HTTP dedicado com valor nulo, texto e CHECK passou em banco descartável",
+        "Frontend: oito testes e build TypeScript/Vite passaram; suíte local do backend teve falhas preexistentes de rota /conversation/talk vs /conversation/message fora deste escopo"
+      ],
+      "snapshot": [
+        {
+          "arquivo": "backend/src/infra/db/relational/migrations/003_agent_public_description.sql",
+          "sha256": "10f4d335ed16c3a65fc395474a060c7269bba4f7c99f20fe92dc997d32ebafb5"
+        },
+        {
+          "arquivo": "backend/src/infra/db/relational/agent_repository.py",
+          "sha256": "a33bd15fcd4208957532eceb95fc1194a762c8f2a9a5b53d0c021afe3032edff"
+        },
+        {
+          "arquivo": "backend/src/services/agent_catalog_service.py",
+          "sha256": "91076eff389673f50a891d1d45a68dfadb0cee99fc1accb01571d994d33c29a5"
+        },
+        {
+          "arquivo": "backend/src/types/dtos/agent_catalog.py",
+          "sha256": "a73a7ce75efb22d0aca170f0f6a6ff735ecfa2111c0aa1e51874e32470afe112"
+        },
+        {
+          "arquivo": "backend/tests/test_agent_catalog.py",
+          "sha256": "b9da6d29a9151b94bfc959892cab215a5cdabfd711da6702e9dfd8007ead36db"
+        },
+        {
+          "arquivo": "backend/tests/test_create_conversation.py",
+          "sha256": "9283a357f8761d7e4a22840bf33191b5d7918ad5d2ed6d7b10aa2087daa5aff8"
+        },
+        {
+          "arquivo": "backend/tests/test_http_integration.py",
+          "sha256": "27acb38cb8280fe1912a6dc34cec997545c48ba06d6e05a2dda5eba9e56d7527"
+        },
+        {
+          "arquivo": "frontend/src/chatApi.ts",
+          "sha256": "d6549954a08b2f14127a95c6464c8b8ce627d758ba82383081a191c58e004bba"
+        },
+        {
+          "arquivo": "frontend/src/components/CreateConversationForm.tsx",
+          "sha256": "4c3f817b2ca6472b16a6d55d6ffb26da98546e850894579bfa6a080c086902bf"
+        },
+        {
+          "arquivo": "frontend/src/styles.css",
+          "sha256": "4ffb61d917bfc8fb24a2bd1878d38f01aa103de59dfbba8415102e4f538e5b04"
+        },
+        {
+          "arquivo": "frontend/tests/chat-api.test.mjs",
+          "sha256": "e276734c3c393c597f19a1415e8bf46d1ffecb3e601a2b0177b4456b6fe307c3"
+        },
+        {
+          "arquivo": "frontend/README.md",
+          "sha256": "f9a435acca88ee4e5ed0f0cbe5add653349682741d79d90ca685dc2c912d3deb"
+        }
+      ]
+    }
+  ],
+  "motivo": "Revisao independente v2 aprovou C1-C3 sem achados bloqueantes; revisao humana pendente."
+}

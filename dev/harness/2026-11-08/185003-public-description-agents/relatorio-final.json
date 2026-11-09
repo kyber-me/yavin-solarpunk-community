@@ -1,0 +1,464 @@
+{
+  "schema_version": 1,
+  "report_id": "01M6YJV91JVXRGTA1BTRVENDXC",
+  "task_id": "2026-11-08/185003-public-description-agents",
+  "implementation_id": "01M6YJP5N4M2P609Q6A51NYKYF",
+  "review_id": "01M6YJR9PP31DADAGMN5X3242T",
+  "gerado_em": "2026-11-08T19:00:47-03:00",
+  "titulo": "Descrição pública opcional no catálogo de agentes",
+  "resumo": "Migracao 003 adicionou public_description nullable e rejeita texto apenas em branco; GET /agents inclui o campo e o frontend o exibe quando presente. Silas permanece com descricao NULL e ULID preservado.",
+  "status_tecnico": "aprovado",
+  "revisao_humana": "pendente",
+  "referencias": {
+    "classificacao": "classificacao.json",
+    "planejamento": "planejamento.json",
+    "revisao": "revisao-001.json",
+    "loop": "loop-002.json",
+    "evidencias_execucao": [
+      "loop-001.json",
+      "revisao-001.json"
+    ]
+  },
+  "snapshot": {
+    "revisao_git": "e3448a2ad3e367b8cf9d22173e7359881ca5e83a",
+    "arquivos": [
+      {
+        "arquivo": "backend/src/infra/db/relational/migrations/003_agent_public_description.sql",
+        "sha256": "10f4d335ed16c3a65fc395474a060c7269bba4f7c99f20fe92dc997d32ebafb5"
+      },
+      {
+        "arquivo": "backend/src/infra/db/relational/agent_repository.py",
+        "sha256": "a33bd15fcd4208957532eceb95fc1194a762c8f2a9a5b53d0c021afe3032edff"
+      },
+      {
+        "arquivo": "backend/src/services/agent_catalog_service.py",
+        "sha256": "91076eff389673f50a891d1d45a68dfadb0cee99fc1accb01571d994d33c29a5"
+      },
+      {
+        "arquivo": "backend/src/types/dtos/agent_catalog.py",
+        "sha256": "a73a7ce75efb22d0aca170f0f6a6ff735ecfa2111c0aa1e51874e32470afe112"
+      },
+      {
+        "arquivo": "backend/tests/test_agent_catalog.py",
+        "sha256": "b9da6d29a9151b94bfc959892cab215a5cdabfd711da6702e9dfd8007ead36db"
+      },
+      {
+        "arquivo": "backend/tests/test_create_conversation.py",
+        "sha256": "9283a357f8761d7e4a22840bf33191b5d7918ad5d2ed6d7b10aa2087daa5aff8"
+      },
+      {
+        "arquivo": "backend/tests/test_http_integration.py",
+        "sha256": "27acb38cb8280fe1912a6dc34cec997545c48ba06d6e05a2dda5eba9e56d7527"
+      },
+      {
+        "arquivo": "frontend/src/chatApi.ts",
+        "sha256": "d6549954a08b2f14127a95c6464c8b8ce627d758ba82383081a191c58e004bba"
+      },
+      {
+        "arquivo": "frontend/src/components/CreateConversationForm.tsx",
+        "sha256": "4c3f817b2ca6472b16a6d55d6ffb26da98546e850894579bfa6a080c086902bf"
+      },
+      {
+        "arquivo": "frontend/src/styles.css",
+        "sha256": "4ffb61d917bfc8fb24a2bd1878d38f01aa103de59dfbba8415102e4f538e5b04"
+      },
+      {
+        "arquivo": "frontend/tests/chat-api.test.mjs",
+        "sha256": "e276734c3c393c597f19a1415e8bf46d1ffecb3e601a2b0177b4456b6fe307c3"
+      },
+      {
+        "arquivo": "frontend/README.md",
+        "sha256": "f9a435acca88ee4e5ed0f0cbe5add653349682741d79d90ca685dc2c912d3deb"
+      }
+    ]
+  },
+  "arquivos_alterados": [
+    {
+      "id": "A01",
+      "caminho": "backend/src/infra/db/relational/migrations/003_agent_public_description.sql",
+      "caminho_anterior": null,
+      "tipo": "adicionado",
+      "resumo": "Adicionar ou verificar public_description no esquema, catalogo e interface",
+      "fases": [
+        "F1"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ],
+      "diff_ref": null
+    },
+    {
+      "id": "A02",
+      "caminho": "backend/src/infra/db/relational/agent_repository.py",
+      "caminho_anterior": null,
+      "tipo": "modificado",
+      "resumo": "Adicionar ou verificar public_description no esquema, catalogo e interface",
+      "fases": [
+        "F1"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ],
+      "diff_ref": null
+    },
+    {
+      "id": "A03",
+      "caminho": "backend/src/services/agent_catalog_service.py",
+      "caminho_anterior": null,
+      "tipo": "modificado",
+      "resumo": "Adicionar ou verificar public_description no esquema, catalogo e interface",
+      "fases": [
+        "F1"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ],
+      "diff_ref": null
+    },
+    {
+      "id": "A04",
+      "caminho": "backend/src/types/dtos/agent_catalog.py",
+      "caminho_anterior": null,
+      "tipo": "modificado",
+      "resumo": "Adicionar ou verificar public_description no esquema, catalogo e interface",
+      "fases": [
+        "F1"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ],
+      "diff_ref": null
+    },
+    {
+      "id": "A05",
+      "caminho": "backend/tests/test_agent_catalog.py",
+      "caminho_anterior": null,
+      "tipo": "modificado",
+      "resumo": "Adicionar ou verificar public_description no esquema, catalogo e interface",
+      "fases": [
+        "F3"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ],
+      "diff_ref": null
+    },
+    {
+      "id": "A06",
+      "caminho": "backend/tests/test_create_conversation.py",
+      "caminho_anterior": null,
+      "tipo": "modificado",
+      "resumo": "Adicionar ou verificar public_description no esquema, catalogo e interface",
+      "fases": [
+        "F3"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ],
+      "diff_ref": null
+    },
+    {
+      "id": "A07",
+      "caminho": "backend/tests/test_http_integration.py",
+      "caminho_anterior": null,
+      "tipo": "modificado",
+      "resumo": "Adicionar ou verificar public_description no esquema, catalogo e interface",
+      "fases": [
+        "F3"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ],
+      "diff_ref": null
+    },
+    {
+      "id": "A08",
+      "caminho": "frontend/src/chatApi.ts",
+      "caminho_anterior": null,
+      "tipo": "modificado",
+      "resumo": "Adicionar ou verificar public_description no esquema, catalogo e interface",
+      "fases": [
+        "F2"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ],
+      "diff_ref": null
+    },
+    {
+      "id": "A09",
+      "caminho": "frontend/src/components/CreateConversationForm.tsx",
+      "caminho_anterior": null,
+      "tipo": "modificado",
+      "resumo": "Adicionar ou verificar public_description no esquema, catalogo e interface",
+      "fases": [
+        "F2"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ],
+      "diff_ref": null
+    },
+    {
+      "id": "A10",
+      "caminho": "frontend/src/styles.css",
+      "caminho_anterior": null,
+      "tipo": "modificado",
+      "resumo": "Adicionar ou verificar public_description no esquema, catalogo e interface",
+      "fases": [
+        "F2"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ],
+      "diff_ref": null
+    },
+    {
+      "id": "A11",
+      "caminho": "frontend/tests/chat-api.test.mjs",
+      "caminho_anterior": null,
+      "tipo": "modificado",
+      "resumo": "Adicionar ou verificar public_description no esquema, catalogo e interface",
+      "fases": [
+        "F2"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ],
+      "diff_ref": null
+    },
+    {
+      "id": "A12",
+      "caminho": "frontend/README.md",
+      "caminho_anterior": null,
+      "tipo": "modificado",
+      "resumo": "Adicionar ou verificar public_description no esquema, catalogo e interface",
+      "fases": [
+        "F2"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ],
+      "diff_ref": null
+    }
+  ],
+  "fases": [
+    {
+      "id": "F1",
+      "titulo": "Migracao e contrato backend",
+      "resumo_executado": "Migracao 003 criada e aplicada; repositorio, servico e DTO retornam descricao nullable",
+      "tarefas": [
+        "T1",
+        "T2"
+      ],
+      "arquivos": [
+        "backend/src/infra/db/relational/migrations/003_agent_public_description.sql",
+        "backend/src/infra/db/relational/agent_repository.py",
+        "backend/src/services/agent_catalog_service.py",
+        "backend/src/types/dtos/agent_catalog.py"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ]
+    },
+    {
+      "id": "F2",
+      "titulo": "Consumo frontend",
+      "resumo_executado": "Frontend valida e mostra descricao do agente selecionado quando presente",
+      "tarefas": [
+        "T3"
+      ],
+      "arquivos": [
+        "frontend/src/chatApi.ts",
+        "frontend/src/components/CreateConversationForm.tsx",
+        "frontend/src/styles.css",
+        "frontend/tests/chat-api.test.mjs",
+        "frontend/README.md"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ]
+    },
+    {
+      "id": "F3",
+      "titulo": "Verificacao e revisao",
+      "resumo_executado": "Testes especificos e revisao independente concluidos",
+      "tarefas": [
+        "T4"
+      ],
+      "arquivos": [
+        "backend/tests/test_agent_catalog.py",
+        "backend/tests/test_create_conversation.py",
+        "backend/tests/test_http_integration.py"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ]
+    }
+  ],
+  "criterios": [
+    {
+      "id": "C1",
+      "estado": "atendido",
+      "evidencia": "003 adiciona coluna TEXT nullable e CHECK que permite NULL e rejeita btrim vazio, sem UPDATE nem alteração de ID. loop-001 registra aplicação local e descartável, preservação do ULID de Silas e CHECK em transação revertida."
+    },
+    {
+      "id": "C2",
+      "estado": "atendido",
+      "evidencia": "AgentRepository.list_agents seleciona id, name e public_description com EXISTS para identidade, sem selecionar seu conteúdo; AgentSummary e GET /agents serializam string ou null. Teste HTTP dedicado no banco descartável relatado no loop cobre ambos os valores e confirma ausência de identidade. Os três testes unitários do catálogo passaram nesta revisão."
+    },
+    {
+      "id": "C3",
+      "estado": "atendido",
+      "evidencia": "listAgents exige string não vazia ou null; CreateConversationForm calcula selectedAgent pelo ID selecionado e renderiza apenas selectedAgent.public_description quando presente. O teste frontend de API cobre null, texto e campo ausente; oito casos passaram antes de erro do runner nesta sessão. Build anterior informado no loop passou."
+    }
+  ],
+  "validacoes": [
+    {
+      "id": "V1",
+      "descricao": "Migração 003 e contrato HTTP em banco descartável",
+      "estado": "aprovada",
+      "origem": "executor",
+      "evidencia": "Teste dedicado com NULL, texto, CHECK e ausencia de identidade passou"
+    },
+    {
+      "id": "V2",
+      "descricao": "Aplicação no banco local",
+      "estado": "aprovada",
+      "origem": "executor",
+      "evidencia": "Alvo localhost:5432/yavin conferido; ULID de Silas preservado e descricao NULL; CHECK em transacao revertida; GET /agents 200"
+    },
+    {
+      "id": "V3",
+      "descricao": "Testes frontend e build",
+      "estado": "aprovada",
+      "origem": "executor",
+      "evidencia": "8 testes e build TypeScript/Vite passaram com NODE_OPTIONS configurado"
+    },
+    {
+      "id": "V4",
+      "descricao": "Validação independente dos arquivos e do catalogo",
+      "estado": "aprovada",
+      "origem": "revisor",
+      "evidencia": "12 hashes estaveis e 3 testes unitarios do catalogo passaram"
+    },
+    {
+      "id": "V5",
+      "descricao": "Reexecucao do build na sessao do revisor",
+      "estado": "falhou",
+      "origem": "revisor",
+      "evidencia": "Erro ambiental SecItemCopyMatching -50 e encerramento 139 do Vite; ver revisao-001.json"
+    }
+  ],
+  "anotacoes": [
+    {
+      "id": "N1",
+      "tipo": "limitacao",
+      "texto": "A suite local completa do backend ainda falha em testes de envio que chamam /conversation/talk enquanto a rota atual e /conversation/message; divergencia anterior e fora deste incremento.",
+      "arquivos": [
+        "backend/tests/test_chat_request.py",
+        "backend/main.py"
+      ],
+      "evidencias": [
+        "loop-001.json"
+      ]
+    },
+    {
+      "id": "N2",
+      "tipo": "limitacao",
+      "texto": "A reexecucao do frontend pelo revisor sofreu erro ambiental de Keychain/Vite. O executor passou testes e build com as opcoes de certificado ja usadas no projeto.",
+      "arquivos": [],
+      "evidencias": [
+        "revisao-001.json"
+      ]
+    },
+    {
+      "id": "N3",
+      "tipo": "explicacao",
+      "texto": "Nao foi criado texto publico para Silas e nao houve alteracao na identidade interna nem na logica de cache.",
+      "arquivos": [
+        "backend/src/infra/db/relational/agent_repository.py"
+      ],
+      "evidencias": [
+        "loop-001.json"
+      ]
+    }
+  ],
+  "fluxo": {
+    "disponivel": true,
+    "motivo": null,
+    "nos": [
+      {
+        "id": "db",
+        "rotulo": "Agentes persistidos",
+        "arquivo": "backend/src/infra/db/relational/migrations/003_agent_public_description.sql",
+        "simbolo": "yavin.agents.public_description"
+      },
+      {
+        "id": "repo",
+        "rotulo": "Consulta do catalogo",
+        "arquivo": "backend/src/infra/db/relational/agent_repository.py",
+        "simbolo": "AgentRepository.list_agents"
+      },
+      {
+        "id": "service",
+        "rotulo": "Contrato publico",
+        "arquivo": "backend/src/services/agent_catalog_service.py",
+        "simbolo": "get_agent_catalog"
+      },
+      {
+        "id": "frontend",
+        "rotulo": "Descricao selecionada",
+        "arquivo": "frontend/src/components/CreateConversationForm.tsx",
+        "simbolo": "CreateConversationForm"
+      }
+    ],
+    "arestas": [
+      {
+        "origem": "db",
+        "destino": "repo",
+        "relacao": "consulta coluna nullable",
+        "evidencias": [
+          "backend/src/infra/db/relational/agent_repository.py"
+        ]
+      },
+      {
+        "origem": "repo",
+        "destino": "service",
+        "relacao": "fornece id, nome e descricao",
+        "evidencias": [
+          "backend/src/services/agent_catalog_service.py"
+        ]
+      },
+      {
+        "origem": "service",
+        "destino": "frontend",
+        "relacao": "GET /agents consumido e exibido condicionalmente",
+        "evidencias": [
+          "backend/src/types/dtos/agent_catalog.py",
+          "frontend/src/chatApi.ts",
+          "frontend/src/components/CreateConversationForm.tsx"
+        ]
+      }
+    ]
+  },
+  "observacoes": [
+    "Revisao humana permanece pendente; alteracoes locais nao relacionadas foram preservadas.",
+    "O campo publico e nullable ate existir texto editorial aprovado."
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "task_id": "2026-11-08/190254-rota-conversation-message",
+  "registrado_em": "2026-11-08T19:02:54-03:00",
+  "avaliado_em": "2026-11-08T19:02:54-03:00",
+  "origem_registro": "contemporanea",
+  "revisao_git": "e3448a2ad3e367b8cf9d22173e7359881ca5e83a",
+  "tarefa": "Alinhar testes e referencia operacional do backend a rota POST /conversation/message ja usada pela API e pelo frontend",
+  "complexidade": 1,
+  "risco": 1,
+  "nivel": 1,
+  "justificativas": {
+    "complexidade": "A rota atual e o consumidor frontend ja concordam em /conversation/message; restam substituicoes localizadas em dois arquivos de teste e um guia do backend, com verificacao direta.",
+    "risco": "Nao modifica rota de producao, payload, banco ou dados persistidos; o efeito se limita a testes e referencia operacional, reversiveis por diff."
+  },
+  "evidencias": [
+    {"arquivo": "backend/main.py", "simbolo": "chat", "observacao": "POST /conversation/message e a rota operacional atual."},
+    {"arquivo": "frontend/src/chatApi.ts", "simbolo": "sendMessage", "observacao": "Frontend ja envia para /conversation/message; nenhuma alteracao adicional e necessaria nele."},
+    {"arquivo": "backend/tests/test_chat_request.py", "simbolo": "ChatRequestTests", "observacao": "Tres requisicoes de teste ainda usam /conversation/talk e falham por desencontro com a rota atual."},
+    {"arquivo": "backend/tests/test_http_integration.py", "simbolo": "HttpIntegrationTests.talk", "observacao": "Helper de testes HTTP ainda chama /conversation/talk."},
+    {"arquivo": "backend/src/infra/db/relational/README.md", "simbolo": null, "observacao": "Guia operacional menciona /conversation/talk como rota ativa."}
+  ],
+  "incertezas": [],
+  "classificacao_provisoria": false,
+  "graphify": {
+    "utilizado": false,
+    "motivo": "Mudanca localizada em literais de rota; busca e leitura direta confirmaram os consumidores. Grafo local esta desatualizado.",
+    "versao_ferramenta": "0.9.71",
+    "revisao_codigo": "d9f1f311747c4473a7966616235bab94ca61ea25",
+    "estado_arquivos": "Arvore e indice contem alteracoes locais preexistentes do Idealizador e implementacoes anteriores; testes do backend ja estao modificados. Nada disso foi reescrito nesta classificacao.",
+    "atualidade": "desatualizada",
+    "limitacoes": ["Grafo nao cobre o contrato HTTP frontend atual."]
+  },
+  "observacoes": [
+    "Documentos historicos como dev/plano-persistencia-conversas.md, dev/retomada-2026-11-07.md e dev/BACKLOG-2026-11-08.md preservam o contrato da epoca e nao serao reescritos.",
+    "O Idealizador pediu corrigir os pontos do backend que ainda usam a rota antiga; o frontend ja havia sido adaptado em turno anterior.",
+    "Classificacao nao autoriza edicao e requer transicao do protocolo para modo Plan, mesmo no nivel 1."
+  ]
+}

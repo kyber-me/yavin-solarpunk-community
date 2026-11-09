@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "task_id": "2026-11-08/193142-titulo-persistido-conversa",
+  "registrado_em": "2026-11-08T19:34:00-03:00",
+  "planejado_em": "2026-11-08T19:34:00-03:00",
+  "origem_registro": "contemporanea",
+  "classificacao_ref": "classificacao.json",
+  "nivel": 3,
+  "tipo_planejamento": "decomposto",
+  "modo_plan": {"estado": "utilizado", "justificativa": "O Idealizador mudou a sessão para Plan e autorizou o planejamento; a gravação do JSON ficou pendente pelas restrições de escrita desse modo e é feita agora, antes de editar o código."},
+  "objetivo": "Persistir o título das conversas, exigi-lo na criação e permitir sua edição no frontend com recuperação após recarga.",
+  "escopo": {
+    "inclui": ["Migração 004 com preenchimento de títulos anteriores", "Persistência, criação, listagem e edição do título na API", "Formulário de criação e edição no frontend", "Testes de contrato, migração e interface"],
+    "exclui": ["Autenticação de usuários", "Mensagens espontâneas de agentes", "Alteração da regra de uma conversa ativa por dupla"]
+  },
+  "criterios_aceitacao": [
+    {"id": "C1", "descricao": "Conversas existentes recebem título preservável e novas conversas exigem e persistem título válido.", "verificacao": "Migração em banco descartável e testes de criação e leitura."},
+    {"id": "C2", "descricao": "A API devolve o título na criação, no conflito e na listagem, e permite edição somente pelo owner declarado.", "verificacao": "Testes HTTP de respostas, validação e autorização de edição."},
+    {"id": "C3", "descricao": "O frontend exige título na criação, edita-o e exibe o valor persistido após recarga.", "verificacao": "Testes de API/UI e checagem TypeScript/build."}
+  ],
+  "fases": [
+    {"id": "F1", "titulo": "Persistência e contrato", "objetivo": "Disponibilizar o título no banco e na API.", "depende_de": [], "tarefas": [
+      {"id": "T1", "descricao": "Criar migração 004, atualizar registro e repositório para incluir e editar título.", "arquivos": ["backend/src/infra/db/relational/migrations/004_conversation_title.sql", "backend/src/infra/db/relational/conversation_record.py", "backend/src/infra/db/relational/conversation_repository.py"], "criterios_aceitacao": ["C1", "C2"], "validacoes": ["Testes de repositório e migração em banco descartável."]},
+      {"id": "T2", "descricao": "Conectar título aos serviços e contratos HTTP de criação, conflito, listagem e edição, com validação de owner e título.", "arquivos": ["backend/src/services/create_conversation_service.py", "backend/src/services/helpers/conversation_history.py", "backend/src/types/dtos/conversation_history.py", "backend/src/types/dtos/create_conversation_request.py", "backend/main.py", "backend/tests/"], "criterios_aceitacao": ["C1", "C2"], "validacoes": ["Testes HTTP sem lifespan e fluxo integrado quando banco descartável estiver disponível."]}
+    ]},
+    {"id": "F2", "titulo": "Interface", "objetivo": "Expor criação e edição do título na SPA.", "depende_de": ["F1"], "tarefas": [
+      {"id": "T3", "descricao": "Integrar os novos campos e a rota de edição em chatApi e formulários de conversa, com tratamento de erro e persistência visual.", "arquivos": ["frontend/src/chatApi.ts", "frontend/src/components/CreateConversationForm.tsx", "frontend/src/components/ConversationPanel.tsx", "frontend/src/styles.css", "frontend/tests/"], "criterios_aceitacao": ["C3"], "validacoes": ["Testes frontend, checagem TypeScript e build."]}
+    ]}
+  ],
+  "incertezas": ["O banco local do projeto não será modificado sem etapa explícita de aplicação da migração; a validação usará banco descartável quando disponível."],
+  "observacoes": ["O Idealizador escolheu título obrigatório na criação durante o modo Plan e aprovou o plano concreto depois de retornar ao modo Default.", "A revisão independente de nível 3 e até duas correções dentro do escopo estão autorizadas pelo plano aprovado."]
+}

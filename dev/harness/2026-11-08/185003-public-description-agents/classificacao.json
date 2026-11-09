@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "task_id": "2026-11-08/185003-public-description-agents",
+  "registrado_em": "2026-11-08T18:50:03-03:00",
+  "avaliado_em": "2026-11-08T18:50:03-03:00",
+  "origem_registro": "contemporanea",
+  "revisao_git": "e3448a2ad3e367b8cf9d22173e7359881ca5e83a",
+  "tarefa": "Adicionar public_description opcional a agentes persistidos e expor o campo no catalogo de agentes e na interface de criacao de conversas",
+  "complexidade": 3,
+  "risco": 3,
+  "nivel": 3,
+  "justificativas": {
+    "complexidade": "A mudanca coordena migracao SQL incremental em banco ja criado, consulta e contrato Pydantic do catalogo, validacao TypeScript e exibicao no formulario. A abordagem foi proposta, mas precisa verificar o contrato de null e a aplicacao da migracao no ambiente local.",
+    "risco": "Um erro na migracao pode impedir consultas aos agentes e um desencontro no formato de GET /agents pode interromper a criacao de conversas no frontend. O novo campo e opcional e nao reescreve dados existentes, de modo que nao ha evidencia de recuperacao dificil ou perda de dados para risco 4 ou 5."
+  },
+  "evidencias": [
+    {"arquivo": "backend/src/infra/db/relational/migrations/002_agents_documents.sql", "simbolo": "yavin.agents", "observacao": "Tabela atual possui id e name; a migracao 002 ja foi aplicada ao banco local, portanto o campo requer nova migracao."},
+    {"arquivo": "backend/src/infra/db/relational/agent_repository.py", "simbolo": "AgentRepository.list_agents", "observacao": "A consulta com EXISTS retorna tuplas de id e name; seed de Silas insere apenas esses campos."},
+    {"arquivo": "backend/src/services/agent_catalog_service.py", "simbolo": "get_agent_catalog", "observacao": "Converte cada tupla do repositorio em AgentSummary."},
+    {"arquivo": "backend/src/types/dtos/agent_catalog.py", "simbolo": "AgentSummary", "observacao": "Contrato publico atual contem somente id e name."},
+    {"arquivo": "frontend/src/chatApi.ts", "simbolo": "AgentOption", "observacao": "Frontend valida e tipa o catalogo retornado por GET /agents."},
+    {"arquivo": "frontend/src/components/CreateConversationForm.tsx", "simbolo": "CreateConversationForm", "observacao": "Formulario mostra nomes no seletor; a descricao podera aparecer para o agente selecionado."}
+  ],
+  "incertezas": [],
+  "classificacao_provisoria": false,
+  "graphify": {
+    "utilizado": false,
+    "motivo": "Grafo local conhecido como desatualizado para servicos reorganizados e novo repositorio; alcance confirmado por busca e leitura direta.",
+    "versao_ferramenta": "0.9.71",
+    "revisao_codigo": "d9f1f311747c4473a7966616235bab94ca61ea25",
+    "estado_arquivos": "Arvore de trabalho contem alteracoes staged e unstaged do Idealizador e da implementacao anterior; agent_repository.py e migracao 002 ainda nao estao rastreados no Git. Nenhum desses arquivos foi alterado nesta classificacao.",
+    "atualidade": "desatualizada",
+    "limitacoes": ["Grafo nao representa os arquivos e contratos atuais do frontend e backend."]
+  },
+  "observacoes": [
+    "A proposta discutida e adicionar public_description TEXT nullable com restricao contra texto apenas em branco, sem inventar descricao para Silas.",
+    "O usuario autorizou implementar a proposta e indicou comecar por migracao 003 e contratos; esta classificacao nao executa essa autorizacao nem substitui a transicao de modo exigida pelo protocolo do projeto.",
+    "Alteracoes locais existentes, inclusive exclusoes staged de registros antigos, foram preservadas."
+  ]
+}

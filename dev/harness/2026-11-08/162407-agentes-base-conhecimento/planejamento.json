@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "task_id": "2026-11-08/162407-agentes-base-conhecimento",
+  "registrado_em": "2026-11-08T16:40:18-03:00",
+  "planejado_em": "2026-11-08T16:40:18-03:00",
+  "origem_registro": "contemporanea",
+  "classificacao_ref": "classificacao-002.json",
+  "nivel": 4,
+  "tipo_planejamento": "decomposto",
+  "modo_plan": {"estado": "utilizado", "justificativa": "Modo Plan confirmado pela sessão anterior; o Idealizador pediu prosseguir com o planejamento após a troca."},
+  "objetivo": "Persistir agentes e documentos, carregar identidade do banco e Manifesto Solarpunk e Projeto de Pesquisa do Notion com fallback local, e recriar o banco local incluindo checkpoints.",
+  "escopo": {
+    "inclui": ["Instalação de jsonschema no ambiente virtual e validação dos registros", "Duas tabelas para agentes e documentos; carga inicial de Silas", "Catálogo, conversa e montagem de contexto obrigatório a partir das novas fontes", "Adaptação do frontend ao ID ULID retornado pela API", "Reset integral do banco local do projeto após verificação"],
+    "exclui": ["Cadastro administrativo de agentes", "RAG, embeddings e seleção de outros documentos", "Mudanças nos documentos do Notion", "Reset de bancos externos ao DATABASE_URI local"]
+  },
+  "criterios_aceitacao": [
+    {"id": "C1", "descricao": "jsonschema instalado no ambiente virtual e classificação e plano validados", "verificacao": "Importar jsonschema com backend/.venv/bin/python e validar os JSON pelos schemas"},
+    {"id": "C2", "descricao": "Silas tem registro com ULID e identidade persistida em documento com FK; documentos gerais não têm FK de agente", "verificacao": "Inspecionar restrições SQL e consultar os registros após a carga"},
+    {"id": "C3", "descricao": "Catálogo e conversas usam o ULID de Silas de forma estável após reinício", "verificacao": "Testes de serviço e integração HTTP com modelo simulado"},
+    {"id": "C4", "descricao": "Os três documentos obrigatórios entram no contexto e falha do Notion aciona arquivos locais de Manifesto e Projeto", "verificacao": "Testes com cliente Notion simulado, incluindo falha e documento ausente"},
+    {"id": "C5", "descricao": "Banco local recriado sem conversas, mensagens ou checkpoints antigos e com esquema e carga inicial novos", "verificacao": "Conferência do alvo antes do reset e consultas de verificação após a recriação"}
+  ],
+  "fases": [
+    {"id": "F1", "titulo": "Preparação e contratos", "objetivo": "Validar registros e estabilizar inicialização", "depende_de": [], "tarefas": [
+      {"id": "T1", "descricao": "Instalar jsonschema no ambiente virtual e validar classificação e planejamento", "arquivos": ["dev/harness/2026-11-08/162407-agentes-base-conhecimento/"], "criterios_aceitacao": ["C1"], "validacoes": ["Importação pelo Python do backend", "Validação pelo schema com formato de data"]},
+      {"id": "T2", "descricao": "Corrigir divergências de imports e DTO que impedem importar a API e definir Member sem persistência própria", "arquivos": ["backend/main.py", "backend/src/domain/member/member.py", "backend/src/services/"], "criterios_aceitacao": ["C3"], "validacoes": ["Import de main sem iniciar serviços", "Testes pertinentes"]}
+    ]},
+    {"id": "F2", "titulo": "Persistência", "objetivo": "Criar esquema e repositórios de agentes e documentos", "depende_de": ["F1"], "tarefas": [
+      {"id": "T3", "descricao": "Criar migração com agents e documents e restrições para identidade e documentos gerais", "arquivos": ["backend/src/infra/db/relational/migrations/"], "criterios_aceitacao": ["C2"], "validacoes": ["Teste SQL em banco descartável", "Conferência de FK e unicidade"]},
+      {"id": "T4", "descricao": "Implementar repositórios e carga inicial idempotente de Silas com identidade do arquivo atual", "arquivos": ["backend/src/infra/db/relational/", "backend/src/services/"], "criterios_aceitacao": ["C2", "C3"], "validacoes": ["Testes de leitura e carga repetida"]}
+    ]},
+    {"id": "F3", "titulo": "Carregamento e consumo", "objetivo": "Usar agentes persistidos e documentos obrigatórios", "depende_de": ["F2"], "tarefas": [
+      {"id": "T5", "descricao": "Integrar cliente Notion e fallback local para Manifesto e Projeto, identidade do banco e falha explícita quando faltar documento", "arquivos": ["backend/src/agents/", "backend/src/services/", "backend/pyproject.toml"], "criterios_aceitacao": ["C4"], "validacoes": ["Testes com Notion simulado e falhas"]},
+      {"id": "T6", "descricao": "Substituir catálogo em memória e adaptar rotas, serviços e frontend ao ULID persistido", "arquivos": ["backend/main.py", "backend/src/services/", "frontend/src/"], "criterios_aceitacao": ["C3"], "validacoes": ["Testes HTTP e build frontend"]}
+    ]},
+    {"id": "F4", "titulo": "Verificação e reset", "objetivo": "Verificar fluxo e recriar o banco local escolhido", "depende_de": ["F3"], "tarefas": [
+      {"id": "T7", "descricao": "Executar testes e revisão técnica antes do reset", "arquivos": ["backend/tests/", "dev/harness/2026-11-08/162407-agentes-base-conhecimento/"], "criterios_aceitacao": ["C3", "C4"], "validacoes": ["Integração com modelo simulado em banco descartável", "Revisão independente"]},
+      {"id": "T8", "descricao": "Confirmar identidade do DATABASE_URI local, recriar banco e inicializar esquema, Silas e checkpointer", "arquivos": ["backend/src/infra/db/relational/migrations/", "backend/src/agents/infra/"], "criterios_aceitacao": ["C5"], "validacoes": ["Consultas de estado vazio e carga inicial", "Revisão técnica final"]}
+    ]}
+  ],
+  "incertezas": ["Permissões para recriar o banco local serão verificadas antes do reset", "Disponibilidade do Notion durante validação integrada será simulada se a conexão real não estiver configurada"],
+  "observacoes": ["Idealizador aprovou a execução do plano apresentado na conversa após mudança para modo Default.", "Correções dentro do escopo: até duas rodadas após entrega inicial, com revisão por tentativa.", "O ID de agente é ULID; Silas é somente name, conforme esclarecimento posterior do Idealizador.", "Reset ocorre em fase própria após revisão da implementação; preservar alterações locais anteriores não relacionadas."]
+}

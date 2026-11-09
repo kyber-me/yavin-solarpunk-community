@@ -1,0 +1,650 @@
+{
+  "schema_version": 1,
+  "report_id": "01M6YBPPWFKJD2R9K9AFZ69XH8",
+  "task_id": "2026-11-08/162407-agentes-base-conhecimento",
+  "implementation_id": "01M6YBF3HSWNH2DW0A273YT2AH",
+  "review_id": "01M6YBMGAGA4EFXYH7C7DH0ETY",
+  "gerado_em": "2026-11-08T16:55:57-03:00",
+  "titulo": "Agentes e base de conhecimento obrigatória",
+  "resumo": "Silas e sua identidade agora são persistidos; Manifesto Solarpunk e Projeto de Pesquisa são lidos do Notion com fallback local. O banco local foi recriado, inclusive os checkpoints.",
+  "status_tecnico": "aprovado",
+  "revisao_humana": "pendente",
+  "referencias": {
+    "classificacao": "classificacao-002.json",
+    "planejamento": "planejamento.json",
+    "revisao": "revisao-001.json",
+    "loop": "loop-002.json",
+    "evidencias_execucao": [
+      "loop-001.json",
+      "revisao-001.json"
+    ]
+  },
+  "snapshot": {
+    "revisao_git": "e3448a2ad3e367b8cf9d22173e7359881ca5e83a",
+    "arquivos": [
+      {
+        "arquivo": "backend/main.py",
+        "sha256": "e27498875bf147a3c5a58da4d227a1d1f04c1e94752d05904a9ee9e4706381cc"
+      },
+      {
+        "arquivo": "backend/pyproject.toml",
+        "sha256": "7a90f2d35c953ef7ed9b3aa38bd18e426d8f0b0a7e235fb3bab72b915df0b1e5"
+      },
+      {
+        "arquivo": "backend/uv.lock",
+        "sha256": "5215e8382a146b0bb49f811e085b32eff9f13bedcf182d0c50fa4da0e20180cb"
+      },
+      {
+        "arquivo": "backend/src/agents/agent.py",
+        "sha256": "167ee7308fcdcdc937f189bdc77758ca64befe338eaad264f7d2f3b18613f7d8"
+      },
+      {
+        "arquivo": "backend/src/agents/knowledge.py",
+        "sha256": "165fcd69641de028c02c83905604da13adc39f49c92f36cb4714db5bf888954c"
+      },
+      {
+        "arquivo": "backend/src/infra/db/relational/agent_repository.py",
+        "sha256": "5bedafbaa9c986100fdc8ce83cf60a611ffdb57e7834c3d3224669ae0303c929"
+      },
+      {
+        "arquivo": "backend/src/infra/db/relational/migrations/002_agents_documents.sql",
+        "sha256": "6e2a0e0df0978215eeed6baa0481497734c503513e04a5b9dc5bdc5ed41c03b8"
+      },
+      {
+        "arquivo": "backend/src/services/agent_catalog_service.py",
+        "sha256": "d3492e61bb90ca7154b636e3a4c1e3f2890456ee57d9d22e99edf11df2814927"
+      },
+      {
+        "arquivo": "backend/src/services/create_conversation_service.py",
+        "sha256": "a0aae5929e09c36b1f87c748ad72d07566ff6e54cada733686136b4b92fdd97d"
+      },
+      {
+        "arquivo": "backend/src/services/helpers/conversation_history.py",
+        "sha256": "17ea5ed50618254897d113694e5a6dc9d55409434f01caec64d3aaa3819a03f4"
+      },
+      {
+        "arquivo": "backend/src/services/send_message_service.py",
+        "sha256": "36e59a2279d62ef837d0c1c95f2b4674e7ef49a6e77e9f0ac79fb92b3cbb2c98"
+      },
+      {
+        "arquivo": "backend/tests/test_agent_catalog.py",
+        "sha256": "bb419282d8c66710f00cc3ad3e2b68398bcc5ea9bd465fbd50de78c421cef20e"
+      },
+      {
+        "arquivo": "backend/tests/test_create_conversation.py",
+        "sha256": "c37754a3056f21b3105b70f1c908202368ad7c06f8c6bc1377ad0a9817fd0671"
+      },
+      {
+        "arquivo": "backend/tests/test_chat_request.py",
+        "sha256": "94d1c39aa2e939100050e193981c3637173071baf29e7e6b95b13fa0f4fc3a78"
+      },
+      {
+        "arquivo": "backend/tests/test_chat_service_messages.py",
+        "sha256": "8fd201d7e11a0f23d9dacdfefa008f8a9cff583f421e721d9335500d8f133ec2"
+      },
+      {
+        "arquivo": "backend/tests/test_chat_checkpoint.py",
+        "sha256": "0e9585cb9c502a6b1ff7c6a0b2a1010956bd8eddf345144d5d90c8a818cae7b9"
+      },
+      {
+        "arquivo": "backend/tests/test_message_repository.py",
+        "sha256": "1e3866a666c37074802183c9d3573769bcb27b5dfcaf0bafb53f3687af681980"
+      },
+      {
+        "arquivo": "backend/tests/test_http_integration.py",
+        "sha256": "4bbe1a4de549f6637035ed91006ffb554fa8179b47129176948297393adbfa4c"
+      },
+      {
+        "arquivo": "backend/tests/test_mandatory_knowledge.py",
+        "sha256": "1fa25ff505f79c2127e8d675ef8786f14c89b0ab9b77a1b8d87be5ebfadf0910"
+      },
+      {
+        "arquivo": "frontend/src/components/ConversationPanel.tsx",
+        "sha256": "dc8b23f4158da77e5e8663523b5244c5b81a8684ac2f159ca5d4d316b3f7a66b"
+      }
+    ]
+  },
+  "arquivos_alterados": [
+    {
+      "id": "A01",
+      "caminho": "backend/main.py",
+      "caminho_anterior": null,
+      "tipo": "modificado",
+      "resumo": "Implementação ou validação do carregamento de agentes e documentos obrigatórios",
+      "fases": [
+        "F1"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ],
+      "diff_ref": null
+    },
+    {
+      "id": "A02",
+      "caminho": "backend/pyproject.toml",
+      "caminho_anterior": null,
+      "tipo": "modificado",
+      "resumo": "Implementação ou validação do carregamento de agentes e documentos obrigatórios",
+      "fases": [
+        "F1"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ],
+      "diff_ref": null
+    },
+    {
+      "id": "A03",
+      "caminho": "backend/uv.lock",
+      "caminho_anterior": null,
+      "tipo": "modificado",
+      "resumo": "Implementação ou validação do carregamento de agentes e documentos obrigatórios",
+      "fases": [
+        "F1"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ],
+      "diff_ref": null
+    },
+    {
+      "id": "A04",
+      "caminho": "backend/src/agents/agent.py",
+      "caminho_anterior": null,
+      "tipo": "modificado",
+      "resumo": "Implementação ou validação do carregamento de agentes e documentos obrigatórios",
+      "fases": [
+        "F3"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ],
+      "diff_ref": null
+    },
+    {
+      "id": "A05",
+      "caminho": "backend/src/agents/knowledge.py",
+      "caminho_anterior": null,
+      "tipo": "adicionado",
+      "resumo": "Implementação ou validação do carregamento de agentes e documentos obrigatórios",
+      "fases": [
+        "F3"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ],
+      "diff_ref": null
+    },
+    {
+      "id": "A06",
+      "caminho": "backend/src/infra/db/relational/agent_repository.py",
+      "caminho_anterior": null,
+      "tipo": "adicionado",
+      "resumo": "Implementação ou validação do carregamento de agentes e documentos obrigatórios",
+      "fases": [
+        "F2"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ],
+      "diff_ref": null
+    },
+    {
+      "id": "A07",
+      "caminho": "backend/src/infra/db/relational/migrations/002_agents_documents.sql",
+      "caminho_anterior": null,
+      "tipo": "adicionado",
+      "resumo": "Implementação ou validação do carregamento de agentes e documentos obrigatórios",
+      "fases": [
+        "F2"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ],
+      "diff_ref": null
+    },
+    {
+      "id": "A08",
+      "caminho": "backend/src/services/agent_catalog_service.py",
+      "caminho_anterior": null,
+      "tipo": "modificado",
+      "resumo": "Implementação ou validação do carregamento de agentes e documentos obrigatórios",
+      "fases": [
+        "F3"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ],
+      "diff_ref": null
+    },
+    {
+      "id": "A09",
+      "caminho": "backend/src/services/create_conversation_service.py",
+      "caminho_anterior": null,
+      "tipo": "modificado",
+      "resumo": "Implementação ou validação do carregamento de agentes e documentos obrigatórios",
+      "fases": [
+        "F3"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ],
+      "diff_ref": null
+    },
+    {
+      "id": "A10",
+      "caminho": "backend/src/services/helpers/conversation_history.py",
+      "caminho_anterior": null,
+      "tipo": "modificado",
+      "resumo": "Implementação ou validação do carregamento de agentes e documentos obrigatórios",
+      "fases": [
+        "F3"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ],
+      "diff_ref": null
+    },
+    {
+      "id": "A11",
+      "caminho": "backend/src/services/send_message_service.py",
+      "caminho_anterior": null,
+      "tipo": "modificado",
+      "resumo": "Implementação ou validação do carregamento de agentes e documentos obrigatórios",
+      "fases": [
+        "F3"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ],
+      "diff_ref": null
+    },
+    {
+      "id": "A12",
+      "caminho": "backend/tests/test_agent_catalog.py",
+      "caminho_anterior": null,
+      "tipo": "modificado",
+      "resumo": "Implementação ou validação do carregamento de agentes e documentos obrigatórios",
+      "fases": [
+        "F3"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ],
+      "diff_ref": null
+    },
+    {
+      "id": "A13",
+      "caminho": "backend/tests/test_create_conversation.py",
+      "caminho_anterior": null,
+      "tipo": "modificado",
+      "resumo": "Implementação ou validação do carregamento de agentes e documentos obrigatórios",
+      "fases": [
+        "F3"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ],
+      "diff_ref": null
+    },
+    {
+      "id": "A14",
+      "caminho": "backend/tests/test_chat_request.py",
+      "caminho_anterior": null,
+      "tipo": "modificado",
+      "resumo": "Implementação ou validação do carregamento de agentes e documentos obrigatórios",
+      "fases": [
+        "F4"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ],
+      "diff_ref": null
+    },
+    {
+      "id": "A15",
+      "caminho": "backend/tests/test_chat_service_messages.py",
+      "caminho_anterior": null,
+      "tipo": "modificado",
+      "resumo": "Implementação ou validação do carregamento de agentes e documentos obrigatórios",
+      "fases": [
+        "F4"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ],
+      "diff_ref": null
+    },
+    {
+      "id": "A16",
+      "caminho": "backend/tests/test_chat_checkpoint.py",
+      "caminho_anterior": null,
+      "tipo": "modificado",
+      "resumo": "Implementação ou validação do carregamento de agentes e documentos obrigatórios",
+      "fases": [
+        "F4"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ],
+      "diff_ref": null
+    },
+    {
+      "id": "A17",
+      "caminho": "backend/tests/test_message_repository.py",
+      "caminho_anterior": null,
+      "tipo": "modificado",
+      "resumo": "Implementação ou validação do carregamento de agentes e documentos obrigatórios",
+      "fases": [
+        "F4"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ],
+      "diff_ref": null
+    },
+    {
+      "id": "A18",
+      "caminho": "backend/tests/test_http_integration.py",
+      "caminho_anterior": null,
+      "tipo": "modificado",
+      "resumo": "Implementação ou validação do carregamento de agentes e documentos obrigatórios",
+      "fases": [
+        "F4"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ],
+      "diff_ref": null
+    },
+    {
+      "id": "A19",
+      "caminho": "backend/tests/test_mandatory_knowledge.py",
+      "caminho_anterior": null,
+      "tipo": "adicionado",
+      "resumo": "Implementação ou validação do carregamento de agentes e documentos obrigatórios",
+      "fases": [
+        "F3"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ],
+      "diff_ref": null
+    },
+    {
+      "id": "A20",
+      "caminho": "frontend/src/components/ConversationPanel.tsx",
+      "caminho_anterior": null,
+      "tipo": "modificado",
+      "resumo": "Implementação ou validação do carregamento de agentes e documentos obrigatórios",
+      "fases": [
+        "F3"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ],
+      "diff_ref": null
+    }
+  ],
+  "fases": [
+    {
+      "id": "F1",
+      "titulo": "Preparação e contratos",
+      "resumo_executado": "jsonschema instalado; plano validado; API voltou a importar",
+      "tarefas": [
+        "T1",
+        "T2"
+      ],
+      "arquivos": [
+        "backend/main.py",
+        "backend/pyproject.toml",
+        "backend/uv.lock"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ]
+    },
+    {
+      "id": "F2",
+      "titulo": "Persistência",
+      "resumo_executado": "esquema, repositório e carga idempotente criados",
+      "tarefas": [
+        "T3",
+        "T4"
+      ],
+      "arquivos": [
+        "backend/src/infra/db/relational/agent_repository.py",
+        "backend/src/infra/db/relational/migrations/002_agents_documents.sql"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ]
+    },
+    {
+      "id": "F3",
+      "titulo": "Carregamento e consumo",
+      "resumo_executado": "Notion com fallback local e IDs ULID integrados ao chat",
+      "tarefas": [
+        "T5",
+        "T6"
+      ],
+      "arquivos": [
+        "backend/src/agents/agent.py",
+        "backend/src/agents/knowledge.py",
+        "backend/src/services/agent_catalog_service.py",
+        "backend/src/services/create_conversation_service.py",
+        "backend/src/services/helpers/conversation_history.py",
+        "backend/src/services/send_message_service.py",
+        "backend/tests/test_agent_catalog.py",
+        "backend/tests/test_create_conversation.py",
+        "backend/tests/test_mandatory_knowledge.py",
+        "frontend/src/components/ConversationPanel.tsx"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ]
+    },
+    {
+      "id": "F4",
+      "titulo": "Verificação e reset",
+      "resumo_executado": "testes, revisão e reset local com checkpoints vazios concluídos",
+      "tarefas": [
+        "T7",
+        "T8"
+      ],
+      "arquivos": [
+        "backend/tests/test_chat_request.py",
+        "backend/tests/test_chat_service_messages.py",
+        "backend/tests/test_chat_checkpoint.py",
+        "backend/tests/test_message_repository.py",
+        "backend/tests/test_http_integration.py"
+      ],
+      "evidencias": [
+        "loop-001.json",
+        "revisao-001.json"
+      ]
+    }
+  ],
+  "criterios": [
+    {
+      "id": "C1",
+      "estado": "atendido",
+      "evidencia": "backend/.venv importa jsonschema 4.26.0; classificação-002.json e planejamento.json validaram com Draft202012Validator e FormatChecker."
+    },
+    {
+      "id": "C2",
+      "estado": "atendido",
+      "evidencia": "002_agents_documents.sql exige ULID em agents/documents; identity requer agent_id com FK e conteúdo; manifesto/projeto exigem agent_id NULL e notion_page_id. AgentRepository.seed cria Silas e os três registros, com conflitos idempotentes; integração SQL/seed declarada no loop."
+    },
+    {
+      "id": "C3",
+      "estado": "atendido",
+      "evidencia": "Seed preserva ID de Silas por nome; catálogo e criação consultam AgentRepository, SendMessageService usa identidade/ID persistidos; integração HTTP com reinício e ULID consta do loop, e consumidor usa id recebido pelo catálogo."
+    },
+    {
+      "id": "C4",
+      "estado": "atendido",
+      "evidencia": "Agent usa identity_content do banco como system_prompt e adiciona manifesto e research_project no primeiro turno. knowledge.py lê páginas do Notion, recorre aos arquivos locais em falha e rejeita documento ausente/vazio; três testes locais passaram."
+    },
+    {
+      "id": "C5",
+      "estado": "atendido",
+      "evidencia": "loop-001 registra conferência do alvo localhost:5432/yavin, reset, zero conversas/mensagens/checkpoints e GET /agents com Silas/ULID; coordenador confirmou a conferência. Revisor não repetiu consultas ao banco."
+    }
+  ],
+  "validacoes": [
+    {
+      "id": "V1",
+      "descricao": "Schema de classificação e plano",
+      "estado": "aprovada",
+      "origem": "executor",
+      "evidencia": "jsonschema 4.26.0 no backend/.venv"
+    },
+    {
+      "id": "V2",
+      "descricao": "Suíte local do backend",
+      "estado": "aprovada",
+      "origem": "revisor",
+      "evidencia": "43 testes OK; 18 skips exigem banco descartável"
+    },
+    {
+      "id": "V3",
+      "descricao": "Integração HTTP e SQL em banco descartável",
+      "estado": "aprovada",
+      "origem": "executor",
+      "evidencia": "5 testes HTTP OK; migrações e seed idempotente verificados"
+    },
+    {
+      "id": "V4",
+      "descricao": "Frontend",
+      "estado": "aprovada",
+      "origem": "executor",
+      "evidencia": "8 testes e build aprovados"
+    },
+    {
+      "id": "V5",
+      "descricao": "Banco local após reset",
+      "estado": "aprovada",
+      "origem": "executor",
+      "evidencia": "contagens zero de conversas, mensagens e checkpoints; GET /agents 200"
+    }
+  ],
+  "anotacoes": [
+    {
+      "id": "N1",
+      "tipo": "limitacao",
+      "texto": "NOTION_TOKEN não está configurado no backend/.env; leitura real privada do Notion não foi exercitada. Fallback local e cliente simulado foram validados.",
+      "arquivos": [
+        "backend/src/agents/knowledge.py"
+      ],
+      "evidencias": [
+        "revisao-001.json"
+      ]
+    },
+    {
+      "id": "N2",
+      "tipo": "explicacao",
+      "texto": "Member era trabalho preexistente do Idealizador e não integra o snapshot da entrega. A página /admin já havia sido construída antes da execução deste plano.",
+      "arquivos": [],
+      "evidencias": [
+        "loop-001.json"
+      ]
+    },
+    {
+      "id": "N3",
+      "tipo": "limitacao",
+      "texto": "A suíte local pula 18 testes dependentes de banco quando YAVIN_TEST_DB_URI não está definido; os cinco testes HTTP foram executados separadamente em banco descartável.",
+      "arquivos": [
+        "backend/tests/test_http_integration.py"
+      ],
+      "evidencias": [
+        "loop-001.json"
+      ]
+    }
+  ],
+  "fluxo": {
+    "disponivel": true,
+    "motivo": null,
+    "nos": [
+      {
+        "id": "api",
+        "rotulo": "API",
+        "arquivo": "backend/main.py",
+        "simbolo": "list_agents/chat"
+      },
+      {
+        "id": "repo",
+        "rotulo": "Agentes e documentos",
+        "arquivo": "backend/src/infra/db/relational/agent_repository.py",
+        "simbolo": "AgentRepository"
+      },
+      {
+        "id": "knowledge",
+        "rotulo": "Notion e fallback",
+        "arquivo": "backend/src/agents/knowledge.py",
+        "simbolo": "load_general_documents"
+      },
+      {
+        "id": "agent",
+        "rotulo": "Agente",
+        "arquivo": "backend/src/agents/agent.py",
+        "simbolo": "Agent.invoke"
+      }
+    ],
+    "arestas": [
+      {
+        "origem": "api",
+        "destino": "repo",
+        "relacao": "consulta agente persistido",
+        "evidencias": [
+          "backend/main.py",
+          "backend/src/services/agent_catalog_service.py"
+        ]
+      },
+      {
+        "origem": "repo",
+        "destino": "knowledge",
+        "relacao": "fornece páginas gerais",
+        "evidencias": [
+          "backend/src/services/send_message_service.py"
+        ]
+      },
+      {
+        "origem": "knowledge",
+        "destino": "agent",
+        "relacao": "fornece contexto obrigatório",
+        "evidencias": [
+          "backend/src/services/send_message_service.py",
+          "backend/src/agents/agent.py"
+        ]
+      }
+    ]
+  },
+  "observacoes": [
+    "Revisão humana pendente. Exclusões staged antigas do harness foram preservadas.",
+    "Nenhuma chamada real ao modelo foi necessária à verificação integrada."
+  ]
+}
