@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "task_id": "acesso-area-idealizador",
+  "registrado_em": "2026-11-09T04:38:18-03:00",
+  "anterior_ref": "loop-004.json",
+  "limite_tentativas": 3,
+  "estado": "aprovado_tecnicamente",
+  "classificacao_ref": "classificacao-002.json",
+  "planejamento_ref": "planejamento-002.json",
+  "autorizacao_ref": "conversation:2026-11-09T04:26:04-03:00",
+  "motivo": "A tentativa 3 implementou o handler de RequestValidationError para completar CA-03; as validações locais passaram e o limite de três tentativas foi atingido, aguardando revisão final.",
+  "tentativas": [
+    {
+      "numero": 1,
+      "implementation_id": "01M6ZKCTJ4MTTNQBCKRRT3SW9K",
+      "parent_implementation_id": null,
+      "fase": "revisada",
+      "revisao_ref": "revisao-001.json",
+      "evidencias_execucao": ["frontend: 11 testes e build aprovados", "backend: compileall aprovado", "git diff --check aprovado"],
+      "snapshot": []
+    },
+    {
+      "numero": 2,
+      "implementation_id": "01M6ZKG3V3NMBA7H3EWM0NAXV6",
+      "parent_implementation_id": "01M6ZKCTJ4MTTNQBCKRRT3SW9K",
+      "fase": "revisada",
+      "revisao_ref": "revisao-002.json",
+      "evidencias_execucao": ["frontend: 11 testes e build aprovados", "backend: compileall aprovado", "git diff --check aprovado"],
+      "snapshot": []
+    },
+    {
+      "numero": 3,
+      "implementation_id": "01M6ZKQX4K65XP5PTK9K23C5WM",
+      "parent_implementation_id": "01M6ZKG3V3NMBA7H3EWM0NAXV6",
+      "fase": "aprovada_tecnicamente",
+      "revisao_ref": "revisao-002.json",
+      "evidencias_execucao": [
+        "frontend: npm test — 11 testes aprovados",
+        "frontend: npm run build — TypeScript/Vite aprovado",
+        "backend: compileall — aprovado",
+        "git diff --check — aprovado"
+      ],
+      "snapshot": [
+        {"arquivo": "backend/main.py", "sha256": "16e2f625d556b3927c2cdf519a4c938c9b532e827cd9302eca60558c8f6b1fc4"},
+        {"arquivo": "backend/src/types/dtos/idealizador_access.py", "sha256": "17daac0eae69ff08f7e4872f6012c28170c0484113cceb5d40f6cce7e87a2e12"},
+        {"arquivo": "frontend/src/main.tsx", "sha256": "fd1cdda19ca983d39bf18b297fa120a2625aa94744111f187684079ab7c4e1a6"},
+        {"arquivo": "frontend/tests/idealizador-access.test.mjs", "sha256": "68f114cedee5dee49bc8ee574e19156a23233eaa8a0a43c82a2ccf109f014733"}
+      ]
+    }
+  ]
+}

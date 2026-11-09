@@ -82,6 +82,12 @@ A URL da API vem de `VITE_API_URL` e usa `http://127.0.0.1:8000` por padrão.
 Mapa e laboratório mantêm a mesma instância do painel. Enter envia e Shift + Enter
 insere uma linha; uma resposta em andamento permanece vinculada à conversa de origem.
 
+Na visita pública (`#/visita`), **Área do Idealizador** abre o login provisório.
+Após a validação pelo backend, o fluxo retorna ao atelier em `#/mapa`; o link
+**Harness** fica dentro da navegação do atelier. A palavra-chave está somente em
+`backend/.env` como `IDEALIZADOR_ACCESS_KEY`. Esse acesso é um mock de
+desenvolvimento e não substitui autenticação real.
+
 ### Verificação
 
 ```sh

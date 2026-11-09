@@ -1,0 +1,223 @@
+{
+  "schema_version": 1,
+  "task_id": "acesso-area-idealizador",
+  "registrado_em": "2026-11-09T04:24:52-03:00",
+  "planejado_em": "2026-11-09T04:24:52-03:00",
+  "origem_registro": "contemporanea",
+  "classificacao_ref": "classificacao-002.json",
+  "nivel": 4,
+  "tipo_planejamento": "decomposto",
+  "modo_plan": {
+    "estado": "utilizado",
+    "justificativa": "O Idealizador solicitou explicitamente a mudança para o modo Plan com /plan antes da elaboração do planejamento inicial; esta revisão corrige o plano conforme o esclarecimento posterior."
+  },
+  "objetivo": "Permitir que o Idealizador saia da visualização pública do mapa para uma página de acesso por palavra-chave provisória validada pelo backend, seja redirecionado diretamente ao atelier já existente e encontre ali o link para o painel de harness, sem alterar a experiência sagrada da Landing Page.",
+  "escopo": {
+    "inclui": [
+      "Adicionar um acesso discreto na navegação da visualização pública do mapa para a página de login.",
+      "Armazenar a palavra-chave somente no backend/.env local, fora do repositório, e validá-la por um endpoint provisório do backend.",
+      "Criar uma página de login com estados de erro, sucesso e foco acessível.",
+      "Após validação, redirecionar explicitamente para #/mapa ou para o atelier, sem criar uma nova página privada intermediária.",
+      "Adicionar dentro do atelier um link para a área/painel de harness.",
+      "Proteger a rota #/admin contra acesso direto sem a autorização provisória da sessão.",
+      "Atualizar testes, estilos e documentação diretamente relacionados ao fluxo."
+    ],
+    "exclui": [
+      "Alterar a composição ou inserir botão de acesso na Landing Page.",
+      "Criar uma área privada visual separada do atelier nesta primeira versão.",
+      "Implementar autenticação de produção, backend de sessão, hashing, cookies seguros ou autorização persistente server-side.",
+      "Desativar o harness ou criar harness.md.",
+      "Alterar os registros, schemas ou conteúdo dos relatórios do harness.",
+      "Alterar as quatro modificações backend preexistentes fora do escopo: conversation_pool.py, message_repository.py, conversation_history.py e message_mapper.py."
+    ]
+  },
+  "criterios_aceitacao": [
+    {
+      "id": "CA-01",
+      "descricao": "A Landing Page mantém sua composição e não recebe um botão de acesso à área privada.",
+      "verificacao": "Executar o build e verificar por teste ou inspeção que Arrival continua levando pelo botão Entrar apenas à visualização pública #/visita."
+    },
+    {
+      "id": "CA-02",
+      "descricao": "A visualização pública do mapa oferece um acesso identificável à página de palavra-chave.",
+      "verificacao": "Teste de navegação confirma que o controle da VisitorMap leva à rota de login sem expor o atelier ou o painel."
+    },
+    {
+      "id": "CA-03",
+      "descricao": "O backend valida a palavra-chave configurada no backend/.env sem versioná-la.",
+      "verificacao": "Testes do endpoint cobrem palavra correta, palavra incorreta, campo vazio e ausência de configuração; inspeção confirma que nenhum valor secreto foi adicionado ao Git."
+    },
+    {
+      "id": "CA-04",
+      "descricao": "Após sucesso no login, o usuário é redirecionado diretamente ao atelier existente e o acesso provisório sobrevive ao recarregamento da aba.",
+      "verificacao": "Teste de rota simula a resposta de sucesso, confirma #/mapa ou atelier como destino e verifica o marcador em sessionStorage após recarga."
+    },
+    {
+      "id": "CA-05",
+      "descricao": "O atelier contém o link para o painel de harness, enquanto #/admin sem autorização redireciona ao login.",
+      "verificacao": "Teste de navegação confirma o link dentro de Workspace e a guarda da rota AdminPage."
+    },
+    {
+      "id": "CA-06",
+      "descricao": "A documentação identifica o mecanismo como acesso provisório de desenvolvimento e registra que não existe autenticação de produção.",
+      "verificacao": "Inspecionar README.md, frontend/README.md e documentação diretamente relacionada."
+    }
+  ],
+  "fases": [
+    {
+      "id": "F1",
+      "titulo": "Definir validação backend e rotas",
+      "objetivo": "Criar o contrato mínimo do login, manter a palavra-chave fora do repositório e definir os destinos explícitos da navegação.",
+      "depende_de": [],
+      "tarefas": [
+        {
+          "id": "T1-1",
+          "descricao": "Adicionar a leitura da variável de ambiente da palavra-chave e um endpoint provisório que responda somente sucesso ou falha, sem devolver a palavra-chave.",
+          "arquivos": [
+            "backend/main.py",
+            "backend/src/global_vars.py",
+            "backend/.env",
+            "backend/tests/"
+          ],
+          "criterios_aceitacao": [
+            "CA-03"
+          ],
+          "validacoes": [
+            "Testes unitários ou HTTP do endpoint.",
+            "git diff --check e inspeção de que backend/.env permanece ignorado.",
+            "Não iniciar modelo, banco ou serviço persistente para validar o contrato."
+          ]
+        },
+        {
+          "id": "T1-2",
+          "descricao": "Definir as rotas de login e retorno ao atelier existente, preservando a Landing Page, a visita pública e o painel de harness.",
+          "arquivos": [
+            "frontend/src/main.tsx",
+            "frontend/src/components/VisitorMap.tsx",
+            "frontend/src/chatApi.ts ou módulo de acesso dedicado"
+          ],
+          "criterios_aceitacao": [
+            "CA-01",
+            "CA-02",
+            "CA-04",
+            "CA-05"
+          ],
+          "validacoes": [
+            "Teste das transições entre #/visita, login, #/mapa, #/laboratorio e #/admin.",
+            "Revisão do diff para confirmar que Arrival não foi alterada fora do necessário."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F2",
+      "titulo": "Implementar login e acesso privado dentro do atelier",
+      "objetivo": "Implementar a tela provisória de login, redirecionar ao atelier já existente e expor o painel apenas a partir desse espaço.",
+      "depende_de": [
+        "F1"
+      ],
+      "tarefas": [
+        {
+          "id": "T2-1",
+          "descricao": "Criar a página de login por palavra-chave, consumindo o endpoint backend, com erro acessível e retorno à visualização pública.",
+          "arquivos": [
+            "frontend/src/components/IdealizadorLoginPage.tsx",
+            "frontend/src/idealizador.css",
+            "frontend/src/main.tsx",
+            "frontend/src/chatApi.ts ou módulo de acesso dedicado"
+          ],
+          "criterios_aceitacao": [
+            "CA-02",
+            "CA-03",
+            "CA-04"
+          ],
+          "validacoes": [
+            "Testes de interação e acessibilidade do formulário.",
+            "Teste de sucesso que confirma o redirecionamento para #/mapa.",
+            "Build TypeScript/Vite."
+          ]
+        },
+        {
+          "id": "T2-2",
+          "descricao": "Adicionar no Workspace do atelier o link para #/admin e aplicar a guarda de acesso ao AdminPage, sem criar uma página privada separada nesta versão.",
+          "arquivos": [
+            "frontend/src/main.tsx",
+            "frontend/src/components/AdminPage.tsx",
+            "frontend/src/styles.css"
+          ],
+          "criterios_aceitacao": [
+            "CA-04",
+            "CA-05"
+          ],
+          "validacoes": [
+            "Teste de acesso autorizado e não autorizado.",
+            "Verificação manual de teclado, foco, retorno ao atelier e recarregamento."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F3",
+      "titulo": "Documentar e validar o fluxo completo",
+      "objetivo": "Registrar a natureza provisória do acesso e verificar a experiência completa sem modificar o conteúdo do harness.",
+      "depende_de": [
+        "F2"
+      ],
+      "tarefas": [
+        {
+          "id": "T3-1",
+          "descricao": "Atualizar a documentação do projeto com as rotas, a entrada pela visita pública, o redirecionamento ao atelier e o link interno para o painel.",
+          "arquivos": [
+            "README.md",
+            "frontend/README.md"
+          ],
+          "criterios_aceitacao": [
+            "CA-06"
+          ],
+          "validacoes": [
+            "Revisão textual das rotas e do comando de execução.",
+            "Verificação de que o mock não é apresentado como autenticação real."
+          ]
+        },
+        {
+          "id": "T3-2",
+          "descricao": "Executar a validação final do fluxo e registrar limitações, preservando alterações backend locais preexistentes.",
+          "arquivos": [
+            "backend/tests/",
+            "frontend/tests/",
+            "frontend/src/"
+          ],
+          "criterios_aceitacao": [
+            "CA-01",
+            "CA-02",
+            "CA-03",
+            "CA-04",
+            "CA-05",
+            "CA-06"
+          ],
+          "validacoes": [
+            "Testes backend direcionados ao endpoint.",
+            "npm test.",
+            "npm run build.",
+            "git diff --check.",
+            "Revisão do estado final para preservar as quatro alterações backend fora do escopo."
+          ]
+        }
+      ]
+    }
+  ],
+  "incertezas": [
+    "O nome exato da variável de ambiente ainda precisa ser escolhido; ela não deve ser exposta em resposta da API nem em código versionado.",
+    "A sessão provisória será client-side após a validação do endpoint; isso controla a navegação da SPA, mas não protege recursos backend.",
+    "O atelier já existente será reutilizado como área privada visual; o link do painel deverá ser integrado sem descaracterizar sua composição.",
+    "A implementação do endpoint altera o backend e exigirá validação sem tocar as quatro alterações locais preexistentes."
+  ],
+  "observacoes": [
+    "Esta é a revisão 002 do planejamento e substitui a interpretação de uma área privada visual separada.",
+    "A palavra-chave fica no backend/.env local; backend/src/global_vars.py pode centralizar apenas o nome da variável ou a leitura, sem armazenar o valor.",
+    "O destino após login é explicitamente o atelier existente, inicialmente #/mapa.",
+    "O painel de harness é acessado por link dentro do atelier; não haverá link equivalente na Landing Page ou na visita pública.",
+    "O plano continua baseado em classificacao-002.json e exclui a desativação do harness.",
+    "A autorização solicitada inclui a implementação inicial e até duas correções posteriores dentro deste mesmo escopo, condicionadas aos achados das revisões."
+  ]
+}

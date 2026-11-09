@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "task_id": "acesso-area-idealizador",
+  "rodada": 1,
+  "registrado_em": "2026-11-09T04:31:12-03:00",
+  "classificacao_ref": "classificacao-002.json",
+  "planejamento_ref": "planejamento-002.json",
+  "evidencias_execucao": [
+    "frontend: npm test — 11 testes aprovados",
+    "frontend: npm run build — TypeScript/Vite aprovado",
+    "backend: compileall — aprovado",
+    "git diff --check — aprovado"
+  ],
+  "revisor": {
+    "agente_id": "revisao-acesso-idealizador",
+    "modelo": null,
+    "contexto": "novo",
+    "observacoes": [
+      "Revisão independente realizada sem edição de arquivos.",
+      "Não foram iniciados banco, modelo ou serviços externos."
+    ]
+  },
+  "snapshot": {
+    "revisao_git": "caf7cb0a7e9dfaba781b826b2448d39909754f22",
+    "arquivos": [
+      {"arquivo": "backend/main.py", "sha256": "96e46a9b26221e4e184b9a2a61294b222d93ff3b8ed0bb8a4894f005d5048e74"},
+      {"arquivo": "backend/src/global_vars.py", "sha256": "d020b69ba9f25cc607e2985881645d7b8126a611f7294207a36bce439e5b8c19"},
+      {"arquivo": "backend/src/types/dtos/idealizador_access.py", "sha256": "17daac0eae69ff08f7e4872f6012c28170c0484113cceb5d40f6cce7e87a2e12"},
+      {"arquivo": "frontend/src/components/IdealizadorLoginPage.tsx", "sha256": "c10bf39f39292390b13d2791e0e4cb683d3f1bb469f535857da1182fc8c25440"},
+      {"arquivo": "frontend/src/idealizadorAccess.ts", "sha256": "8c4ed795a8deab053122ad330106799e13ba60907db45a9b90e8dd28cd24799d"},
+      {"arquivo": "frontend/src/components/VisitorMap.tsx", "sha256": "8ae0839a1b5cb526101ea37dc63f409ebc6665477613f13140e464775091a375"},
+      {"arquivo": "frontend/src/components/AdminPage.tsx", "sha256": "36098e8a72e5c87186803b91e76355b3c0dd9380cacc3940283cc1e20055e254"},
+      {"arquivo": "frontend/src/main.tsx", "sha256": "6b862535140ab95b0b47d1c4fb336cf20edc0ac02a4f5afe5858402b3310b10b"},
+      {"arquivo": "frontend/tests/idealizador-access.test.mjs", "sha256": "68f114cedee5dee49bc8ee574e19156a23233eaa8a0a43c82a2ccf109f014733"}
+    ],
+    "alteracoes_durante_revisao": false
+  },
+  "escopo": {
+    "arquivos_revisados": [
+      "backend/main.py",
+      "backend/src/global_vars.py",
+      "backend/src/types/dtos/idealizador_access.py",
+      "frontend/src/components/IdealizadorLoginPage.tsx",
+      "frontend/src/idealizador.css",
+      "frontend/src/idealizadorAccess.ts",
+      "frontend/src/components/VisitorMap.tsx",
+      "frontend/src/components/AdminPage.tsx",
+      "frontend/src/main.tsx",
+      "frontend/tests/idealizador-access.test.mjs",
+      "README.md",
+      "frontend/README.md"
+    ],
+    "fora_do_escopo": [
+      "As quatro alterações backend preexistentes explicitamente preservadas.",
+      "Desativação do harness."
+    ],
+    "limitacoes": [
+      "Não foi executado teste HTTP do endpoint; a incompatibilidade do 422 foi verificada pelo código e pelo comportamento padrão do FastAPI."
+    ]
+  },
+  "criterios": [
+    {"id": "CA-01", "estado": "atendido", "evidencia": "Arrival não foi alterada e o build passou."},
+    {"id": "CA-02", "estado": "atendido", "evidencia": "VisitorMap adiciona link #/acesso sem expor diretamente o painel."},
+    {"id": "CA-03", "estado": "nao_atendido", "evidencia": "Field(min_length=1) gera 422 padrão sem envelope ApiResponse.error para campo vazio."},
+    {"id": "CA-04", "estado": "nao_atendido", "evidencia": "Quando o login é aberto por /admin, o pathname continua /admin após mudar somente o hash para /mapa."},
+    {"id": "CA-05", "estado": "nao_atendido", "evidencia": "A guarda existe, mas o fluxo direto por /admin compartilha o problema de redirecionamento."},
+    {"id": "CA-06", "estado": "atendido", "evidencia": "README.md e frontend/README.md identificam o mecanismo como mock provisório sem autenticação real."}
+  ],
+  "achados": [
+    {
+      "id": "REV-001",
+      "titulo": "Login iniciado em /admin não retorna ao atelier",
+      "categoria": "funcional",
+      "gravidade": "alta",
+      "bloqueante": true,
+      "origem": "introduzido",
+      "local": {"arquivo": "frontend/src/main.tsx", "linha": 92, "simbolo": "getExperience"},
+      "problema": "O login acessado por /admin não chega ao atelier após sucesso.",
+      "causa": "A resolução testa pathname /admin antes do hash; o formulário altera apenas o hash para /mapa.",
+      "consequencia": "O usuário autenticado permanece resolvido como admin em vez de ser redirecionado explicitamente para #/mapa, violando CA-04.",
+      "evidencia": "O pathname continua /admin quando somente window.location.hash muda.",
+      "correcao_minima": "Dar precedência ao hash de destino ou navegar para uma URL cujo pathname não seja /admin ao concluir o login.",
+      "criterios_relacionados": ["CA-04", "CA-05"],
+      "referencias": ["frontend/src/main.tsx:getExperience", "frontend/src/components/IdealizadorLoginPage.tsx:submit"]
+    },
+    {
+      "id": "REV-002",
+      "titulo": "Payload vazio não usa o envelope de erro da API",
+      "categoria": "funcional",
+      "gravidade": "media",
+      "bloqueante": true,
+      "origem": "introduzido",
+      "local": {"arquivo": "backend/src/types/dtos/idealizador_access.py", "linha": 4, "simbolo": "IdealizadorAccessRequest"},
+      "problema": "Campo vazio retorna a validação padrão do FastAPI em vez do envelope ApiResponse.",
+      "causa": "Field(min_length=1) interrompe a chamada antes do endpoint; o handler existente trata AppError, não RequestValidationError.",
+      "consequencia": "O caminho de entrada inválida não respeita o contrato de erro padronizado exigido em CA-03.",
+      "evidencia": "O DTO declara min_length=1 e main.py não registra handler específico para RequestValidationError.",
+      "correcao_minima": "Validar dentro do endpoint e lançar AppError, ou adicionar tratamento de RequestValidationError que produza ApiResponse.error; cobrir com teste.",
+      "criterios_relacionados": ["CA-03"],
+      "referencias": ["backend/src/types/dtos/idealizador_access.py:IdealizadorAccessRequest", "backend/main.py:handle_app_error"]
+    }
+  ],
+  "verificacoes": [
+    {"descricao": "Testes frontend", "comando": "cd frontend && npm test", "estado": "aprovada", "origem": "implementador", "evidencia": "11 testes aprovados."},
+    {"descricao": "Build frontend", "comando": "cd frontend && npm run build", "estado": "aprovada", "origem": "implementador", "evidencia": "TypeScript e Vite concluídos."},
+    {"descricao": "Compilação backend", "comando": "backend/.venv/bin/python -m compileall -q backend/src backend/main.py", "estado": "aprovada", "origem": "implementador", "evidencia": "Compilação concluída."},
+    {"descricao": "Revisão de contratos e rotas", "comando": null, "estado": "aprovada", "origem": "revisor", "evidencia": "Foram encontrados dois bloqueios localizados descritos em REV-001 e REV-002."}
+  ],
+  "recomendacao": "solicitar_correcoes",
+  "justificativa": "A entrega atende a maior parte do fluxo, mas dois bloqueios demonstrados impedem aceitar o contrato completo: o retorno incorreto quando o login começa em /admin e o erro de payload vazio fora do envelope da API.",
+  "observacoes": [
+    "O revisor confirmou que as quatro alterações backend preexistentes foram preservadas.",
+    "A palavra-chave não foi exposta no relatório."
+  ]
+}

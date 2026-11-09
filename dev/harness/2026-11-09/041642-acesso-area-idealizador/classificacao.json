@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "task_id": "acesso-area-idealizador",
+  "registrado_em": "2026-11-09T04:16:42-03:00",
+  "avaliado_em": "2026-11-09T04:16:42-03:00",
+  "origem_registro": "contemporanea",
+  "revisao_git": "caf7cb0a7e9dfaba781b826b2448d39909754f22",
+  "tarefa": "Criar acesso privado mockado para a área do Idealizador e desativar temporariamente o fluxo do harness",
+  "complexidade": 3,
+  "risco": 4,
+  "nivel": 4,
+  "justificativas": {
+    "complexidade": "A mudança coordena a navegação pública do frontend, uma tela de palavra-chave, persistência de sessão de acesso, proteção da rota de admin e uma configuração compartilhada que desativa o harness. O backend atualmente possui apenas global_vars.py para constantes e o frontend já expõe AdminPage por rota direta.",
+    "risco": "A palavra-chave mockada não é autenticação real, mas uma proteção incorreta pode expor registros do harness. A alteração também atravessa o limite entre experiência pública, área privada e painel de desenvolvimento, exigindo deixar explícitas as limitações."
+  },
+  "evidencias": [
+    {
+      "arquivo": "frontend/src/main.tsx",
+      "simbolo": "getExperience",
+      "observacao": "A rota /admin e #/admin são aceitas diretamente, sem verificação de acesso."
+    },
+    {
+      "arquivo": "frontend/src/components/Arrival.tsx",
+      "simbolo": "enter",
+      "observacao": "O botão Entrar leva a #/visita, que é a visualização pública do mapa."
+    },
+    {
+      "arquivo": "frontend/src/components/VisitorMap.tsx",
+      "simbolo": "VisitorMap",
+      "observacao": "A visualização pública possui navegação própria e é o ponto proposto para o acesso à área privada."
+    },
+    {
+      "arquivo": "frontend/src/components/AdminPage.tsx",
+      "simbolo": "AdminPage",
+      "observacao": "O painel de admin renderiza registros versionados do harness e declara que não possui controles de acesso."
+    },
+    {
+      "arquivo": "backend/src/global_vars.py",
+      "simbolo": null,
+      "observacao": "Arquivo atual de constantes e caminhos, candidato a receber apenas a configuração mockada solicitada."
+    },
+    {
+      "arquivo": "dev/harness/README.md",
+      "simbolo": null,
+      "observacao": "Documenta o fluxo de validação e deverá ser subordinado à nova diretriz ACTIVE."
+    }
+  ],
+  "incertezas": [
+    "Ainda não foi definido se a palavra-chave deve sobreviver ao recarregamento ou apenas à sessão da aba.",
+    "Não existe autenticação backend nem endpoint de sessão; a proteção inicial será somente client-side e não deve ser apresentada como segurança real.",
+    "O local exato e o formato do arquivo harness.md ainda precisam ser escolhidos para serem acessíveis tanto ao agente quanto ao código/documentação.",
+    "O painel deverá mostrar registros do harness mesmo com ACTIVE=false, ou deverá informar que o fluxo está desativado; esse comportamento precisa ser decidido."
+  ],
+  "classificacao_provisoria": true,
+  "graphify": {
+    "utilizado": false,
+    "motivo": "A investigação usou leitura direta dos pontos de entrada, rotas e painel; o grafo não era necessário para confirmar o alcance inicial.",
+    "versao_ferramenta": null,
+    "revisao_codigo": "caf7cb0a7e9dfaba781b826b2448d39909754f22",
+    "estado_arquivos": "A branch está limpa em relação ao commit caf7cb0, mas há quatro alterações locais preexistentes no backend fora do escopo desta classificação; elas foram preservadas.",
+    "atualidade": "confirmada",
+    "limitacoes": [
+      "Não foi inspecionado nenhum contrato de autenticação backend porque ele ainda não existe.",
+      "A classificação cobre a parcela backend e seus consumidores frontend, não uma implementação de autenticação de produção."
+    ]
+  },
+  "observacoes": [
+    "A solicitação do Idealizador autoriza a direção funcional, mas não substitui a decisão posterior sobre o limite de segurança da palavra-chave mockada.",
+    "O nível é max(complexidade, risco)."
+  ]
+}
