@@ -94,7 +94,7 @@ class SendMessageService(IService):
             try:
                 checkpointer = request.app.state.checkpointer
                 silas = Agent(
-                    agent_record.name, None,
+                    agent_record.name,
                     checkpointer,
                     identity_content=agent_record.identity,
                     general_documents=general_documents,
