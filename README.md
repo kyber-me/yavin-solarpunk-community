@@ -118,6 +118,18 @@ recupera do banco as mensagens ao recarregar. Rascunhos existem só durante a se
 Reuniões aguardam persistência. Simulações energéticas, execução multiagêntica e
 comandos que alterem o mapa permanecem possibilidades futuras.
 
+### Acesso do Idealizador
+
+Na visualização pública do mapa (`#/visita`), o link **Área do Idealizador** abre
+um acesso provisório por palavra-chave. A palavra-chave local fica em
+`backend/.env` na variável `IDEALIZADOR_ACCESS_KEY`, fora do repositório. Após a
+validação pelo backend, a interface retorna diretamente ao atelier (`#/mapa`).
+Dentro do atelier há um link para o painel de harness (`#/admin`).
+
+Esse mecanismo é somente um mock de desenvolvimento: a sessão da interface usa
+`sessionStorage`, não há autenticação de produção nem proteção server-side dos
+recursos do painel.
+
 ### Base técnica
 
 | Componente | Tecnologias e função |
@@ -147,7 +159,7 @@ A partir da raiz do repositório:
 ```sh
 cd backend
 uv sync
-uv run python agent_state.py
+uv run python main.py
 ```
 
 A API atende em `http://127.0.0.1:8000`; a documentação dos endpoints fica em `/docs`.

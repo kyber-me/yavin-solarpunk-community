@@ -6,7 +6,7 @@ from psycopg import Connection
 from psycopg.rows import class_row
 from psycopg_pool import ConnectionPool
 
-from src.infra.db.relational.conversation_repository import ConversationRecord
+from src.persistence.db.relational.conversation_repository import ConversationRecord
 
 
 @contextmanager

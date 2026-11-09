@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "report_id": "01M6ZM3J2VJ4N8D6Y7Q1R5T9KC",
+  "task_id": "acesso-area-idealizador",
+  "implementation_id": "01M6ZKQX4K65XP5PTK9K23C5WM",
+  "review_id": "01M6ZKZ8WQ8Y4YJ4K8B7P7H9Q2",
+  "gerado_em": "2026-11-09T04:43:18-03:00",
+  "titulo": "Acesso provisório à área do Idealizador",
+  "resumo": "Foi implementado o fluxo Landing Page → visita pública → login por palavra-chave validada pelo backend → atelier existente, com link interno para o painel Harness. O mecanismo é deliberadamente provisório, client-side e sem autenticação de produção.",
+  "status_tecnico": "aprovado",
+  "revisao_humana": "pendente",
+  "referencias": {
+    "classificacao": "dev/harness/2026-11-09/041642-acesso-area-idealizador/classificacao-002.json",
+    "planejamento": "dev/harness/2026-11-09/041642-acesso-area-idealizador/planejamento-002.json",
+    "revisao": "dev/harness/2026-11-09/041642-acesso-area-idealizador/revisao-002.json",
+    "loop": "dev/harness/2026-11-09/041642-acesso-area-idealizador/loop-005.json",
+    "evidencias_execucao": [
+      "npm test: 11 testes aprovados",
+      "npm run build: TypeScript/Vite aprovados",
+      "compileall do backend aprovado",
+      "git diff --check aprovado"
+    ]
+  },
+  "snapshot": {
+    "revisao_git": null,
+    "arquivos": [
+      {"arquivo": "backend/main.py", "sha256": "16e2f625d556b3927c2cdf519a4c938c9b532e827cd9302eca60558c8f6b1fc4"},
+      {"arquivo": "backend/src/types/dtos/idealizador_access.py", "sha256": "17daac0eae69ff08f7e4872f6012c28170c0484113cceb5d40f6cce7e87a2e12"},
+      {"arquivo": "frontend/src/main.tsx", "sha256": "fd1cdda19ca983d39bf18b297fa120a2625aa94744111f187684079ab7c4e1a6"},
+      {"arquivo": "frontend/tests/idealizador-access.test.mjs", "sha256": "68f114cedee5dee49bc8ee574e19156a23233eaa8a0a43c82a2ccf109f014733"}
+    ]
+  },
+  "arquivos_alterados": [
+    {"id": "A01", "caminho": "backend/main.py", "caminho_anterior": null, "tipo": "modificado", "resumo": "Adiciona o endpoint provisório e o tratamento padronizado de validação.", "fases": ["F1"], "evidencias": ["revisao-002.json: CA-03"], "diff_ref": null},
+    {"id": "A02", "caminho": "backend/src/global_vars.py", "caminho_anterior": null, "tipo": "modificado", "resumo": "Centraliza o nome da variável de ambiente da palavra-chave.", "fases": ["F1"], "evidencias": ["revisao-002.json: CA-03"], "diff_ref": null},
+    {"id": "A03", "caminho": "backend/src/types/dtos/idealizador_access.py", "caminho_anterior": null, "tipo": "adicionado", "resumo": "Define o DTO do payload de acesso.", "fases": ["F1"], "evidencias": ["revisao-002.json: CA-03"], "diff_ref": null},
+    {"id": "A04", "caminho": "frontend/src/main.tsx", "caminho_anterior": null, "tipo": "modificado", "resumo": "Adiciona rotas, guarda do painel e integração do link no atelier.", "fases": ["F1", "F2"], "evidencias": ["revisao-002.json: CA-01, CA-04, CA-05"], "diff_ref": null},
+    {"id": "A05", "caminho": "frontend/src/components/VisitorMap.tsx", "caminho_anterior": null, "tipo": "modificado", "resumo": "Adiciona a entrada pública para o login.", "fases": ["F1"], "evidencias": ["revisao-002.json: CA-02"], "diff_ref": null},
+    {"id": "A06", "caminho": "frontend/src/components/IdealizadorLoginPage.tsx", "caminho_anterior": null, "tipo": "adicionado", "resumo": "Implementa o formulário de palavra-chave e o retorno ao atelier.", "fases": ["F2"], "evidencias": ["revisao-002.json: CA-03, CA-04"], "diff_ref": null},
+    {"id": "A07", "caminho": "frontend/src/idealizador.css", "caminho_anterior": null, "tipo": "adicionado", "resumo": "Estiliza a página de acesso.", "fases": ["F2"], "evidencias": ["revisao-002.json: CA-04"], "diff_ref": null},
+    {"id": "A08", "caminho": "frontend/src/idealizadorAccess.ts", "caminho_anterior": null, "tipo": "adicionado", "resumo": "Encapsula chamada ao endpoint e marcador de sessão.", "fases": ["F2"], "evidencias": ["revisao-002.json: CA-03, CA-04"], "diff_ref": null},
+    {"id": "A09", "caminho": "frontend/src/components/AdminPage.tsx", "caminho_anterior": null, "tipo": "modificado", "resumo": "Atualiza o texto do painel para o acesso provisório.", "fases": ["F2"], "evidencias": ["revisao-002.json: CA-05"], "diff_ref": null},
+    {"id": "A10", "caminho": "frontend/tests/idealizador-access.test.mjs", "caminho_anterior": null, "tipo": "adicionado", "resumo": "Testa sucesso, sessão, limpeza e falha do acesso.", "fases": ["F3"], "evidencias": ["npm test: 11 testes aprovados"], "diff_ref": null},
+    {"id": "A11", "caminho": "README.md", "caminho_anterior": null, "tipo": "modificado", "resumo": "Documenta fluxo, configuração e limitações.", "fases": ["F3"], "evidencias": ["revisao-002.json: CA-06"], "diff_ref": null},
+    {"id": "A12", "caminho": "frontend/README.md", "caminho_anterior": null, "tipo": "modificado", "resumo": "Documenta rotas e acesso provisório no frontend.", "fases": ["F3"], "evidencias": ["revisao-002.json: CA-06"], "diff_ref": null}
+  ],
+  "fases": [
+    {"id": "F1", "titulo": "Definir validação backend e rotas", "resumo_executado": "Endpoint e rotas públicas/privadas foram integrados sem alterar a Landing Page.", "tarefas": ["T1-1", "T1-2"], "arquivos": ["A01", "A02", "A03", "A04", "A05"], "evidencias": ["revisao-002.json: CA-01, CA-02, CA-03, CA-04, CA-05"]},
+    {"id": "F2", "titulo": "Implementar login e acesso privado dentro do atelier", "resumo_executado": "Tela de login, marcador de sessão, retorno ao atelier e guarda do painel foram implementados.", "tarefas": ["T2-1", "T2-2"], "arquivos": ["A04", "A06", "A07", "A08", "A09"], "evidencias": ["revisao-002.json: CA-03, CA-04, CA-05"]},
+    {"id": "F3", "titulo": "Documentar e validar o fluxo completo", "resumo_executado": "Documentação e testes direcionados foram entregues; a revisão técnica final aprovou a implementação.", "tarefas": ["T3-1", "T3-2"], "arquivos": ["A10", "A11", "A12"], "evidencias": ["npm test", "npm run build", "compileall", "git diff --check", "revisao-002.json"]}
+  ],
+  "criterios": [
+    {"id": "CA-01", "estado": "atendido", "evidencia": "Landing Page intacta e build aprovado."},
+    {"id": "CA-02", "estado": "atendido", "evidencia": "VisitorMap oferece #/acesso."},
+    {"id": "CA-03", "estado": "atendido", "evidencia": "Endpoint usa ambiente e normaliza entradas inválidas."},
+    {"id": "CA-04", "estado": "atendido", "evidencia": "Login grava sessão e redireciona para #/mapa."},
+    {"id": "CA-05", "estado": "atendido", "evidencia": "Link Harness fica no atelier e #/admin é protegido."},
+    {"id": "CA-06", "estado": "atendido", "evidencia": "READMEs documentam a natureza provisória."}
+  ],
+  "validacoes": [
+    {"id": "V01", "descricao": "Testes frontend", "estado": "aprovada", "origem": "executor", "evidencia": "npm test: 11 testes aprovados."},
+    {"id": "V02", "descricao": "Build frontend", "estado": "aprovada", "origem": "executor", "evidencia": "npm run build concluído."},
+    {"id": "V03", "descricao": "Compilação backend", "estado": "aprovada", "origem": "executor", "evidencia": "compileall concluído."},
+    {"id": "V04", "descricao": "Revisão técnica independente", "estado": "aprovada", "origem": "revisor", "evidencia": "revisao-002.json recomenda aprovar."},
+    {"id": "V05", "descricao": "Teste HTTP integrado", "estado": "nao_executada", "origem": "revisor", "evidencia": "Não foram iniciados servidor, banco ou modelo."}
+  ],
+  "anotacoes": [
+    {"id": "N01", "tipo": "limitacao", "texto": "O acesso é um mock client-side: o marcador em sessionStorage controla a navegação da SPA, mas não protege recursos backend.", "arquivos": ["frontend/src/idealizadorAccess.ts", "frontend/src/main.tsx"], "evidencias": ["planejamento-002.json", "revisao-002.json"]},
+    {"id": "N02", "tipo": "pendencia", "texto": "A revisão humana do Idealizador permanece pendente.", "arquivos": [], "evidencias": ["status_tecnico aprovado; revisao_humana pendente"]},
+    {"id": "N03", "tipo": "explicacao", "texto": "A palavra-chave local permanece somente no backend/.env, fora do repositório.", "arquivos": ["backend/main.py"], "evidencias": ["revisao-002.json: CA-03"]}
+  ],
+  "fluxo": {
+    "disponivel": true,
+    "motivo": null,
+    "nos": [
+      {"id": "N01", "rotulo": "Visita pública", "arquivo": "frontend/src/components/VisitorMap.tsx", "simbolo": "VisitorMap"},
+      {"id": "N02", "rotulo": "Login do Idealizador", "arquivo": "frontend/src/components/IdealizadorLoginPage.tsx", "simbolo": "IdealizadorLoginPage"},
+      {"id": "N03", "rotulo": "Validação backend", "arquivo": "backend/main.py", "simbolo": "access_idealizador"},
+      {"id": "N04", "rotulo": "Atelier", "arquivo": "frontend/src/main.tsx", "simbolo": "getExperience"},
+      {"id": "N05", "rotulo": "Painel Harness", "arquivo": "frontend/src/components/AdminPage.tsx", "simbolo": "AdminPage"}
+    ],
+    "arestas": [
+      {"origem": "N01", "destino": "N02", "relacao": "navega para", "evidencias": ["VisitorMap link #/acesso"]},
+      {"origem": "N02", "destino": "N03", "relacao": "envia palavra-chave", "evidencias": ["idealizadorAccess.ts chama POST /access/idealizador"]},
+      {"origem": "N03", "destino": "N04", "relacao": "autoriza e redireciona", "evidencias": ["IdealizadorLoginPage navega para #/mapa"]},
+      {"origem": "N04", "destino": "N05", "relacao": "oferece link interno", "evidencias": ["Workspace link #/admin"]}
+    ]
+  },
+  "observacoes": [
+    "O relatório consolida a terceira e última tentativa do loop de correções.",
+    "As quatro alterações backend preexistentes foram preservadas e permanecem fora do escopo.",
+    "Este relatório não autoriza commit, publicação, merge ou autenticação de produção."
+  ]
+}

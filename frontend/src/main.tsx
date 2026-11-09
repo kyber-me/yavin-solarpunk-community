@@ -8,6 +8,8 @@ import { VisitorMap } from './components/VisitorMap';
 import { useArrivalSound } from './arrivalSound';
 import { ManifestoPage } from './components/ManifestoPage';
 import { AdminPage } from './components/AdminPage';
+import { IdealizadorLoginPage } from './components/IdealizadorLoginPage';
+import { hasIdealizadorAccess } from './idealizadorAccess';
 import './styles.css';
 import './map.css';
 
@@ -56,13 +58,13 @@ function Workspace({ active }: { active: boolean }) {
     <header className="workspace-header">
       <a className="wordmark" href="#/mapa" aria-label="Yavin, início"><svg viewBox="0 0 40 40" fill="none" aria-hidden="true"><circle cx="20" cy="20" r="7" fill="currentColor" /><path d="M20 0v9m0 22v9M0 20h9m22 0h9M6 6l7 7m14 14 7 7M6 34l7-7M27 13l7-7" stroke="currentColor" strokeWidth="3" /></svg>YAVIN<span className="brand-period">.</span></a>
       <span className="workspace-caption">Oficina de futuros possíveis</span>
-      <nav className="header-navigation" aria-label="Navegação principal"><a href="#/mapa" aria-current={!inLaboratory ? 'page' : undefined}>Território</a><a href="#/laboratorio" aria-current={inLaboratory ? 'page' : undefined}>Laboratório <span aria-hidden="true">↗</span></a><a href="#/manifesto">Manifesto</a></nav>
+      <nav className="header-navigation" aria-label="Navegação principal"><a href="#/mapa" aria-current={!inLaboratory ? 'page' : undefined}>Território</a><a href="#/laboratorio" aria-current={inLaboratory ? 'page' : undefined}>Laboratório <span aria-hidden="true">↗</span></a><a href="#/manifesto">Manifesto</a><a href="#/admin">Harness</a></nav>
       <span className="preview-badge">PRÉVIA LOCAL</span>
     </header>
     <nav className="workspace-rail" aria-label="Espaços de trabalho">
       <a href="#/mapa" aria-current={!inLaboratory ? 'page' : undefined}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2ZM9 3v16M15 5v16" /></svg><span>Território</span></a>
       <a href="#/laboratorio" aria-current={inLaboratory ? 'page' : undefined}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M8 3h8M10 3v7L4 20h16l-6-10V3M7 15h10" /></svg><span>Laboratório</span></a>
-      <span className="rail-note">PENSAR · FAZER · REFAZER</span>
+      <a href="#/admin" aria-label="Abrir painel de harness">Harness</a><span className="rail-note">PENSAR · FAZER · REFAZER</span>
     </nav>
     <div className={`workspace-content ${inLaboratory ? 'laboratory-workspace' : 'map-workspace'} ${!inLaboratory && chatOpen ? 'drawer-open' : ''}`} onKeyDownCapture={event => {
       if (!inLaboratory && chatOpen && event.key === 'Escape') {
@@ -87,10 +89,13 @@ function Workspace({ active }: { active: boolean }) {
 }
 
 const getExperience = () => {
-  if (window.location.pathname === '/admin' || window.location.hash === '#/admin') return 'admin';
-  if (window.location.hash === '#/mapa' || window.location.hash === '#/laboratorio') return 'atelier';
-  if (window.location.hash === '#/visita') return 'visit';
-  if (window.location.hash === '#/manifesto') return 'manifesto';
+  const hash = window.location.hash;
+  if (hash === '#/admin') return hasIdealizadorAccess() ? 'admin' : 'idealizador-login';
+  if (hash === '#/acesso') return 'idealizador-login';
+  if (hash === '#/mapa' || hash === '#/laboratorio') return 'atelier';
+  if (hash === '#/visita') return 'visit';
+  if (hash === '#/manifesto') return 'manifesto';
+  if (window.location.pathname === '/admin') return hasIdealizadorAccess() ? 'admin' : 'idealizador-login';
   return 'arrival';
 };
 
@@ -101,13 +106,14 @@ function App() {
   const previousExperience = useRef(experience);
   useEffect(() => {
     if (experience === 'atelier') setAtelierVisited(true);
-    else document.title = experience === 'visit' ? 'Visite Yavin · Território em formação' : experience === 'manifesto' ? 'Manifesto Solarpunk · Yavin' : experience === 'admin' ? 'Admin · Yavin' : 'Yavin · O futuro tem lugar';
+    else document.title = experience === 'visit' ? 'Visite Yavin · Território em formação' : experience === 'manifesto' ? 'Manifesto Solarpunk · Yavin' : experience === 'admin' ? 'Admin · Yavin' : experience === 'idealizador-login' ? 'Acesso do Idealizador · Yavin' : 'Yavin · O futuro tem lugar';
     if (previousExperience.current !== experience) {
       window.scrollTo(0, 0);
       if (experience === 'arrival') document.getElementById('arrival-title')?.focus();
       if (experience === 'visit') document.getElementById('visitor-territory-title')?.focus();
       if (experience === 'manifesto') document.getElementById('manifesto-title')?.focus();
       if (experience === 'admin') document.getElementById('admin-title')?.focus();
+      if (experience === 'idealizador-login') document.getElementById('idealizador-login-title')?.focus();
     }
     previousExperience.current = experience;
   }, [experience]);
@@ -116,6 +122,7 @@ function App() {
     {experience === 'visit' && <VisitorMap sound={sound} />}
     {experience === 'manifesto' && <ManifestoPage sound={sound} />}
     {experience === 'admin' && <AdminPage />}
+    {experience === 'idealizador-login' && <IdealizadorLoginPage />}
     {(atelierVisited || experience === 'atelier') && <div hidden={experience !== 'atelier'}><Workspace active={experience === 'atelier'} /></div>}
   </>;
 }

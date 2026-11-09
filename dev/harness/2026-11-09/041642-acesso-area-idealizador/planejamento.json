@@ -1,0 +1,214 @@
+{
+  "schema_version": 1,
+  "task_id": "acesso-area-idealizador",
+  "registrado_em": "2026-11-09T04:19:12-03:00",
+  "planejado_em": "2026-11-09T04:19:12-03:00",
+  "origem_registro": "contemporanea",
+  "classificacao_ref": "classificacao-002.json",
+  "nivel": 4,
+  "tipo_planejamento": "decomposto",
+  "modo_plan": {
+    "estado": "utilizado",
+    "justificativa": "O Idealizador solicitou explicitamente a mudança para o modo Plan com /plan antes da elaboração deste registro."
+  },
+  "objetivo": "Permitir que o Idealizador saia da visualização pública do mapa para uma página de acesso por palavra-chave mockada e, após a validação client-side, entre em uma área privada que contenha o link para o painel de harness, sem alterar a experiência sagrada da Landing Page.",
+  "escopo": {
+    "inclui": [
+      "Adicionar um ponto de acesso discreto na navegação da visualização pública do mapa.",
+      "Criar uma página de login client-side com palavra-chave mockada.",
+      "Definir a palavra-chave mockada em uma configuração substituível do backend, preferencialmente backend/src/global_vars.py ou arquivo dedicado de configuração.",
+      "Manter o estado de acesso durante a sessão da aba, sem alegar segurança de produção.",
+      "Criar a área privada do Idealizador com navegação para o painel de harness.",
+      "Bloquear acesso direto à rota do painel quando a área privada não estiver autorizada.",
+      "Atualizar testes, estilos e documentação diretamente relacionados ao novo fluxo."
+    ],
+    "exclui": [
+      "Alterar a composição ou inserir botão de acesso na Landing Page.",
+      "Implementar autenticação real, backend de sessão, hashing, cookies seguros ou autorização server-side.",
+      "Desativar o harness ou criar harness.md.",
+      "Alterar os registros, schemas ou conteúdo dos relatórios do harness.",
+      "Alterar as quatro modificações backend preexistentes fora do escopo: conversation_pool.py, message_repository.py, conversation_history.py e message_mapper.py."
+    ]
+  },
+  "criterios_aceitacao": [
+    {
+      "id": "CA-01",
+      "descricao": "A Landing Page mantém sua composição e não recebe um botão de acesso à área privada.",
+      "verificacao": "Executar o build e verificar visualmente ou por teste que Arrival continua navegando apenas pelo botão Entrar para #/visita e que nenhum controle privado foi adicionado à Landing Page."
+    },
+    {
+      "id": "CA-02",
+      "descricao": "A visualização pública do mapa oferece um acesso identificável à página de palavra-chave.",
+      "verificacao": "Teste de navegação ou teste de componente confirma que o controle da VisitorMap leva à rota de login sem expor o painel."
+    },
+    {
+      "id": "CA-03",
+      "descricao": "A palavra-chave correta permite entrar na área privada e uma palavra-chave incorreta permanece na página de login com erro acessível.",
+      "verificacao": "Testes unitários da autenticação mockada cobrem sucesso, falha, campo vazio e anúncio de erro."
+    },
+    {
+      "id": "CA-04",
+      "descricao": "O acesso autorizado sobrevive ao recarregamento da SPA durante a sessão da aba, e o acesso direto ao admin sem autorização redireciona para o login.",
+      "verificacao": "Teste de rota simula sessionStorage, recarga e abertura direta de #/admin; teste confirma redirecionamento quando o marcador não existe."
+    },
+    {
+      "id": "CA-05",
+      "descricao": "A área privada apresenta um link para o painel de harness, e o painel deixa de ser uma rota pública direta.",
+      "verificacao": "Teste de navegação confirma o link interno e a guarda da rota; build confirma a integração dos componentes."
+    },
+    {
+      "id": "CA-06",
+      "descricao": "A documentação identifica a palavra-chave como mock de desenvolvimento e registra que não existe autenticação de produção.",
+      "verificacao": "Inspecionar README.md e documentação diretamente relacionada após a implementação."
+    }
+  ],
+  "fases": [
+    {
+      "id": "F1",
+      "titulo": "Definir configuração e fluxo de acesso",
+      "objetivo": "Estabelecer a fonte da palavra-chave mockada, o estado de sessão e os contratos internos de rotas antes de integrar a interface.",
+      "depende_de": [],
+      "tarefas": [
+        {
+          "id": "T1-1",
+          "descricao": "Escolher e implementar a configuração substituível da palavra-chave mockada, além de um helper client-side para validar e armazenar o acesso somente na sessão da aba.",
+          "arquivos": [
+            "backend/src/global_vars.py",
+            "frontend/src/adminAccess.ts",
+            "backend/src/global_vars.py ou configuração dedicada a definir durante a implementação"
+          ],
+          "criterios_aceitacao": [
+            "CA-03",
+            "CA-04"
+          ],
+          "validacoes": [
+            "Teste unitário do helper de acesso.",
+            "Verificação de que nenhum segredo real é introduzido no repositório."
+          ]
+        },
+        {
+          "id": "T1-2",
+          "descricao": "Definir as rotas internas para login e área privada, preservando a Landing Page, a visita pública e o painel de harness existentes.",
+          "arquivos": [
+            "frontend/src/main.tsx",
+            "frontend/src/components/VisitorMap.tsx"
+          ],
+          "criterios_aceitacao": [
+            "CA-01",
+            "CA-02",
+            "CA-04"
+          ],
+          "validacoes": [
+            "Teste de transições entre #/visita, login, área privada e #/admin.",
+            "Revisão do diff para confirmar que Arrival não foi alterada fora do necessário."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F2",
+      "titulo": "Construir telas privadas e proteger o painel",
+      "objetivo": "Implementar a experiência de login e a área privada com acesso controlado ao painel de harness.",
+      "depende_de": [
+        "F1"
+      ],
+      "tarefas": [
+        {
+          "id": "T2-1",
+          "descricao": "Criar a página de login por palavra-chave com estados de carregamento, erro, foco e retorno à visualização pública.",
+          "arquivos": [
+            "frontend/src/components/IdealizadorLoginPage.tsx",
+            "frontend/src/idealizador.css",
+            "frontend/src/main.tsx"
+          ],
+          "criterios_aceitacao": [
+            "CA-02",
+            "CA-03",
+            "CA-04"
+          ],
+          "validacoes": [
+            "Testes de interação e acessibilidade do formulário.",
+            "Build TypeScript/Vite."
+          ]
+        },
+        {
+          "id": "T2-2",
+          "descricao": "Criar a área privada do Idealizador, adicionar o link para o painel de harness e aplicar a guarda de acesso ao AdminPage.",
+          "arquivos": [
+            "frontend/src/components/IdealizadorArea.tsx",
+            "frontend/src/components/AdminPage.tsx",
+            "frontend/src/main.tsx",
+            "frontend/src/styles.css"
+          ],
+          "criterios_aceitacao": [
+            "CA-04",
+            "CA-05"
+          ],
+          "validacoes": [
+            "Teste de acesso autorizado e não autorizado.",
+            "Verificação manual de teclado, foco e retorno de rota."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F3",
+      "titulo": "Documentar e validar o fluxo completo",
+      "objetivo": "Registrar as limitações do mock e verificar a experiência completa sem modificar o harness.",
+      "depende_de": [
+        "F2"
+      ],
+      "tarefas": [
+        {
+          "id": "T3-1",
+          "descricao": "Atualizar a documentação do projeto com as rotas, o fluxo privado e a limitação de segurança da palavra-chave mockada.",
+          "arquivos": [
+            "README.md",
+            "frontend/README.md"
+          ],
+          "criterios_aceitacao": [
+            "CA-06"
+          ],
+          "validacoes": [
+            "Revisão textual dos comandos e rotas documentados.",
+            "Verificação de que nenhuma afirmação apresenta o mock como autenticação real."
+          ]
+        },
+        {
+          "id": "T3-2",
+          "descricao": "Executar a validação final do fluxo e registrar limitações sem iniciar ou alterar o backend operacional.",
+          "arquivos": [
+            "frontend/tests/",
+            "frontend/src/"
+          ],
+          "criterios_aceitacao": [
+            "CA-01",
+            "CA-02",
+            "CA-03",
+            "CA-04",
+            "CA-05",
+            "CA-06"
+          ],
+          "validacoes": [
+            "npm test.",
+            "npm run build.",
+            "git diff --check.",
+            "Revisão do estado final para preservar alterações backend preexistentes."
+          ]
+        }
+      ]
+    }
+  ],
+  "incertezas": [
+    "A palavra-chave mockada será necessariamente incorporada ao bundle frontend se a validação ocorrer apenas no cliente; isso é aceitável somente como mecanismo de protótipo.",
+    "A configuração em backend/src/global_vars.py não é diretamente importável pelo frontend; a implementação precisa decidir uma ponte explícita ou manter uma cópia de desenvolvimento, sem criar um contrato backend falso.",
+    "O desenho visual da área privada ainda não foi especificado; deve reutilizar a linguagem do atelier sem alterar a Landing Page.",
+    "A presença de quatro alterações backend locais preexistentes exige cuidado para não incluí-las no escopo nem revertê-las."
+  ],
+  "observacoes": [
+    "Plano baseado em classificacao-002.json, que removeu a desativação do harness.",
+    "A autorização solicitada inclui a implementação inicial e até duas correções posteriores dentro deste mesmo escopo, condicionadas aos achados das revisões e sem ampliar o objetivo.",
+    "Não inclui commit, push ou alteração das modificações backend preexistentes; essas decisões serão tratadas separadamente.",
+    "O planejamento não comprova implementação, testes aprovados ou revisão humana."
+  ]
+}

@@ -1,0 +1,16 @@
+.idealizador-login { min-height: 100dvh; background: var(--background); color: var(--ink); }
+.idealizador-skip { position: fixed; top: -100px; left: 16px; padding: 14px; background: var(--paper); z-index: 20; }
+.idealizador-skip:focus { top: 12px; }
+.idealizador-header { display: flex; justify-content: space-between; align-items: center; padding: 24px 5%; border-bottom: 1px solid var(--ink); background: var(--paper); }
+.idealizador-header>a:last-child { color: var(--action); font-size: 12px; }
+.idealizador-brand { font-size: 30px; font-weight: 700; letter-spacing: -.08em; }.idealizador-brand span { color: var(--copper); }
+.idealizador-card { width: min(100% - 40px, 620px); margin: clamp(60px, 14vh, 150px) auto; padding: clamp(28px, 6vw, 64px); border: 1px solid var(--ink); background: var(--paper); box-shadow: 8px 8px 0 var(--ink); }
+.idealizador-card .eyebrow { color: var(--copper); }
+.idealizador-card h1 { margin: 18px 0; font: 700 clamp(46px, 8vw, 88px)/.9 var(--display); text-transform: uppercase; }
+.idealizador-card h1 em { color: var(--copper); font-style: normal; }
+.idealizador-card>p { max-width: 380px; color: var(--muted); line-height: 1.7; }
+.idealizador-card form { display: grid; gap: 10px; margin-top: 34px; }
+.idealizador-card label { font: 10px var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+.idealizador-card input { min-height: 52px; border: 1px solid var(--ink); padding: 12px 14px; background: white; }
+.idealizador-card .primary-button { justify-content: space-between; margin-top: 8px; }
+.idealizador-card small { display: block; margin-top: 28px; color: var(--muted); font-size: 10px; line-height: 1.5; }

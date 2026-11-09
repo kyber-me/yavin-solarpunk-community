@@ -23,7 +23,7 @@ export function AdminPage() {
         <section><h2>O que sustenta a nota</h2><ul>{classification.evidencias.map(item => <li key={item.arquivo}><code>{item.arquivo}</code><p>{item.observacao}</p></li>)}</ul></section>
         <section><h2>Pontos para o plano</h2><ol>{classification.incertezas.map(item => <li key={item}>{item}</li>)}</ol><div className="admin-decision"><strong>Diretrizes registradas</strong><p>Reset integral do banco, inclusive checkpoints. Notion como fonte principal; documentos locais como fallback quando estiver indisponível.</p><p>O reset ainda não foi executado.</p></div></section>
       </div>
-      <footer className="admin-footer"><span>Registro {classification.task_id} · Git {classification.revisao_git.slice(0, 7)}</span><span>Visualização local de um registro versionado. Não inclui controles de acesso.</span></footer>
+      <footer className="admin-footer"><span>Registro {classification.task_id} · Git {classification.revisao_git.slice(0, 7)}</span><span>Visualização local de um registro versionado. Acesso provisório pelo atelier.</span></footer>
     </main>
   </div>;
 }

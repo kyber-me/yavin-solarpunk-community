@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "task_id": "acesso-area-idealizador",
+  "registrado_em": "2026-11-09T04:34:12-03:00",
+  "anterior_ref": "loop-002.json",
+  "limite_tentativas": 3,
+  "estado": "aguardando_revisao",
+  "classificacao_ref": "classificacao-002.json",
+  "planejamento_ref": "planejamento-002.json",
+  "autorizacao_ref": "conversation:2026-11-09T04:26:04-03:00",
+  "motivo": "A tentativa 2 corrigiu REV-001 e REV-002; as validações locais passaram e a entrega está reservada para nova revisão independente.",
+  "tentativas": [
+    {
+      "numero": 1,
+      "implementation_id": "01M6ZKCTJ4MTTNQBCKRRT3SW9K",
+      "parent_implementation_id": null,
+      "fase": "revisada",
+      "revisao_ref": "revisao-001.json",
+      "evidencias_execucao": ["frontend: 11 testes e build aprovados", "backend: compileall aprovado", "git diff --check aprovado"],
+      "snapshot": []
+    },
+    {
+      "numero": 2,
+      "implementation_id": "01M6ZKG3V3NMBA7H3EWM0NAXV6",
+      "parent_implementation_id": "01M6ZKCTJ4MTTNQBCKRRT3SW9K",
+      "fase": "entregue",
+      "revisao_ref": null,
+      "evidencias_execucao": [
+        "frontend: npm test — 11 testes aprovados",
+        "frontend: npm run build — TypeScript/Vite aprovado",
+        "backend: compileall — aprovado",
+        "git diff --check — aprovado"
+      ],
+      "snapshot": [
+        {"arquivo": "backend/main.py", "sha256": "96e46a9b26221e4e184b9a2a61294b222d93ff3b8ed0bb8a4894f005d5048e74"},
+        {"arquivo": "backend/src/types/dtos/idealizador_access.py", "sha256": "a72b72afce6c7297ca9af1283a26c0c36560e801a01e28987774927ccb8f4d71"},
+        {"arquivo": "frontend/src/main.tsx", "sha256": "fd1cdda19ca983d39bf18b297fa120a2625aa94744111f187684079ab7c4e1a6"},
+        {"arquivo": "frontend/tests/idealizador-access.test.mjs", "sha256": "68f114cedee5dee49bc8ee574e19156a23233eaa8a0a43c82a2ccf109f014733"}
+      ]
+    }
+  ]
+}

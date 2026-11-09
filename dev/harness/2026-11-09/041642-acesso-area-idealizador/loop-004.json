@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "task_id": "acesso-area-idealizador",
+  "registrado_em": "2026-11-09T04:36:18-03:00",
+  "anterior_ref": "loop-003.json",
+  "limite_tentativas": 3,
+  "estado": "aguardando_executor",
+  "classificacao_ref": "classificacao-002.json",
+  "planejamento_ref": "planejamento-002.json",
+  "autorizacao_ref": "conversation:2026-11-09T04:26:04-03:00",
+  "motivo": "A revisão-002 confirmou REV-001 e REV-002 resolvidos e solicitou uma última correção no mesmo critério CA-03 para normalizar todos os payloads inválidos do endpoint.",
+  "tentativas": [
+    {
+      "numero": 1,
+      "implementation_id": "01M6ZKCTJ4MTTNQBCKRRT3SW9K",
+      "parent_implementation_id": null,
+      "fase": "revisada",
+      "revisao_ref": "revisao-001.json",
+      "evidencias_execucao": ["frontend: 11 testes e build aprovados", "backend: compileall aprovado", "git diff --check aprovado"],
+      "snapshot": []
+    },
+    {
+      "numero": 2,
+      "implementation_id": "01M6ZKG3V3NMBA7H3EWM0NAXV6",
+      "parent_implementation_id": "01M6ZKCTJ4MTTNQBCKRRT3SW9K",
+      "fase": "revisada",
+      "revisao_ref": "revisao-002.json",
+      "evidencias_execucao": ["frontend: 11 testes e build aprovados", "backend: compileall aprovado", "git diff --check aprovado"],
+      "snapshot": []
+    },
+    {
+      "numero": 3,
+      "implementation_id": "01M6ZKQX4K65XP5PTK9K23C5WM",
+      "parent_implementation_id": "01M6ZKG3V3NMBA7H3EWM0NAXV6",
+      "fase": "executor_reservado",
+      "revisao_ref": null,
+      "evidencias_execucao": [],
+      "snapshot": []
+    }
+  ]
+}

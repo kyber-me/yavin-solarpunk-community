@@ -13,7 +13,7 @@ export function VisitorMap({ sound }: { sound: ArrivalSound }) {
       <a href="#/" className="visitor-brand" aria-label="Yavin, voltar à entrada">yavin<span>.</span></a>
       <p>Todo futuro tem um começo.</p>
       <SoundControl sound={sound} />
-      <nav className="visitor-links" aria-label="Menu superior"><a href="#/manifesto">Manifesto</a><a href="#/">Mirante <span aria-hidden="true">↗</span></a></nav>
+      <nav className="visitor-links" aria-label="Menu superior"><a href="#/manifesto">Manifesto</a><a href="#/acesso">Área do Idealizador <span aria-hidden="true">↗</span></a><a href="#/">Mirante <span aria-hidden="true">↗</span></a></nav>
     </header>
     <MapView hidden={false} headingRef={heading} expanded visitor onToggleExpanded={() => {}} chatOpen={false} onToggleChat={() => {}} chatButtonRef={chatButton} onOpenSilasChat={() => {}} />
     <p role="status" className="sr-only">{sound.error}</p>

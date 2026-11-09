@@ -4,8 +4,8 @@ from typing import TYPE_CHECKING
 from psycopg import Connection
 from psycopg.rows import class_row
 
-from src.infra.db.relational.conversation_record import ConversationRecord
-from src.infra.db.relational.message_record import MessageRecord
+from src.persistence.db.relational.conversation_record import ConversationRecord
+from src.persistence.db.relational.message_record import MessageRecord
 
 if TYPE_CHECKING:
     from psycopg_pool import ConnectionPool

@@ -5,6 +5,8 @@ from typing import Any
 import uvicorn
 import os
 from fastapi import FastAPI, Query, Request, status
+from fastapi.exception_handlers import request_validation_exception_handler
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from starlette.concurrency import run_in_threadpool
@@ -24,6 +26,8 @@ from src.persistence.db.relational.agent_repository import AgentRepository
 from src.types.dtos.conversation_history import ConversationPage, MessagePage
 from src.services.update_conversation_title_service import UpdateConversationTitleService
 from src.persistence.cache.container import cache_container
+from src.global_vars import IDEALIZADOR_ACCESS_KEY_ENV
+from src.types.dtos.idealizador_access import IdealizadorAccessRequest
 
 from dotenv import load_dotenv
 load_dotenv(Path(__file__).resolve().parent / ".env")
@@ -66,9 +70,41 @@ async def handle_app_error(_, exception: AppError):
     )
 
 
+@app.exception_handler(RequestValidationError)
+async def handle_request_validation_error(request: Request, exception: RequestValidationError):
+    if request.url.path != "/access/idealizador":
+        return await request_validation_exception_handler(request, exception)
+
+    response = ApiResponse[None](
+        error=ApiError(
+            code="IDEALIZADOR_ACCESS_INVALID_REQUEST",
+            message="Payload inválido.",
+        )
+    )
+    return JSONResponse(status_code=422, content=response.model_dump(mode="json"))
+
+
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
+
+
+@app.post("/access/idealizador", response_model=ApiResponse[dict[str, bool]])
+async def idealizador_access(payload: IdealizadorAccessRequest):
+    expected = os.getenv(IDEALIZADOR_ACCESS_KEY_ENV)
+    if not expected:
+        raise AppError(
+            code="IDEALIZADOR_ACCESS_NOT_CONFIGURED",
+            message="O acesso provisório do Idealizador não está configurado.",
+            status_code=503,
+        )
+    if payload.key != expected:
+        raise AppError(
+            code="IDEALIZADOR_ACCESS_DENIED",
+            message="Palavra-chave incorreta.",
+            status_code=401,
+        )
+    return ApiResponse(data={"authorized": True})
 
 
 @app.get("/agents", response_model=ApiResponse[AgentCatalog])
