@@ -10,6 +10,7 @@ type Props = {
 export function CreateConversationForm({ preferSilas, onCreate, onCancel }: Props) {
   const [agents, setAgents] = useState<AgentOption[]>([]);
   const [participantId, setParticipantId] = useState('');
+  const [title, setTitle] = useState('');
   const [loading, setLoading] = useState(true);
   const [catalogError, setCatalogError] = useState('');
   const [error, setError] = useState('');
@@ -49,14 +50,14 @@ export function CreateConversationForm({ preferSilas, onCreate, onCancel }: Prop
     if (inFlight.current) return;
     setError('');
     const agent = agents.find(item => item.id === participantId);
-    if (!agent || existing) return;
+    if (!agent || existing || !title.trim()) return;
     inFlight.current = true;
     setPending(true);
     try {
-      const result = await createConversation(agent.id);
+      const result = await createConversation(agent.id, title.trim());
       if (!mounted.current) return;
       if (result.existing) setExisting({ agent, metadata: result.conversation });
-      else onCreate(`Conversa com ${agent.name}`, [agent.name], {
+      else onCreate(result.conversation.title, [agent.name], {
         agent, metadata: result.conversation, resumed: false,
       });
     } catch (reason) {
@@ -67,6 +68,8 @@ export function CreateConversationForm({ preferSilas, onCreate, onCancel }: Prop
     }
   }
 
+  const selectedAgent = agents.find(agent => agent.id === participantId);
+
   return <form className="create-form" onSubmit={submit} aria-busy={loading || pending}>
       <label htmlFor="conversation-agent">Com quem vamos conversar?</label>
       <select id="conversation-agent" required value={participantId} disabled={loading || pending || !agents.length || !!existing}
@@ -74,19 +77,23 @@ export function CreateConversationForm({ preferSilas, onCreate, onCancel }: Prop
         <option value="">{loading ? 'Carregando agentes…' : 'Selecione um agente'}</option>
         {agents.map(agent => <option key={agent.id} value={agent.id}>{agent.name}</option>)}
       </select>
+      <label htmlFor="conversation-title">Título da conversa</label>
+      <input id="conversation-title" value={title} onChange={event => { setTitle(event.target.value); setError(''); }}
+        required maxLength={120} disabled={pending || !!existing} placeholder="Ex.: Pesquisa sobre energia" />
+      {selectedAgent?.public_description && <p className="agent-public-description">{selectedAgent.public_description}</p>}
       {loading && <small role="status">Buscando os agentes disponíveis…</small>}
       {!loading && !catalogError && !agents.length && <small role="status">Nenhum agente está disponível para conversar agora.</small>}
       {catalogError && <p className="form-error" role="alert">{catalogError}</p>}
       {!loading && (catalogError || !agents.length) && <button type="button" className="text-button" onClick={() => setAttempt(value => value + 1)}>Tentar novamente</button>}
       {existing && <div className="existing-conversation" role="status">
         <p>Já existe uma conversa ativa com {existing.agent.name}.</p>
-        <button type="button" className="primary-button" onClick={() => onCreate(`Conversa com ${existing.agent.name}`,
+        <button type="button" className="primary-button" onClick={() => onCreate(existing.metadata.title,
           [existing.agent.name], { ...existing, resumed: true })}>Abrir conversa existente</button>
       </div>}
     {error && <p role="alert" className="form-error">{error}</p>}
     <div className="form-actions">
       <button type="button" className="text-button" disabled={pending} onClick={onCancel}>Cancelar</button>
-      {!existing && <button className="primary-button" type="submit" disabled={pending || loading || !participantId}>
+      {!existing && <button className="primary-button" type="submit" disabled={pending || loading || !participantId || !title.trim()}>
         {pending ? 'Iniciando…' : 'Iniciar conversa'}
       </button>}
     </div>

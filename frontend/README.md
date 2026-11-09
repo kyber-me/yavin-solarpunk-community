@@ -55,7 +55,8 @@ não são importados nem exibidos. Rascunhos existem apenas na memória da pági
 
 O backend define os contratos, sempre no envelope `{ data, error }`:
 
-- `GET /agents`: catálogo de participantes disponíveis; atualmente apenas Silas.
+- `GET /agents`: catálogo de participantes disponíveis com `id`, `name` e
+  `public_description` (texto público ou `null`); atualmente apenas Silas.
 - `POST /conversation/create`: cria antes de permitir envio; `201` confirma o
   registro, `409 / CONVERSATION_ALREADY_ACTIVE` oferece abrir a conversa existente.
 - `GET /conversations?sender_id=idealizador`: lista as conversas persistidas da dupla
@@ -64,7 +65,7 @@ O backend define os contratos, sempre no envelope `{ data, error }`:
   e devolve mensagens persistidas com seus IDs, autores e timestamps reais.
 - As consultas usam `limit` (até 100) e `offset`; a interface segue `next_offset`
   até recuperar o histórico completo. Falhas não usam histórico local como fallback.
-- `POST /conversation/talk`: recebe `conversation_id`, `sender_id` e `message` como
+- `POST /conversation/message`: recebe `conversation_id`, `sender_id` e `message` como
   texto. Após sucesso ou falha, a interface consulta o histórico novamente: a entrada
   pode ter sido gravada mesmo se o agente falhar. Não cria mensagens provisórias.
 

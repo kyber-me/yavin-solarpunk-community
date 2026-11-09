@@ -7,6 +7,7 @@ import { Arrival } from './components/Arrival';
 import { VisitorMap } from './components/VisitorMap';
 import { useArrivalSound } from './arrivalSound';
 import { ManifestoPage } from './components/ManifestoPage';
+import { AdminPage } from './components/AdminPage';
 import './styles.css';
 import './map.css';
 
@@ -86,6 +87,7 @@ function Workspace({ active }: { active: boolean }) {
 }
 
 const getExperience = () => {
+  if (window.location.pathname === '/admin' || window.location.hash === '#/admin') return 'admin';
   if (window.location.hash === '#/mapa' || window.location.hash === '#/laboratorio') return 'atelier';
   if (window.location.hash === '#/visita') return 'visit';
   if (window.location.hash === '#/manifesto') return 'manifesto';
@@ -94,17 +96,18 @@ const getExperience = () => {
 
 function App() {
   const experience = useSyncExternalStore(subscribeToRoute, getExperience);
-  const sound = useArrivalSound(experience !== 'atelier');
+  const sound = useArrivalSound(experience !== 'atelier' && experience !== 'admin');
   const [atelierVisited, setAtelierVisited] = useState(experience === 'atelier');
   const previousExperience = useRef(experience);
   useEffect(() => {
     if (experience === 'atelier') setAtelierVisited(true);
-    else document.title = experience === 'visit' ? 'Visite Yavin · Território em formação' : experience === 'manifesto' ? 'Manifesto Solarpunk · Yavin' : 'Yavin · O futuro tem lugar';
+    else document.title = experience === 'visit' ? 'Visite Yavin · Território em formação' : experience === 'manifesto' ? 'Manifesto Solarpunk · Yavin' : experience === 'admin' ? 'Admin · Yavin' : 'Yavin · O futuro tem lugar';
     if (previousExperience.current !== experience) {
       window.scrollTo(0, 0);
       if (experience === 'arrival') document.getElementById('arrival-title')?.focus();
       if (experience === 'visit') document.getElementById('visitor-territory-title')?.focus();
       if (experience === 'manifesto') document.getElementById('manifesto-title')?.focus();
+      if (experience === 'admin') document.getElementById('admin-title')?.focus();
     }
     previousExperience.current = experience;
   }, [experience]);
@@ -112,6 +115,7 @@ function App() {
     {experience === 'arrival' && <Arrival sound={sound} />}
     {experience === 'visit' && <VisitorMap sound={sound} />}
     {experience === 'manifesto' && <ManifestoPage sound={sound} />}
+    {experience === 'admin' && <AdminPage />}
     {(atelierVisited || experience === 'atelier') && <div hidden={experience !== 'atelier'}><Workspace active={experience === 'atelier'} /></div>}
   </>;
 }
