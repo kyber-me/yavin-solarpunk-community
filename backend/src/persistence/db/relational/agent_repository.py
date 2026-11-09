@@ -52,4 +52,3 @@ class AgentRepository:
             with conn.cursor(row_factory=dict_row) as cursor:
                 cursor.execute("SELECT kind, notion_page_id FROM yavin.documents WHERE agent_id IS NULL")
                 return {row["kind"]: row["notion_page_id"] for row in cursor.fetchall()}
-                

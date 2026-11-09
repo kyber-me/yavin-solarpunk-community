@@ -13,9 +13,8 @@ class ConversationDetails(BaseModel):
 class CreateConversationRequest(BaseModel):
     owner_id: str
     conversation_details: ConversationDetails
-    
+
 class UpdateConversationTitleRequest(BaseModel):
     owner_id: str = Field(min_length=1)
     title: ConversationTitle
-
 
