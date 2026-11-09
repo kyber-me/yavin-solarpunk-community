@@ -4,14 +4,14 @@ from typing import TYPE_CHECKING
 from psycopg import Connection
 from psycopg.errors import UniqueViolation
 
-from src.infra.db.relational.conversation_record import ConversationRecord
+from src.persistence.db.relational.conversation_record import ConversationRecord
 
 if TYPE_CHECKING:
     from psycopg_pool import ConnectionPool
 
 
 ACTIVE_PAIR_INDEX = "conversations_active_pair_uq"
-COLUMNS = "id, sender_id, participant_id, thread_id, created_at, start_date, end_date, active"
+COLUMNS = "id, sender_id, participant_id, thread_id, created_at, start_date, end_date, active, title"
 
 
 class ActiveConversationExists(Exception):
@@ -53,6 +53,8 @@ class PostgresConversationRepository:
     def create(self, conversation: ConversationRecord) -> ConversationRecord:
         if not conversation.sender_id.strip() or not conversation.participant_id.strip():
             raise ValueError("Both participant IDs are required")
+        if not conversation.title.strip() or len(conversation.title) > 120:
+            raise ValueError("A valid conversation title is required")
         if conversation.sender_id == conversation.participant_id:
             raise ValueError("A conversation requires distinct participants")
         for timestamp in (conversation.created_at, conversation.start_date, conversation.end_date):
@@ -64,11 +66,11 @@ class PostgresConversationRepository:
         try:
             with self._pool.connection() as connection:
                 saved = connection.execute(
-                    f"INSERT INTO yavin.conversations ({COLUMNS}) VALUES (%s, %s, %s, %s, %s, %s, %s, %s) RETURNING {COLUMNS}",
+                    f"INSERT INTO yavin.conversations ({COLUMNS}) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING {COLUMNS}",
                     (
                         conversation.id, conversation.sender_id, conversation.participant_id,
                         conversation.thread_id, conversation.created_at,
-                        conversation.start_date, conversation.end_date, conversation.active,
+                        conversation.start_date, conversation.end_date, conversation.active, conversation.title,
                     ),
                 ).fetchone()
                 if saved is None:
@@ -81,3 +83,10 @@ class PostgresConversationRepository:
                 if existing is not None:
                     raise ActiveConversationExists(existing) from error
             raise
+
+    def update_title(self, conversation_id: str, owner_id: str, title: str) -> ConversationRecord | None:
+        with self._pool.connection() as connection:
+            return connection.execute(
+                f"UPDATE yavin.conversations SET title = %s WHERE id = %s AND sender_id = %s RETURNING {COLUMNS}",
+                (title, conversation_id, owner_id),
+            ).fetchone()
