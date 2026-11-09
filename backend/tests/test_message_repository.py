@@ -15,7 +15,7 @@ from src.infra.db.relational.conversation_pool import open_conversation_pool
 from src.infra.db.relational.conversation_record import ConversationRecord
 from src.infra.db.relational.conversation_repository import PostgresConversationRepository
 from src.infra.db.relational.message_repository import PostgresMessageRepository
-from services.helpers.message_mapper import message_from_record, message_to_record
+from src.services.helpers.message_mapper import message_from_record, message_to_record
 from src.types.dtos.send_message_service_request import Message
 
 
@@ -51,7 +51,9 @@ class MessageRepositoryIntegrationTests(unittest.TestCase):
         with psycopg.connect(cls.uri, autocommit=True) as connection:
             if connection.execute("SELECT to_regclass('yavin.conversations')").fetchone()[0] is not None:
                 raise RuntimeError('Refusing to run: test database must be empty')
-            connection.execute(Path('src/infra/db/relational/migrations/001_initial_schema.sql').read_text())
+            connection.execute(Path('src/persistence/db/relational/migrations/001_initial_schema.sql').read_text())
+            connection.execute(Path('src/persistence/db/relational/migrations/002_agents_documents.sql').read_text())
+            connection.execute(Path('src/persistence/db/relational/migrations/004_conversation_title.sql').read_text())
 
     def setUp(self):
         self.context = open_conversation_pool(self.uri)

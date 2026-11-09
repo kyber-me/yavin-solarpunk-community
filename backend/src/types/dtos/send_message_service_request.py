@@ -15,4 +15,4 @@ class SendMessageRequest(BaseModel):
     sender_id: str
     conversation_id: str
     message: str = Field(min_length=1)
-    # thread_id: str = Field(min_length=1)
+

@@ -7,28 +7,28 @@ from fastapi import FastAPI, Request
 from fastapi.testclient import TestClient
 
 from main import app
-from src.services.send_message_service import ChatService
-from src.types.dtos.send_message_service_request import ChatServiceRequest, Message
+from src.services.send_message_service import SendMessageService
+from src.types.dtos.send_message_service_request import SendMessageRequest, Message
 
 
 class ChatRequestTests(unittest.TestCase):
     def test_frontend_payload_reaches_service_with_request(self):
         # No TestClient context: do not execute the database lifespan.
-        with patch('main.ChatService.run', return_value={'content': 'Resposta'}) as run:
-            response = TestClient(app).post('/conversation/talk', json={
+        with patch('main.SendMessageService.run', return_value={'content': 'Resposta'}) as run:
+            response = TestClient(app).post('/conversation/message', json={
                 'conversation_id': 'Conv_test', 'sender_id': 'idealizador', 'message': 'Olá',
             })
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()['data'], {'content': 'Resposta'})
         dto, request = run.call_args.args
-        self.assertIsInstance(dto, ChatServiceRequest)
+        self.assertIsInstance(dto, SendMessageRequest)
         self.assertEqual(dto.message, 'Olá')
         self.assertIsInstance(request, Request)
         self.assertIs(request.app, app)
 
     def test_client_cannot_supply_message_metadata_instead_of_text(self):
-        with patch('main.ChatService.run') as run:
-            response = TestClient(app).post('/conversation/talk', json={
+        with patch('main.SendMessageService.run') as run:
+            response = TestClient(app).post('/conversation/message', json={
                 'conversation_id': 'Conv_test', 'sender_id': 'idealizador',
                 'message': {'id': 'client-id', 'content': 'Olá', 'created_at': '2000-01-01T00:00:00Z'},
             })
@@ -39,16 +39,16 @@ class ChatRequestTests(unittest.TestCase):
         application = FastAPI()
         application.state.conversation_pool = object()
         request = Request({'type': 'http', 'app': application})
-        dto = ChatServiceRequest(conversation_id='Conv_test', sender_id='idealizador', message='Olá')
+        dto = SendMessageRequest(conversation_id='Conv_test', sender_id='idealizador', message='Olá')
         # Stop at the adaptation boundary to isolate this stage from persistence.
-        with patch('src.services.send_message_service.py.PostgresConversationRepository') as repository, patch(
-                'src.services.send_message_service.py.message_to_record', side_effect=RuntimeError('adaptation boundary')
+        with patch('src.services.send_message_service.PostgresConversationRepository') as repository, patch(
+                'src.services.send_message_service.message_to_record', side_effect=RuntimeError('adaptation boundary')
         ) as mapper:
             repository.return_value.get_by_id.return_value = SimpleNamespace(
                 sender_id='idealizador', participant_id='silas', active=True,
             )
             with self.assertRaisesRegex(RuntimeError, 'adaptation boundary'):
-                ChatService.run(dto, request)
+                SendMessageService.run(dto, request)
         message = mapper.call_args.args[0]
         self.assertIsInstance(message, Message)
         self.assertEqual(message.content, 'Olá')
@@ -70,13 +70,13 @@ class ChatRequestTests(unittest.TestCase):
         for conversation, status, code in cases:
             with self.subTest(status=status, conversation=conversation), patch.object(
                 app.state, 'conversation_pool', object(), create=True
-            ), patch('src.services.send_message_service.py.PostgresConversationRepository') as repository, patch(
-                'src.services.send_message_service.py.PostgresMessageRepository'
-            ) as messages, patch('src.services.send_message_service.py.Agent') as agent, patch(
-                'src.services.send_message_service.py.message_to_record'
+            ), patch('src.services.send_message_service.PostgresConversationRepository') as repository, patch(
+                'src.services.send_message_service.PostgresMessageRepository'
+            ) as messages, patch('src.services.send_message_service.Agent') as agent, patch(
+                'src.services.send_message_service.message_to_record'
             ) as mapper:
                 repository.return_value.get_by_id.return_value = conversation
-                response = TestClient(app).post('/conversation/talk', json={
+                response = TestClient(app).post('/conversation/message', json={
                     'conversation_id': 'Conv_test', 'sender_id': 'idealizador', 'message': 'Olá',
                 })
                 self.assertEqual(response.status_code, status)

@@ -1,25 +1,21 @@
 from pathlib import Path
 from fastapi import Request
 
-from src.infra.db.relational.conversation_repository import PostgresConversationRepository
-from src.infra.db.relational.message_record import MessageRecord
-from src.infra.db.relational.message_repository import PostgresMessageRepository
+from src.persistence.db.relational.conversation_repository import PostgresConversationRepository
+from src.persistence.db.relational.message_record import MessageRecord
+from src.persistence.db.relational.message_repository import PostgresMessageRepository
 from src.agents.agent import Agent
 from src.services.service_interface import IService
 from src.types.app_error import AppError
 from src.types.dtos.send_message_service_request import SendMessageRequest, Message
-from services.helpers.message_mapper import message_to_record
-# from src.infra.cache.cache import CHAT_CACHE
+from src.services.helpers.message_mapper import message_to_record
+from src.persistence.db.relational.agent_repository import AgentRepository
+from src.agents.knowledge import load_general_documents
 
 
 current_path = Path(
     __file__
 )  # /Users/tiagocuri/Repos/Yavin/backend/src/services/send_message_service.py
-
-# project_path_module = Path(__name__)  # "src.services.chat_service"
-
-PROJECT_ROOT = current_path.resolve().parents[2]  # /Users/tiagocuri/Repos/Yavin/backend
-PROJECT_SOURCE = current_path.resolve().parents[1]  # /Users/tiagocuri/Repos/Yavin/backend/src
 
 
 class SendMessageService(IService):
@@ -30,20 +26,15 @@ class SendMessageService(IService):
 
         content = dto.message
         # Add Prompt Injection Defend (PromptShield)
-        if not content.strip():
+        if not content or not content.strip():
             raise AppError(
                 code="INVALID_REQUEST",
                 message="The message is required",
                 status_code=400,
             )
 
-        # If conversation does not exist in cache, research in the database
-        # If not found raise an error
-        # ---------------------------------------------------------------
-        # Rapidly look-up for an existent conversation by id
-        # cache_key = (str(conversation_look_up_id), dto.thread_id)
-        # conversation_exists = CHAT_CACHE.get(cache_key)
-        # ---------------------------------------------------------------
+        # A message sent to a conversation that does not exist does not make sense
+        # It can be interpreted as a suspicious behavior
         conversation_repo = PostgresConversationRepository(request.app.state.conversation_pool)
         conversation_exists = conversation_repo.get_by_id(dto.conversation_id)
         if not conversation_exists:
@@ -72,22 +63,43 @@ class SendMessageService(IService):
             sender_id=dto.sender_id
         )
 
-        # Once the system receives a message from a sender (the `sender_id` identifies the message owner)
-        # it must persist it on database. If, for some reason, the receiver could not respond,
-        # the system returns an error but the original message from the sender is kept (?)
-
         message_repo = PostgresMessageRepository(request.app.state.conversation_pool)
+        agent_repo = AgentRepository(request.app.state.conversation_pool)
+
+        agent_id = conversation_exists.participant_id
+        agent_record = request.app.state.cache_container["agents"].get(agent_id)
+        if agent_record is None:
+            agent_record = agent_repo.get(conversation_exists.participant_id)
+            if agent_record is None:
+                raise AppError(
+                    code="AGENT_UNAVAILABLE",
+                    message="The conversation agent is unavailable",
+                    status_code=422
+                )
+        try:
+            general_documents = request.app.state.cache_container.get("general_documents")
+            if not general_documents:
+                # Create a Documents repository may be the best approach
+                general_documents = load_general_documents(agent_repo.general_pages())
+                request.app.state.cache_container["general_documents"] = general_documents
+        except (OSError, ValueError) as error:
+            raise AppError(
+                code="KNOWLEDGE_UNAVAILABLE",
+                message="Required knowledge is unavailable",
+                status_code=503) from error
         response: dict[str, str] | None
         try:
-            result = message_repo.create(message_record) # What happens if it fails?
+            # What are the consequences for the user experience if it fails?
+            result = message_repo.create(message_record)
             try:
-                instructions_path = (
-                        PROJECT_ROOT / "src" / "agents" / "prompts" / "IDENTIDADE_ID_SILAS.md"
-                )
                 checkpointer = request.app.state.checkpointer
+                silas = Agent(
+                    agent_record.name, None,
+                    checkpointer,
+                    identity_content=agent_record.identity,
+                    general_documents=general_documents,
+                    agent_id=agent_record.id)
 
-                # checkpointer gives memory to the agent (even the object Agent is recreated every request)
-                silas = Agent("Silas", instructions_path, checkpointer)
                 response = silas.invoke(result.content, conversation_exists.thread_id)
 
                 if not response:
