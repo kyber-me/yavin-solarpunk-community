@@ -4,7 +4,37 @@ Este arquivo consolida o contexto operacional necessário para o Codex ou outra 
 agêntica retomar o desenvolvimento de Yavin. Ele não faz parte da base de conhecimento
 dos agentes da simulação.
 
-## Retomada atual — 08/11/2026
+## Retomada atual — 09/11/2026
+
+**Natureza:** orientação operacional de desenvolvimento.
+Leia [`dev/retomada-2026-11-09.md`](dev/retomada-2026-11-09.md) antes de propor
+trabalho. O repositório está novamente na branch `main`, após a integração da
+branch de retomada. O acesso provisório à área do Idealizador foi implementado,
+revisado tecnicamente e registrado; a revisão humana continua pendente.
+
+Commits recentes relevantes:
+
+- `7c7c623` — acesso provisório à área do Idealizador, login backend/frontend,
+  guarda do painel Harness e documentação;
+- `88f7ef6` — correção dos imports relacionais após a reorganização da persistência;
+- `cc58717` — merge da branch de retomada em `main`.
+
+O valor de `IDEALIZADOR_ACCESS_KEY` permanece somente em `backend/.env`, que não
+é versionado. Não reproduzir o valor em documentação, commits ou respostas.
+As quatro alterações de imports foram integradas no commit separado acima.
+
+As próximas ideias de frontend estão apenas na lista local
+[`dev/local/personal_annotations.txt`](dev/local/personal_annotations.txt):
+ícone do Harness no menu lateral, seletor customizado de agentes com foto e nome,
+e histórico detalhado de implementações no painel Harness. O Notion não foi
+atualizado nesta sessão; não tratar essas tarefas como aprovadas para execução.
+
+Não há alteração backend pendente nesta retomada. A autenticação do Idealizador
+continua um mock de desenvolvimento client-side, sem sessão ou autorização
+server-side. Não desativar o harness nem criar `harness.md`: essa ideia foi
+retirada do escopo.
+
+## Registro anterior — 08/11/2026
 
 **Natureza:** orientação operacional de desenvolvimento.
 Leia [o ponto de retomada atual](dev/retomada-2026-11-08.md) e consulte as tarefas
@@ -33,7 +63,7 @@ os originais continuam no Git. O acesso de Silas ao Notion não foi implementado
 nem autorizado por essa transferência. A seleção para uso pelo agente permanece
 separada da catalogação documental. Ver detalhes e limites no ponto de retomada.
 
-## Prioridade atual — método de desenvolvimento agêntico, 08/11/2026
+## Registro de prioridade — método de desenvolvimento agêntico, 08/11/2026
 
 **Natureza:** orientação operacional de desenvolvimento.
 O Idealizador redirecionou a próxima frente para o método de delegação e pareamento,
@@ -94,7 +124,7 @@ O loop limitado está descrito para execução pelo coordenador via ferramentas 
 agentes; não há serviço/runner autônomo. Roteamento de modelos, captura automática
 de estados e interface continuam como incrementos posteriores.
 
-## Organização atual — monorepo, 08/11/2026
+## Registro de organização — monorepo, 08/11/2026
 
 **Natureza:** estado operacional de desenvolvimento.
 O projeto Python está em `backend/`: código, testes, `main.py`, `pyproject.toml`,

@@ -1,7 +1,20 @@
 # Registros do harness
 
 **Natureza:** referência operacional de desenvolvimento, fora da memória da simulação.
-**Data:** 08/11/2026.
+**Data:** 09/11/2026.
+
+## Ciclo contemporâneo concluído
+
+A tarefa `acesso-area-idealizador`, registrada em
+`2026-11-09/041642-acesso-area-idealizador/`, percorreu classificação,
+planejamento, três tentativas de implementação, revisão técnica independente e
+relatório final. A revisão `revisao-002.json` recomenda `aprovar` e o evento
+`loop-005.json` está em `aprovado_tecnicamente`. O relatório final mantém
+`revisao_humana` como `pendente`.
+
+Esse ciclo não desativa o harness, não cria `harness.md` e não estabelece um
+runner automático. O acesso implementado é uma autenticação mock de frontend
+para desenvolvimento; não representa autorização server-side.
 
 Cada classificação de implementação delegada no backend deve gerar um JSON
 versionável antes das edições. Organização inicial:

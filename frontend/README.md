@@ -95,7 +95,7 @@ npm test
 npm run build
 ```
 
-Oito testes do frontend e build aprovados. Testes HTTP e PostgreSQL descartável
+Onze testes do frontend e build aprovados. Testes HTTP e PostgreSQL descartável
 cobrem leitura, paginação, isolamento, recarga e rejeição de acesso. Com Ego Browser,
 verificados no ambiente real: quatro mensagens do banco após recarregar, remoção de
 entrada local antiga, reuniões bloqueadas e retomada pelo conflito `409`.
