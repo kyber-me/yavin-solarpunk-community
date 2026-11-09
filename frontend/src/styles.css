@@ -122,6 +122,11 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 .thread-heading>div { min-width: 0; }
 .thread-heading h2 { font-size: 12px; margin: 0 0 5px; overflow-wrap: anywhere; }
 .thread-heading p { font-size: 10px; color: var(--muted); margin: 0; }
+.thread-heading .rename-button { margin-left: auto; flex-shrink: 0; }
+.rename-form { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 10px 22px; border-bottom: 1px solid var(--line); }
+.rename-form label { width: 100%; font-size: 11px; }
+.rename-form input { flex: 1 1 180px; min-width: 0; min-height: 44px; padding: 8px; border: 1px solid #7e8777; color: var(--ink); background: var(--paper); font: inherit; }
+.rename-form .form-error { width: 100%; margin: 0; }
 .local-tag { margin-left: auto; font: 8px var(--mono); color: var(--muted); border: 1px solid var(--line); padding: 5px 6px; white-space: nowrap; }
 .participant-list { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; padding: 10px 22px; margin: 0; max-height: 74px; overflow: auto; }
 .participant-list li { font-size: 10px; background: #e5eadf; border: 1px solid #bdc7b3; padding: 4px 8px; overflow-wrap: anywhere; }
@@ -364,6 +369,7 @@ img.silas-mark { letter-spacing: normal; border: 1px solid #84702d; }
 
 /* Agent selection and persisted conversation states. */
 .create-form select { width: 100%; min-width: 0; min-height: 44px; padding: 10px 8px; border: 1px solid #7e8777; color: var(--ink); background: var(--paper); border-radius: 0; font: inherit; font-size: 12px; }
+.agent-public-description { margin: 2px 0 6px; color: var(--muted); font-size: 12px; line-height: 1.5; }
 .create-form :disabled { opacity: .65; }
 .existing-conversation { padding: 10px; border: 1px solid var(--line); background: var(--paper-deep); font-size: 12px; line-height: 1.6; }
 .existing-conversation .primary-button { white-space: normal; }

@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "task_id": "2026-11-08/193142-titulo-persistido-conversa",
+  "registrado_em": "2026-11-08T19:40:06-03:00",
+  "anterior_ref": null,
+  "limite_tentativas": 3,
+  "estado": "aguardando_revisao",
+  "classificacao_ref": "classificacao.json",
+  "planejamento_ref": "planejamento.json",
+  "autorizacao_ref": "Mensagem do Idealizador: Implement the approved plan (após apresentação do plano de título persistido)",
+  "motivo": "Entrega inicial implementada e validada; revisão independente pendente.",
+  "tentativas": [
+    {
+      "numero": 1,
+      "implementation_id": "01M6YN38JEQXTJHDXAHRMS8FHN",
+      "parent_implementation_id": null,
+      "fase": "entregue",
+      "revisao_ref": null,
+      "evidencias_execucao": [
+        "Relato do coordenador nesta rodada: backend 48 testes, 20 ignorados; frontend 9 testes e build aprovados; bancos descartáveis: repositório 10, mensagens 8, HTTP 6 testes aprovados."
+      ],
+      "snapshot": [
+        {
+          "arquivo": "backend/src/infra/db/relational/migrations/004_conversation_title.sql",
+          "sha256": "5828f68ddb9a53152765bfae2a9af100cdd694c419648ae75cdf5bc1ea9096e0"
+        },
+        {
+          "arquivo": "backend/src/infra/db/relational/conversation_record.py",
+          "sha256": "a274f1abd597ad94fea4ec20abcde6d2c12126e29e2cbf35d6065b6e24a2c4ee"
+        },
+        {
+          "arquivo": "backend/src/infra/db/relational/conversation_repository.py",
+          "sha256": "c8ce0b5f7c5ca79b5762550bf205bff9956985a904a1bd524a84cc75581e100c"
+        },
+        {
+          "arquivo": "backend/src/types/dtos/create_conversation_request.py",
+          "sha256": "7d7660c800c884db1a063ac9e82af1a5b2096a210dc9be7eba1af87ce29708a7"
+        },
+        {
+          "arquivo": "backend/src/services/create_conversation_service.py",
+          "sha256": "3b9c30e368f7b07632c123e424d8b8e18da4a92abce231e5f22b40185fafde1f"
+        },
+        {
+          "arquivo": "backend/src/types/dtos/conversation_history.py",
+          "sha256": "98b64f06bc5b0e42d4d451fd9e47f747dcb5a36ca9eec78381f9ae2d080d4386"
+        },
+        {
+          "arquivo": "backend/src/services/helpers/conversation_history.py",
+          "sha256": "dac16a26d409093008fb902782e4b0794a416f993aa961c66e9b266255197ee3"
+        },
+        {
+          "arquivo": "backend/src/services/update_conversation_title_service.py",
+          "sha256": "8fe9d036529407e8b46da88e66400d0ead87e6ac8082331942156a76f17d1e0d"
+        },
+        {
+          "arquivo": "backend/main.py",
+          "sha256": "e39861e73e86bde50c341c0fce043bd9286d3ed63cd9eaddb332a88af01a7e02"
+        },
+        {
+          "arquivo": "backend/tests/test_create_conversation.py",
+          "sha256": "2836ab4f7c02919c316deaf648aa72939cc35c846769c163479eab35dbede64d"
+        },
+        {
+          "arquivo": "backend/tests/test_http_integration.py",
+          "sha256": "7aa6644c3f873bb0772d9972cb24fcd9c5106bda980041005b0e653ca247a008"
+        },
+        {
+          "arquivo": "backend/tests/test_conversation_repository.py",
+          "sha256": "04d58f32ffd30b81b570ae58057b3d4915791dab20d6fe3de03f2263e72d4c98"
+        },
+        {
+          "arquivo": "backend/tests/test_message_repository.py",
+          "sha256": "356c95eb1b5a7f2846d00ddb21945fcea0870962511b2f040ab0b09ee0e9f1b0"
+        },
+        {
+          "arquivo": "backend/tests/test_update_conversation_title.py",
+          "sha256": "8a04385b0110d1065e0938ec17af3d18f0e9513b3eed760ecd0c70aed9744a2a"
+        },
+        {
+          "arquivo": "frontend/src/chatApi.ts",
+          "sha256": "163366fc81e251ee9f325a0b04c2c7a337383921178f2010959134744621a152"
+        },
+        {
+          "arquivo": "frontend/src/components/CreateConversationForm.tsx",
+          "sha256": "1b377300c893e7f4938a2cbffb512b70088a0a12e2297f12a71285d6e14fd4c0"
+        },
+        {
+          "arquivo": "frontend/src/components/ConversationPanel.tsx",
+          "sha256": "1c7ce6da513ea1289d7d837f8d13c6bbee2901bbe0f654aac92c0b2c0720f529"
+        },
+        {
+          "arquivo": "frontend/src/styles.css",
+          "sha256": "8762a1e192d0dc3077ee058f090b18732ce9da05648a957ad7c023146b7c2001"
+        },
+        {
+          "arquivo": "frontend/tests/chat-api.test.mjs",
+          "sha256": "14ff5c56e3b8b3862b853afd76f44fc820e5783b013ab9f1b7ead110350bc1d2"
+        }
+      ]
+    }
+  ]
+}

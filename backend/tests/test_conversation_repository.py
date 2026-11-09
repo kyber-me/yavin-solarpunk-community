@@ -32,11 +32,20 @@ class RepositoryIntegrationTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.uri = os.environ['YAVIN_TEST_DB_URI']
-        migration = Path('src/infra/db/relational/migrations/001_initial_schema.sql').read_text()
         with psycopg.connect(cls.uri, autocommit=True) as connection:
             if connection.execute("SELECT to_regclass('yavin.conversations')").fetchone()[0] is not None:
                 raise RuntimeError('Refusing to run: test DB must not already contain yavin.conversations')
-            connection.execute(migration)
+            for name in ('001_initial_schema.sql', '002_agents_documents.sql'):
+                connection.execute(Path('src/persistence/db/relational/migrations', name).read_text())
+            cls.legacy_agent_id = str(ULID())
+            cls.legacy_conversation_id = str(ULID())
+            connection.execute('INSERT INTO yavin.agents (id, name) VALUES (%s, %s)', (cls.legacy_agent_id, 'Agente legado'))
+            connection.execute(
+                'INSERT INTO yavin.conversations (id, sender_id, participant_id, thread_id, created_at) '
+                'VALUES (%s, %s, %s, %s, %s)',
+                (cls.legacy_conversation_id, 'legacy-owner', cls.legacy_agent_id, str(ULID()), datetime.now(UTC)),
+            )
+            connection.execute(Path('src/persistence/db/relational/migrations/004_conversation_title.sql').read_text())
 
     def setUp(self):
         self.sender = 'test-' + str(uuid4())
@@ -69,6 +78,14 @@ class RepositoryIntegrationTests(unittest.TestCase):
             self.assertEqual(other.get_active_by_participants(second.sender_id, second.participant_id), second)
             self.assertIsNone(other.get_by_id('missing'))
         self.assertIsNotNone(self.repo.get_by_id(first.id).created_at.utcoffset())
+
+    def test_migration_backfills_legacy_title_and_update_persists(self):
+        self.assertEqual(self.repo.get_by_id(self.legacy_conversation_id).title, 'Conversa com Agente legado')
+        record = self.repo.create(replace(self.record(), title='Pesquisa inicial'))
+        updated = self.repo.update_title(record.id, self.sender, 'Pesquisa solar')
+        self.assertEqual(updated.title, 'Pesquisa solar')
+        self.assertEqual(self.repo.get_by_id(record.id).title, 'Pesquisa solar')
+        self.assertIsNone(self.repo.update_title(record.id, 'other-owner', 'Indevido'))
 
     def test_reverse_pair_reports_existing(self):
         first = self.repo.create(self.record())
@@ -134,8 +151,8 @@ class RepositoryIntegrationTests(unittest.TestCase):
             with psycopg.connect(self.uri) as connection:
                 connection.execute(
                     "INSERT INTO yavin.conversations "
-                    "(id, sender_id, participant_id, thread_id, created_at) VALUES (%s, %s, %s, %s, %s)",
-                    (str(ULID()), first.participant_id, first.sender_id, str(ULID()), first.created_at),
+                    "(id, sender_id, participant_id, thread_id, created_at, title) VALUES (%s, %s, %s, %s, %s, %s)",
+                    (str(ULID()), first.participant_id, first.sender_id, str(ULID()), first.created_at, 'Teste'),
                 )
         self.assertEqual(caught.exception.diag.constraint_name, 'conversations_active_pair_uq')
 

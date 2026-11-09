@@ -13,3 +13,4 @@ class ConversationRecord:
     end_date: datetime | None = field(default=None)
     active: bool = field(default=True)
     created_at: datetime = field(default_factory=lambda: datetime.now(UTC)) # What does mean the parameter `init`? It initializes the field with a default value?
+    title: str = field(default='Conversa')

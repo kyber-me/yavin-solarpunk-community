@@ -337,13 +337,13 @@ A estrutura inicial do backend está organizada em camadas provisórias:
 
 - `backend/src/domain/` — entidades e comportamento do domínio;
 - `backend/src/services/` — serviços de aplicação;
-- `backend/src/infra/` — arquivos de infraestrutura e configuração em desenvolvimento;
+- `backend/src/persistence` — arquivos de infraestrutura e configuração em desenvolvimento;
 - `backend/src/agents/` — implementação agêntica, tools e prompts.
 - `backend/src/agents/tools/` — reorganização local das ferramentas em andamento;
   conferir o ponto de retomada antes de presumir que os imports foram validados.
 
 Essa organização ainda não é uma arquitetura definitiva. Os arquivos JSON em
-`backend/src/infra/db/relational/draft/` (`citizens.json`, `places.json` e `tools.json`) são configurações em
+`backend/src/persistence` (`citizens.json`, `places.json` e `tools.json`) são configurações em
 desenvolvimento e ainda não constituem um contrato oficial ou uma fonte única de verdade
 do domínio.
 
@@ -389,7 +389,7 @@ alteração do backend exige consulta prévia ao Idealizador.
 **Natureza:** estado de implementação e divisão de responsabilidades aprovada.
 
 O plano está em `dev/plano-persistencia-conversas.md`; a infraestrutura em
-`backend/src/infra/db/relational/README.md`. Pool, repositório, migração e frontend foram
+`backend/src/persistence`. Pool, repositório, migração e frontend foram
 implementados pelo assistente sob autorização específica. O Idealizador conectou o pool ao
 lifespan e iniciou a integração dos serviços e rotas. `GET /agents` retorna apenas
 Silas com o identificador estável provisório `silas`; GET e POST são permitidos no
@@ -407,7 +407,7 @@ mensagens vêm do banco via API; rascunhos ficam apenas em memória. Reuniões e
 bloqueadas até haver persistência. Checkpoints existentes
 não foram alterados. Uma conversa ativa por dupla sem direção é a regra inicial;
 encerramento e reuniões ficam para depois. O schema inicial consolidado está em
-`backend/src/infra/db/relational/migrations/001_initial_schema.sql`: conversas e mensagens,
+`backend/src/persistence`: conversas e mensagens,
 ULIDs puros, índice único da dupla normalizada com `LEAST`/`GREATEST` e `WHERE active`.
 Antes da aplicação, o Idealizador confirmou que nenhum script intermediário havia
 sido aplicado e só existiam dados do checkpointer; os scripts foram substituídos pelo schema inicial único.
@@ -422,7 +422,7 @@ As consultas são `GET /conversations` por `sender_id` e
 `backend/src/services/helpers/message_mapper.py` e repositório síncrono. Reutiliza o pool de
 conversas com row factory por cursor. O serviço já grava entrada e resposta com
 autoria, UTC e verificação de participação e atividade. O fluxo passou com grafo
-simulado e com dois turnos reais. A migração inicial foi aplicada ao banco do projeto. Guia e limites em `backend/src/infra/db/relational/MESSAGES.md`.
+simulado e com dois turnos reais. A migração inicial foi aplicada ao banco do projeto. Guia e limites em `backend/src/persistence`.
 
 ## Escopo da documentação de desenvolvimento
 

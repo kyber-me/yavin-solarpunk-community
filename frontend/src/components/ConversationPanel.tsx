@@ -3,7 +3,7 @@ import { discardLocalHistory, type Conversation, type Mode } from '../conversati
 
 import silasAvatar from '../assets/silas-avatar.png';
 import { CreateConversationForm } from './CreateConversationForm';
-import { ChatApiError, sendMessage, listConversations, listMessages, SENDER_ID, type PersistedMessage, type AgentOption, type ConversationMetadata } from '../chatApi';
+import { ChatApiError, sendMessage, listConversations, listMessages, updateConversationTitle, SENDER_ID, type PersistedMessage, type AgentOption, type ConversationMetadata } from '../chatApi';
 
 function Icon({ name }: { name: 'plus' | 'send' | 'chat' | 'group' | 'arrow' }) {
   const paths: Record<typeof name, ReactNode> = {
@@ -35,6 +35,10 @@ export function ConversationPanel({ drawer = false, onCollapse, silasChatRequest
   const [mode, setMode] = useState<Mode>('conversation');
   const [activeId, setActiveId] = useState('');
   const [creating, setCreating] = useState(false);
+  const [editingTitleId, setEditingTitleId] = useState('');
+  const [titleDraft, setTitleDraft] = useState('');
+  const [titlePending, setTitlePending] = useState(false);
+  const [titleError, setTitleError] = useState('');
   const [preferSilas, setPreferSilas] = useState(false);
   const [sendError, setSendError] = useState<{ id: string; message: string } | null>(null);
   const sendingLock = useRef(false);
@@ -67,7 +71,7 @@ export function ConversationPanel({ drawer = false, onCollapse, silasChatRequest
       setConversations(previous => records.map(record => ({
         id: record.conversation_id, serverConversationId: record.conversation_id,
         participantId: record.participant_id, mode: 'conversation',
-        title: `Conversa com ${record.participant_name}`, participants: [record.participant_name],
+        title: record.title, participants: [record.participant_name],
         messages: [], draft: previous.find(item => item.id === record.conversation_id)?.draft ?? '',
         createdAt: record.created_at, unavailableReason: record.active ? undefined : 'Esta conversa está encerrada.',
       })));
@@ -107,7 +111,7 @@ export function ConversationPanel({ drawer = false, onCollapse, silasChatRequest
     if (listLoading || handledSilasRequest.current === silasChatRequest) return;
     handledSilasRequest.current = silasChatRequest;
     setMode('conversation');
-    const selected = conversations.find(item => !item.unavailableReason && item.participantId === 'silas');
+    const selected = conversations.find(item => !item.unavailableReason && item.participants.some(name => name.toLocaleLowerCase() === 'silas'));
     if (selected) { setCreating(false); setActiveId(selected.id); }
     else { setPreferSilas(true); setCreating(true); }
   }, [silasChatRequest, conversations, listLoading]);
@@ -124,11 +128,26 @@ export function ConversationPanel({ drawer = false, onCollapse, silasChatRequest
     const { agent, metadata } = remote;
     setConversations(items => items.some(item => item.id === metadata.conversation_id) ? items : [{
       id: metadata.conversation_id, serverConversationId: metadata.conversation_id, participantId: agent.id,
-      mode: 'conversation', title: `Conversa com ${agent.name}`, participants: [agent.name],
+      mode: 'conversation', title: metadata.title, participants: [agent.name],
       messages: [], draft: '', createdAt: metadata.created_at,
     }, ...items]);
     setActiveId(metadata.conversation_id); setHistoryAttempt(value => value + 1);
     setCreating(false); setSendError(null); requestAnimationFrame(focusComposer);
+  }
+  async function saveTitle(event: FormEvent) {
+    event.preventDefault();
+    if (!active || titlePending || !titleDraft.trim()) return;
+    const conversationId = active.id;
+    setTitlePending(true); setTitleError('');
+    try {
+      const title = await updateConversationTitle(conversationId, titleDraft.trim());
+      setConversations(items => items.map(item => item.id === conversationId ? { ...item, title } : item));
+      setEditingTitleId('');
+    } catch (error) {
+      setTitleError(error instanceof Error ? error.message : 'Não foi possível alterar o título.');
+    } finally {
+      setTitlePending(false);
+    }
   }
   async function send(event: FormEvent) {
     event.preventDefault();
@@ -185,7 +204,7 @@ export function ConversationPanel({ drawer = false, onCollapse, silasChatRequest
     <section className="conversation-directory" aria-label={mode === 'meeting' ? 'Suas reuniões' : 'Suas conversas'}>
       <div className="directory-heading"><span>{mode === 'meeting' ? 'MESA DE AGENTES' : 'COM AGENTES'}</span><button className="new-button" disabled={mode === 'meeting' || listLoading} onClick={() => { setPreferSilas(false); setCreating(value => !value); }} aria-expanded={creating}><Icon name="plus" />{mode === 'meeting' ? 'Em breve' : 'Iniciar conversa'}</button></div>
       {creating ? <CreateConversationForm key={`${mode}:${silasChatRequest}`} preferSilas={preferSilas} onCreate={create} onCancel={() => setCreating(false)} /> : <div className="conversation-list">
-        {filtered.map(item => <button key={item.id} className={`conversation-item ${item.id === activeId ? 'selected' : ''}`} aria-current={item.id === activeId ? 'true' : undefined} onClick={() => { setActiveId(item.id); setAnnouncement(''); }}>
+        {filtered.map(item => <button key={item.id} className={`conversation-item ${item.id === activeId ? 'selected' : ''}`} aria-current={item.id === activeId ? 'true' : undefined} onClick={() => { setActiveId(item.id); setEditingTitleId(''); setAnnouncement(''); }}>
           <Icon name={mode === 'meeting' ? 'group' : 'chat'} /><span><strong>{item.title}</strong><small>{item.messages.at(-1)?.content ?? (mode === 'meeting' ? `${item.participants.length} agentes · ainda sem mensagens` : 'Uma pergunta pode ser o começo.')}</small></span><Icon name="arrow" />
         </button>)}
         {listLoading && mode === 'conversation' && <p role="status">Carregando conversas do servidor…</p>}
@@ -197,7 +216,14 @@ export function ConversationPanel({ drawer = false, onCollapse, silasChatRequest
     </div>
     <div className="thread-workspace" aria-busy={sending}>
     {active ? <>
-      <div className="thread-heading"><span className="thread-avatar" aria-hidden="true">{mode === 'meeting' ? <Icon name="group" /> : <AgentPortrait name={agentName} />}</span><div><h2>{active.title}</h2><p>{mode === 'meeting' ? `${active.participants.length} agentes nesta mesa` : `${agentName} · colaborador de Yavin`}</p></div><span className="local-tag">{agentName}</span></div>
+      <div className="thread-heading"><span className="thread-avatar" aria-hidden="true">{mode === 'meeting' ? <Icon name="group" /> : <AgentPortrait name={agentName} />}</span><div><h2>{active.title}</h2><p>{mode === 'meeting' ? `${active.participants.length} agentes nesta mesa` : `${agentName} · colaborador de Yavin`}</p></div>{mode === 'conversation' && <button type="button" className="text-button rename-button" onClick={() => { setEditingTitleId(active.id); setTitleDraft(active.title); setTitleError(''); }}>Renomear</button>}</div>
+      {mode === 'conversation' && editingTitleId === active.id && <form className="rename-form" onSubmit={saveTitle}>
+        <label htmlFor="rename-title">Título da conversa</label>
+        <input id="rename-title" value={titleDraft} onChange={event => setTitleDraft(event.target.value)} required maxLength={120} disabled={titlePending} />
+        <button type="submit" className="primary-button" disabled={titlePending || !titleDraft.trim()}>Salvar</button>
+        <button type="button" className="text-button" disabled={titlePending} onClick={() => { setEditingTitleId(''); setTitleError(''); }}>Cancelar</button>
+        {titleError && <p className="form-error" role="alert">{titleError}</p>}
+      </form>}
       {mode === 'meeting' && <ul className="participant-list" aria-label="Agentes participantes">{active.participants.map(name => <li key={name}>{name}</li>)}</ul>}
       <div className="message-history" ref={history} role="log" aria-label={`Mensagens de ${active.title}`} aria-live="polite" tabIndex={0}>
         {historyLoadingId === active.id ? <p role="status">Carregando mensagens do servidor…</p> : historyError?.id === active.id ? <div role="alert"><p>{historyError.message}</p><button className="text-button" onClick={() => setHistoryAttempt(value => value + 1)}>Tentar novamente</button></div> : !active.messages.length ? <div className="thread-empty">

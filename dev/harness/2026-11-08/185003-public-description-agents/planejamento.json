@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "task_id": "2026-11-08/185003-public-description-agents",
+  "registrado_em": "2026-11-08T18:54:34-03:00",
+  "planejado_em": "2026-11-08T18:54:34-03:00",
+  "origem_registro": "contemporanea",
+  "classificacao_ref": "classificacao.json",
+  "nivel": 3,
+  "tipo_planejamento": "decomposto",
+  "modo_plan": {"estado": "utilizado", "justificativa": "Modo Plan confirmado no turno anterior; o Idealizador pediu registrar o planejamento nesse modo."},
+  "objetivo": "Adicionar public_description opcional aos agentes persistidos e expor a descricao publica no catalogo e no formulario de criacao de conversas.",
+  "escopo": {
+    "inclui": ["Migracao SQL 003 incremental e aplicacao explicita ao banco local conferido", "Consulta de catalogo, DTO e resposta GET /agents com public_description nullable", "Tipo e exibicao condicional da descricao no frontend", "Testes pertinentes, build e revisao independente"],
+    "exclui": ["Alteracao da identidade interna dos agentes", "Criacao de texto publico para Silas", "Foto e adaptador de storage", "Alteracoes no cache e no envio de mensagens", "Reaplicacao da migracao 002 ou reset de banco"]
+  },
+  "criterios_aceitacao": [
+    {"id": "C1", "descricao": "Migracao 003 adiciona public_description nullable sem modificar ids nem dados existentes e rejeita apenas texto em branco nao nulo", "verificacao": "Aplicar em banco descartavel e local conferido; consultar Silas e testar CHECK em transacao revertida"},
+    {"id": "C2", "descricao": "GET /agents inclui public_description como string ou null sem incluir identidade", "verificacao": "Testes de repositorio e contrato HTTP com os dois valores"},
+    {"id": "C3", "descricao": "Frontend aceita o campo nullable e mostra somente a descricao do agente selecionado quando presente", "verificacao": "Testes da API frontend, teste do formulario e build"}
+  ],
+  "fases": [
+    {"id": "F1", "titulo": "Migracao e contrato backend", "objetivo": "Persistir e expor a descricao publica", "depende_de": [], "tarefas": [
+      {"id": "T1", "descricao": "Criar e validar migracao 003 incremental com coluna nullable e CHECK de texto nao vazio", "arquivos": ["backend/src/infra/db/relational/migrations/003_agent_public_description.sql"], "criterios_aceitacao": ["C1"], "validacoes": ["Aplicar em banco descartavel apos 001 e 002", "Aplicar no banco local apenas apos conferencia do alvo e validar preservacao de Silas"]},
+      {"id": "T2", "descricao": "Selecionar public_description no catalogo, adaptar retorno do repositorio e AgentSummary, sem alterar consulta da identidade", "arquivos": ["backend/src/infra/db/relational/agent_repository.py", "backend/src/services/agent_catalog_service.py", "backend/src/types/dtos/agent_catalog.py", "backend/tests/"], "criterios_aceitacao": ["C2"], "validacoes": ["Testar GET /agents com string e null", "Verificar que identidade nao aparece no payload"]}
+    ]},
+    {"id": "F2", "titulo": "Consumo frontend", "objetivo": "Apresentar a descricao quando disponivel", "depende_de": ["F1"], "tarefas": [
+      {"id": "T3", "descricao": "Validar campo nullable em AgentOption e mostrar descricao do agente selecionado abaixo do seletor", "arquivos": ["frontend/src/chatApi.ts", "frontend/src/components/CreateConversationForm.tsx", "frontend/tests/"], "criterios_aceitacao": ["C3"], "validacoes": ["Testes frontend com texto e null", "Build TypeScript/Vite"]}
+    ]},
+    {"id": "F3", "titulo": "Verificacao e revisao", "objetivo": "Confirmar integracao e revisar entrega", "depende_de": ["F1", "F2"], "tarefas": [
+      {"id": "T4", "descricao": "Executar testes proporcionais, verificar o banco local e submeter snapshot a revisor independente", "arquivos": ["backend/tests/", "frontend/tests/", "dev/harness/2026-11-08/185003-public-description-agents/"], "criterios_aceitacao": ["C1", "C2", "C3"], "validacoes": ["Schema e integridade dos registros do harness", "Testes backend e frontend pertinentes", "Revisao independente de nivel 3"]}
+    ]}
+  ],
+  "incertezas": [],
+  "observacoes": ["O Idealizador aprovou explicitamente a execucao deste plano apos a apresentacao concreta.", "Autorizacao cobre a entrega inicial e ate duas correcoes dentro do mesmo escopo, segundo o plano aprovado.", "Os arquivos do backend e o indice contem alteracoes locais do Idealizador; preserva-las sem limpeza paralela.", "Silas inicia com public_description null; nenhum texto editorial sera inventado."]
+}

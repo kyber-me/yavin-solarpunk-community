@@ -1,0 +1,171 @@
+{
+  "schema_version": 2,
+  "task_id": "2026-11-08/185003-public-description-agents",
+  "rodada": 1,
+  "registrado_em": "2026-11-08T18:59:43-03:00",
+  "classificacao_ref": "classificacao.json",
+  "planejamento_ref": "planejamento.json",
+  "evidencias_execucao": [
+    "loop-001.json, tentativa 1: aplicação da migração 003 em banco descartável e local conferido; CHECK testado em transação revertida; teste HTTP dedicado passou; oito testes frontend e build passaram segundo o coordenador."
+  ],
+  "revisor": {
+    "agente_id": "/root/public_description_review",
+    "modelo": null,
+    "contexto": "novo",
+    "observacoes": [
+      "Agente revisor separado, sem histórico do implementador; não editou código nem acessou o banco local."
+    ]
+  },
+  "snapshot": {
+    "revisao_git": "e3448a2ad3e367b8cf9d22173e7359881ca5e83a",
+    "arquivos": [
+      {
+        "arquivo": "backend/src/infra/db/relational/migrations/003_agent_public_description.sql",
+        "sha256": "10f4d335ed16c3a65fc395474a060c7269bba4f7c99f20fe92dc997d32ebafb5"
+      },
+      {
+        "arquivo": "backend/src/infra/db/relational/agent_repository.py",
+        "sha256": "a33bd15fcd4208957532eceb95fc1194a762c8f2a9a5b53d0c021afe3032edff"
+      },
+      {
+        "arquivo": "backend/src/services/agent_catalog_service.py",
+        "sha256": "91076eff389673f50a891d1d45a68dfadb0cee99fc1accb01571d994d33c29a5"
+      },
+      {
+        "arquivo": "backend/src/types/dtos/agent_catalog.py",
+        "sha256": "a73a7ce75efb22d0aca170f0f6a6ff735ecfa2111c0aa1e51874e32470afe112"
+      },
+      {
+        "arquivo": "backend/tests/test_agent_catalog.py",
+        "sha256": "b9da6d29a9151b94bfc959892cab215a5cdabfd711da6702e9dfd8007ead36db"
+      },
+      {
+        "arquivo": "backend/tests/test_create_conversation.py",
+        "sha256": "9283a357f8761d7e4a22840bf33191b5d7918ad5d2ed6d7b10aa2087daa5aff8"
+      },
+      {
+        "arquivo": "backend/tests/test_http_integration.py",
+        "sha256": "27acb38cb8280fe1912a6dc34cec997545c48ba06d6e05a2dda5eba9e56d7527"
+      },
+      {
+        "arquivo": "frontend/src/chatApi.ts",
+        "sha256": "d6549954a08b2f14127a95c6464c8b8ce627d758ba82383081a191c58e004bba"
+      },
+      {
+        "arquivo": "frontend/src/components/CreateConversationForm.tsx",
+        "sha256": "4c3f817b2ca6472b16a6d55d6ffb26da98546e850894579bfa6a080c086902bf"
+      },
+      {
+        "arquivo": "frontend/src/styles.css",
+        "sha256": "4ffb61d917bfc8fb24a2bd1878d38f01aa103de59dfbba8415102e4f538e5b04"
+      },
+      {
+        "arquivo": "frontend/tests/chat-api.test.mjs",
+        "sha256": "e276734c3c393c597f19a1415e8bf46d1ffecb3e601a2b0177b4456b6fe307c3"
+      },
+      {
+        "arquivo": "frontend/README.md",
+        "sha256": "f9a435acca88ee4e5ed0f0cbe5add653349682741d79d90ca685dc2c912d3deb"
+      }
+    ],
+    "alteracoes_durante_revisao": false
+  },
+  "escopo": {
+    "arquivos_revisados": [
+      "backend/src/infra/db/relational/migrations/003_agent_public_description.sql",
+      "backend/src/infra/db/relational/agent_repository.py",
+      "backend/src/services/agent_catalog_service.py",
+      "backend/src/types/dtos/agent_catalog.py",
+      "backend/tests/test_agent_catalog.py",
+      "backend/tests/test_create_conversation.py",
+      "backend/tests/test_http_integration.py",
+      "frontend/src/chatApi.ts",
+      "frontend/src/components/CreateConversationForm.tsx",
+      "frontend/src/styles.css",
+      "frontend/tests/chat-api.test.mjs",
+      "frontend/README.md"
+    ],
+    "fora_do_escopo": [
+      "Mudanças preexistentes do Idealizador em backend/main.py, AgentRepository e migração 002 além do campo public_description.",
+      "Fluxo de mensagens e divergência preexistente entre rotas /conversation/talk e /conversation/message.",
+      "AdminPage, cache, base de conhecimento e demais mudanças simultâneas na árvore de trabalho."
+    ],
+    "limitacoes": [
+      "Aplicação da migração e teste HTTP com banco descartável são evidências da execução relatada no loop; não foram repetidos pelo revisor.",
+      "Não há teste automatizado específico de renderização do formulário; a condição de exibição foi conferida por leitura do componente.",
+      "Nesta sessão, npm test executou oito casos com sucesso, mas o runner terminou com SecItemCopyMatching failed -50; npm run build terminou com o mesmo erro e segfault do Vite. O coordenador informou que ambos passaram na execução anterior."
+    ]
+  },
+  "criterios": [
+    {
+      "id": "C1",
+      "estado": "atendido",
+      "evidencia": "003 adiciona coluna TEXT nullable e CHECK que permite NULL e rejeita btrim vazio, sem UPDATE nem alteração de ID. loop-001 registra aplicação local e descartável, preservação do ULID de Silas e CHECK em transação revertida."
+    },
+    {
+      "id": "C2",
+      "estado": "atendido",
+      "evidencia": "AgentRepository.list_agents seleciona id, name e public_description com EXISTS para identidade, sem selecionar seu conteúdo; AgentSummary e GET /agents serializam string ou null. Teste HTTP dedicado no banco descartável relatado no loop cobre ambos os valores e confirma ausência de identidade. Os três testes unitários do catálogo passaram nesta revisão."
+    },
+    {
+      "id": "C3",
+      "estado": "atendido",
+      "evidencia": "listAgents exige string não vazia ou null; CreateConversationForm calcula selectedAgent pelo ID selecionado e renderiza apenas selectedAgent.public_description quando presente. O teste frontend de API cobre null, texto e campo ausente; oito casos passaram antes de erro do runner nesta sessão. Build anterior informado no loop passou."
+    }
+  ],
+  "achados": [],
+  "verificacoes": [
+    {
+      "descricao": "Conferência dos 12 hashes do snapshot no início e no fim",
+      "comando": "SHA-256 via hashlib sobre os arquivos de loop-001.json",
+      "estado": "aprovada",
+      "origem": "revisor",
+      "evidencia": "Todos os hashes correspondem ao loop-001.json; nenhum arquivo do snapshot mudou durante a revisão."
+    },
+    {
+      "descricao": "Testes unitários do catálogo HTTP",
+      "comando": "./.venv/bin/python -m unittest tests.test_agent_catalog -v",
+      "estado": "aprovada",
+      "origem": "revisor",
+      "evidencia": "Três testes passaram."
+    },
+    {
+      "descricao": "Testes frontend",
+      "comando": "npm test",
+      "estado": "falhou",
+      "origem": "revisor",
+      "evidencia": "Oito casos passaram; processo terminou exit 1 com SecItemCopyMatching failed -50 no runner, após os casos."
+    },
+    {
+      "descricao": "Build frontend",
+      "comando": "npm run build",
+      "estado": "falhou",
+      "origem": "revisor",
+      "evidencia": "Processo terminou exit 139 após SecItemCopyMatching failed -50 e segmentation fault em vite build."
+    },
+    {
+      "descricao": "Migração e integração HTTP em bancos descartável e local",
+      "comando": null,
+      "estado": "aprovada",
+      "origem": "implementador",
+      "evidencia": "Resultados concretos relatados em loop-001.json; revisor não acessou bancos."
+    },
+    {
+      "descricao": "Testes e build frontend da entrega",
+      "comando": "npm test; npm run build",
+      "estado": "aprovada",
+      "origem": "implementador",
+      "evidencia": "loop-001.json registra oito testes e build aprovados na execução anterior."
+    }
+  ],
+  "recomendacao": "aprovar",
+  "justificativa": "Os critérios C1 a C3 são atendidos pelo snapshot estável e pelas evidências de execução. A falha do runner e do Vite nesta sessão ocorreu após erro de Keychain no ambiente de revisão, sem evidência de regressão no incremento; os resultados anteriores constam no controle do loop. Não há achado bloqueante. Aprovação técnica não substitui revisão humana.",
+  "observacoes": [
+    "O comentário autoral em agent_catalog_service.py questiona acesso à identidade e sugere foto/storage. A consulta do catálogo usa EXISTS para presença da identidade, sem ler ou devolver o conteúdo; foto/storage estão expressamente fora do plano. O comentário foi preservado.",
+    "O teste de renderização do formulário previsto como verificação em T3 não foi adicionado; a condição simples foi conferida no código.",
+    "A suíte backend global tem falhas preexistentes de rota informadas pelo coordenador, fora do incremento."
+  ],
+  "implementation_id": "01M6YJP5N4M2P609Q6A51NYKYF",
+  "review_id": "01M6YJR9PP31DADAGMN5X3242T",
+  "parent_implementation_id": null
+}

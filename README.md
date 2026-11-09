@@ -138,7 +138,7 @@ esses registros pela API, sem histórico em armazenamento local do navegador.
 Para executar o backend, são necessários Python 3.14 ou superior, `uv`, acesso a um
 PostgreSQL e uma chave da OpenAI para o modelo atualmente configurado. Configure
 `DATABASE_URI` e `OPENAI_API_KEY` em `backend/.env`, com valores do seu ambiente.
-Em ambiente novo, aplique explicitamente `backend/src/infra/db/relational/migrations/001_initial_schema.sql`
+Em ambiente novo, aplique explicitamente `backend/src/persistence`
 uma vez. Na inicialização, o checkpointer prepara suas tabelas; a conexão precisa de permissão
 para essa operação. Chamadas ao modelo utilizam a conta associada à chave.
 

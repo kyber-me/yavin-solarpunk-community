@@ -6,6 +6,7 @@ from pydantic import BaseModel
 
 class ConversationSummary(BaseModel):
     conversation_id: str
+    title: str
     participant_id: str
     participant_name: str
     created_at: datetime

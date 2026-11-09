@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "task_id": "2026-11-08/190254-rota-conversation-message",
+  "registrado_em": "2026-11-08T19:05:18-03:00",
+  "planejado_em": "2026-11-08T19:05:18-03:00",
+  "origem_registro": "contemporanea",
+  "classificacao_ref": "classificacao.json",
+  "nivel": 1,
+  "tipo_planejamento": "minimo",
+  "modo_plan": {"estado": "utilizado", "justificativa": "Plano concreto apresentado no modo Plan ativado na sessao anterior; o Idealizador tambem havia concedido excecao para planejar fora dele, nao necessaria apos a ativacao."},
+  "objetivo": "Alinhar testes HTTP e guia operacional do backend a rota POST /conversation/message ja usada pela API e pelo frontend.",
+  "escopo": {
+    "inclui": ["Troca de quatro chamadas em dois arquivos de teste do backend", "Atualizacao de uma referencia no guia relacional do backend", "Verificacao dos testes e busca por rotas antigas ativas"],
+    "exclui": ["Alterar a rota operacional ou payload da API", "Alterar o frontend ja adaptado", "Reescrever registros historicos em dev/", "Alterar banco, cache ou logica de envio"]
+  },
+  "criterios_aceitacao": [
+    {"id": "C1", "descricao": "Testes e guia ativo do backend usam /conversation/message sem referencias ativas a /conversation/talk", "verificacao": "Busca restrita aos arquivos ativos, diff e testes de requisicao"},
+    {"id": "C2", "descricao": "Contrato frontend e rota backend permanecem alinhados e os testes pertinentes passam", "verificacao": "Conferir main.py e chatApi.ts; executar testes de requisicao e integracao HTTP quando houver banco descartavel"}
+  ],
+  "fases": [
+    {"id": "F1", "titulo": "Alinhamento localizado", "objetivo": "Atualizar somente referencias ativas da rota", "depende_de": [], "tarefas": [
+      {"id": "T1", "descricao": "Substituir quatro chamadas de teste e uma referencia no guia, sem mudar runtime", "arquivos": ["backend/tests/test_chat_request.py", "backend/tests/test_http_integration.py", "backend/src/infra/db/relational/README.md"], "criterios_aceitacao": ["C1", "C2"], "validacoes": ["Executar testes pertinentes", "Buscar referencias antigas ativas", "Executar git diff --check"]}
+    ]}
+  ],
+  "incertezas": [],
+  "observacoes": ["O Idealizador autorizou corrigir as referencias e aprovou a versao concreta do plano apos a troca de modo.", "O frontend ja foi adaptado e nao sera reeditado nesta tarefa.", "Alteracoes locais preexistentes nos arquivos de teste serao preservadas; apenas os literais de rota serao alterados."]
+}

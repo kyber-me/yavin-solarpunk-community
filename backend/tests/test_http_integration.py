@@ -45,7 +45,10 @@ class HttpIntegrationTests(unittest.TestCase):
                     {'configurable': {'thread_id': cls.seed_thread}},
                 )
         with psycopg.connect(cls.uri, autocommit=True) as connection:
-            connection.execute(Path('src/infra/db/relational/migrations/001_initial_schema.sql').read_text())
+            connection.execute(Path('src/persistence/db/relational/migrations/001_initial_schema.sql').read_text())
+            connection.execute(Path('src/persistence/db/relational/migrations/002_agents_documents.sql').read_text())
+            connection.execute(Path('src/persistence/db/relational/migrations/003_agent_public_description.sql').read_text())
+            connection.execute(Path('src/persistence/db/relational/migrations/004_conversation_title.sql').read_text())
 
     def setUp(self):
         self.sender = str(ULID())
@@ -53,18 +56,20 @@ class HttpIntegrationTests(unittest.TestCase):
         self.enterContext(tracing_context(enabled=False))
         self.factory = self.enterContext(patch('src.agents.agent.create_agent', side_effect=simulated_graph))
         self.knowledge = self.enterContext(patch(
-            'src.agents.agent._retrieval_knowledge', side_effect=lambda: [SystemMessage('test reference')]
+            'src.agents.agent._retrieval_knowledge', side_effect=lambda **kwargs: [SystemMessage('test reference')]
         ))
 
     def create(self, client, sender=None):
+        self.agent_id = client.get('/agents').json()['data']['agents'][0]['id']
         response = client.post('/conversation/create', json={
-            'sender_id': sender or self.sender, 'participant_id': 'silas',
+            'owner_id': sender or self.sender,
+            'conversation_details': {'title': 'Conversa com Silas', 'participant_id': self.agent_id},
         })
         self.assertEqual(response.status_code, 201, response.text)
         return response.json()['data']['conversation_id']
 
     def talk(self, client, conversation, content, sender=None):
-        return client.post('/conversation/talk', json={
+        return client.post('/conversation/message', json={
             'sender_id': sender or self.sender, 'conversation_id': conversation, 'message': content,
         })
 
@@ -75,19 +80,47 @@ class HttpIntegrationTests(unittest.TestCase):
                 'WHERE conversation_id = %s ORDER BY created_at, id', (conversation,),
             ).fetchall()
 
+    def test_catalog_public_description_is_nullable_and_never_exposes_identity(self):
+        with TestClient(app) as client:
+            initial = client.get('/agents').json()['data']['agents'][0]
+            agent_id = initial['id']
+            self.assertIsNone(initial['public_description'])
+            self.assertEqual(set(initial), {'id', 'name', 'public_description'})
+            try:
+                with psycopg.connect(self.uri) as connection:
+                    connection.execute('UPDATE yavin.agents SET public_description = %s WHERE id = %s',
+                                       ('Investiga energia em Yavin.', agent_id))
+                updated = client.get('/agents').json()['data']['agents'][0]
+                self.assertEqual(updated['public_description'], 'Investiga energia em Yavin.')
+                with self.assertRaises(CheckViolation), psycopg.connect(self.uri) as connection:
+                    connection.execute('UPDATE yavin.agents SET public_description = %s WHERE id = %s',
+                                       ('   ', agent_id))
+            finally:
+                with psycopg.connect(self.uri) as connection:
+                    connection.execute('UPDATE yavin.agents SET public_description = NULL WHERE id = %s', (agent_id,))
+
     def test_full_flow_restart_isolation_and_resource_shutdown(self):
         with TestClient(app) as client:
             pool, checkpoint_connection = app.state.conversation_pool, app.state.checkpointer.conn
-            self.assertEqual(client.get('/agents').json()['data']['agents'], [{'id': 'silas', 'name': 'Silas'}])
+            self.assertEqual(client.get('/agents').json()['data']['agents'][0]['name'], 'Silas')
             conversation = self.create(client)
-            duplicate = client.post('/conversation/create', json={'sender_id': self.sender, 'participant_id': 'silas'})
+            renamed = client.patch(f'/conversations/{conversation}/title', json={
+                'owner_id': self.sender, 'title': 'Pesquisa solar',
+            })
+            self.assertEqual(renamed.status_code, 200, renamed.text)
+            self.assertEqual(renamed.json()['data']['title'], 'Pesquisa solar')
+            self.assertEqual(client.get('/conversations', params={'sender_id': self.sender}).json()['data']['conversations'][0]['title'], 'Pesquisa solar')
+            duplicate = client.post('/conversation/create', json={
+                'owner_id': self.sender,
+                'conversation_details': {'title': 'Conversa com Silas', 'participant_id': self.agent_id},
+            })
             self.assertEqual(duplicate.status_code, 409)
             self.assertEqual(duplicate.json()['error']['details']['conversation_id'], conversation)
             first = self.talk(client, conversation, 'primeira')
             self.assertEqual(first.status_code, 200, first.text)
             self.assertEqual(first.json()['data']['content'], 'turn=1; first=primeira; last=primeira')
             self.assertEqual([row[:2] for row in self.rows(conversation)],
-                             [(self.sender, 'primeira'), ('silas', first.json()['data']['content'])])
+                             [(self.sender, 'primeira'), (self.agent_id, first.json()['data']['content'])])
         self.assertTrue(pool.closed)
         self.assertTrue(checkpoint_connection.closed)
 
@@ -106,7 +139,10 @@ class HttpIntegrationTests(unittest.TestCase):
 
     def test_rejections_have_no_message_or_agent_effects(self):
         with TestClient(app) as client:
-            unavailable = client.post('/conversation/create', json={'sender_id': self.sender, 'participant_id': 'missing'})
+            unavailable = client.post('/conversation/create', json={
+                'owner_id': self.sender,
+                'conversation_details': {'title': 'Conversa com Silas', 'participant_id': 'missing'},
+            })
             self.assertEqual(unavailable.status_code, 422)
             conversation = self.create(client)
             self.assertEqual(self.talk(client, str(ULID()), 'missing').status_code, 404)
@@ -132,7 +168,7 @@ class HttpIntegrationTests(unittest.TestCase):
             first = client.get(path, params={'sender_id': self.sender, 'limit': 1}).json()['data']
             second = client.get(path, params={'sender_id': self.sender, 'limit': 1, 'offset': first['next_offset']}).json()['data']
             self.assertEqual(first['messages'][0]['content'], 'persisted history')
-            self.assertEqual(second['messages'][0]['sender_id'], 'silas')
+            self.assertEqual(second['messages'][0]['sender_id'], self.agent_id)
             self.assertIsNone(second['next_offset'])
             self.assertEqual(client.get(path, params={'sender_id': 'outsider'}).status_code, 403)
             self.assertEqual(client.get(f'/conversations/{ULID()}/messages', params={'sender_id': self.sender}).status_code, 404)

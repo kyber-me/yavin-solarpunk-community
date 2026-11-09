@@ -5,6 +5,7 @@ from pydantic import BaseModel
 class AgentSummary(BaseModel):
     id: str
     name: str
+    public_description: str | None
 
 
 class AgentCatalog(BaseModel):

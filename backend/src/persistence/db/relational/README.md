@@ -64,7 +64,7 @@ roda na inicialização. Não altera tabelas nem dados do checkpointer.
 Se `DATABASE_URI` estiver exportada no shell, executar na raiz:
 
 ```sh
-psql "$DATABASE_URI" --set=ON_ERROR_STOP=1 --file=src/infra/db/relational/migrations/001_initial_schema.sql
+psql "$DATABASE_URI" --set=ON_ERROR_STOP=1 --file=src/persistence/db/relational/migrations/001_initial_schema.sql
 ```
 
 Ter a variável em `.env` não a exporta para o shell. Não há executor automático
@@ -108,7 +108,7 @@ O exemplo não é uma recomendação de criar outro pool por requisição.
 
 - `create(record)`: confirma a gravação antes de devolver o registro persistido.
 - `get_by_id(id)`: devolve um registro ou `None`; serve para resolver a conversa
-  recebida em `/conversation/talk` e acessar seu `thread_id` interno.
+  recebida em `/conversation/message` e acessar seu `thread_id` interno.
 - `get_active_by_participants(sender_id, participant_id)`: devolve a conversa ativa da dupla ou `None`.
 - `list_by_participant(id, limit=100, offset=0)`: lista conversas em que o ID aparece
   em qualquer ponta, incluindo inativas, por criação e ID decrescentes.
@@ -166,7 +166,7 @@ que deseje preservar.
 
 ```sh
 uv run python -m unittest discover -s tests -v
-uv run pyright --pythonpath .venv/bin/python src/infra/db/relational/conversation_pool.py src/infra/db/relational/conversation_repository.py
+uv run pyright --pythonpath .venv/bin/python src/persistence/db/relational/conversation_pool.py src/persistence/db/relational/conversation_repository.py
 ```
 
 A suíte atual cobre configuração do pool, reconexão, isolamento de duplas,

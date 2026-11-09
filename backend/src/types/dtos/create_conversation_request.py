@@ -1,11 +1,20 @@
-from pydantic import BaseModel  # Field
+from typing import Annotated
+
+from pydantic import BaseModel, Field, StringConstraints
 
 
-class CreateConversationRequest(BaseModel):
-    sender_id: str
+ConversationTitle = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=120)]
+
+
+class ConversationDetails(BaseModel):
+    title: ConversationTitle
     participant_id: str
 
-    # def __init__(self, /, **data: Any):
-    #     super().__init__(data)
+class CreateConversationRequest(BaseModel):
+    owner_id: str
+    conversation_details: ConversationDetails
 
+class UpdateConversationTitleRequest(BaseModel):
+    owner_id: str = Field(min_length=1)
+    title: ConversationTitle
 

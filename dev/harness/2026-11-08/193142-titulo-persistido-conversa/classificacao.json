@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "task_id": "2026-11-08/193142-titulo-persistido-conversa",
+  "registrado_em": "2026-11-08T19:31:42-03:00",
+  "avaliado_em": "2026-11-08T19:31:42-03:00",
+  "origem_registro": "contemporanea",
+  "revisao_git": "e3448a2",
+  "tarefa": "Persistir o título de conversas e permitir criá-lo e editá-lo no frontend",
+  "complexidade": 3,
+  "risco": 3,
+  "nivel": 3,
+  "justificativas": {
+    "complexidade": "A mudança atravessa migração SQL, registro e repositório de conversas, serviços de criação e listagem, contrato HTTP e estado da SPA. É preciso definir o preenchimento de conversas antigas e a atualização do título.",
+    "risco": "Uma falha pode quebrar a criação ou listagem de conversas e deixar títulos divergentes entre banco e interface. A migração deve preservar registros existentes; o alcance afeta um fluxo importante e seu contrato com o frontend."
+  },
+  "evidencias": [
+    {"arquivo": "backend/src/infra/db/relational/migrations/001_initial_schema.sql", "simbolo": "yavin.conversations", "observacao": "A tabela atual não tem coluna title; há conversas persistidas a preservar."},
+    {"arquivo": "backend/src/types/dtos/create_conversation_request.py", "simbolo": "ConversationDetails.title", "observacao": "O pedido já exige title, mas o serviço ainda não o persiste."},
+    {"arquivo": "backend/src/infra/db/relational/conversation_repository.py", "simbolo": "PostgresConversationRepository", "observacao": "As consultas e o INSERT compartilham COLUMNS, que precisará incluir title."},
+    {"arquivo": "backend/src/services/helpers/conversation_history.py", "simbolo": "list_conversations", "observacao": "A listagem deverá devolver o título persistido para a SPA."},
+    {"arquivo": "frontend/src/components/ConversationPanel.tsx", "simbolo": "ConversationPanel", "observacao": "A interface hoje constrói um título padrão em memória e o recria ao carregar a listagem."}
+  ],
+  "incertezas": ["É preciso confirmar a política de título para conversas existentes e o contrato da edição antes da migração."],
+  "classificacao_provisoria": false,
+  "graphify": {
+    "utilizado": false,
+    "motivo": "A busca e a leitura dos componentes diretamente ligados ao fluxo foram suficientes; o grafo local pode estar defasado em relação às alterações não commitadas.",
+    "versao_ferramenta": null,
+    "revisao_codigo": null,
+    "estado_arquivos": "Árvore de trabalho contém alterações não commitadas no serviço, DTO e consumidores; índice e alterações do Idealizador preservados.",
+    "atualidade": "nao_verificada",
+    "limitacoes": ["Não foi verificada correspondência do grafo local com a árvore de trabalho atual."]
+  },
+  "observacoes": ["O pedido anterior de dispensar skills referia-se à integração simples de owner_id; esta tarefa inclui persistência e edição com contrato novo."]
+}

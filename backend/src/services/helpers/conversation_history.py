@@ -13,12 +13,13 @@ from src.types.dtos.conversation_history import (
 def list_conversations(request: Request, sender_id: str, limit: int, offset: int) -> ConversationPage:
     repository = PostgresConversationRepository(request.app.state.conversation_pool)
     records = repository.list_by_participant(sender_id, limit=limit + 1, offset=offset)
-    names = {agent.id: agent.name for agent in get_agent_catalog().agents}
+    names = {agent.id: agent.name for agent in get_agent_catalog(request.app.state.conversation_pool).agents}
     summaries: list[ConversationSummary] = []
     for record in records[:limit]:
         other = record.participant_id if record.sender_id == sender_id else record.sender_id
         summaries.append(ConversationSummary(
-            conversation_id=record.id, participant_id=other, participant_name=names.get(other, other),
+            conversation_id=record.id, title=record.title,
+            participant_id=other, participant_name=names.get(other, other),
             created_at=record.created_at, active=record.active,
         ))
     return ConversationPage(conversations=summaries,

@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "task_id": "2026-11-08/162407-agentes-base-conhecimento",
+  "registrado_em": "2026-11-08T16:55:16-03:00",
+  "anterior_ref": "loop-001.json",
+  "limite_tentativas": 3,
+  "estado": "aprovado_tecnicamente",
+  "classificacao_ref": "classificacao-002.json",
+  "planejamento_ref": "planejamento.json",
+  "autorizacao_ref": "conversa: Implement the approved plan",
+  "tentativas": [
+    {
+      "numero": 1,
+      "implementation_id": "01M6YBF3HSWNH2DW0A273YT2AH",
+      "parent_implementation_id": null,
+      "fase": "revisada",
+      "revisao_ref": "revisao-001.json",
+      "evidencias_execucao": [
+        "5 testes HTTP em banco descartavel; SQL 001+002 e seed idempotente; banco descartavel removido",
+        "43 testes locais OK, 18 skips de banco; 3 testes obrigatorios de conhecimento OK",
+        "8 testes frontend e build aprovados",
+        "Banco localhost:5432/yavin recriado; consultas de conversas, mensagens e checkpoints retornaram zero; GET /agents retornou Silas com ULID"
+      ],
+      "snapshot": [
+        {
+          "arquivo": "backend/main.py",
+          "sha256": "e27498875bf147a3c5a58da4d227a1d1f04c1e94752d05904a9ee9e4706381cc"
+        },
+        {
+          "arquivo": "backend/pyproject.toml",
+          "sha256": "7a90f2d35c953ef7ed9b3aa38bd18e426d8f0b0a7e235fb3bab72b915df0b1e5"
+        },
+        {
+          "arquivo": "backend/uv.lock",
+          "sha256": "5215e8382a146b0bb49f811e085b32eff9f13bedcf182d0c50fa4da0e20180cb"
+        },
+        {
+          "arquivo": "backend/src/agents/agent.py",
+          "sha256": "167ee7308fcdcdc937f189bdc77758ca64befe338eaad264f7d2f3b18613f7d8"
+        },
+        {
+          "arquivo": "backend/src/agents/knowledge.py",
+          "sha256": "165fcd69641de028c02c83905604da13adc39f49c92f36cb4714db5bf888954c"
+        },
+        {
+          "arquivo": "backend/src/infra/db/relational/agent_repository.py",
+          "sha256": "5bedafbaa9c986100fdc8ce83cf60a611ffdb57e7834c3d3224669ae0303c929"
+        },
+        {
+          "arquivo": "backend/src/infra/db/relational/migrations/002_agents_documents.sql",
+          "sha256": "6e2a0e0df0978215eeed6baa0481497734c503513e04a5b9dc5bdc5ed41c03b8"
+        },
+        {
+          "arquivo": "backend/src/services/agent_catalog_service.py",
+          "sha256": "d3492e61bb90ca7154b636e3a4c1e3f2890456ee57d9d22e99edf11df2814927"
+        },
+        {
+          "arquivo": "backend/src/services/create_conversation_service.py",
+          "sha256": "a0aae5929e09c36b1f87c748ad72d07566ff6e54cada733686136b4b92fdd97d"
+        },
+        {
+          "arquivo": "backend/src/services/helpers/conversation_history.py",
+          "sha256": "17ea5ed50618254897d113694e5a6dc9d55409434f01caec64d3aaa3819a03f4"
+        },
+        {
+          "arquivo": "backend/src/services/send_message_service.py",
+          "sha256": "36e59a2279d62ef837d0c1c95f2b4674e7ef49a6e77e9f0ac79fb92b3cbb2c98"
+        },
+        {
+          "arquivo": "backend/tests/test_agent_catalog.py",
+          "sha256": "bb419282d8c66710f00cc3ad3e2b68398bcc5ea9bd465fbd50de78c421cef20e"
+        },
+        {
+          "arquivo": "backend/tests/test_create_conversation.py",
+          "sha256": "c37754a3056f21b3105b70f1c908202368ad7c06f8c6bc1377ad0a9817fd0671"
+        },
+        {
+          "arquivo": "backend/tests/test_chat_request.py",
+          "sha256": "94d1c39aa2e939100050e193981c3637173071baf29e7e6b95b13fa0f4fc3a78"
+        },
+        {
+          "arquivo": "backend/tests/test_chat_service_messages.py",
+          "sha256": "8fd201d7e11a0f23d9dacdfefa008f8a9cff583f421e721d9335500d8f133ec2"
+        },
+        {
+          "arquivo": "backend/tests/test_chat_checkpoint.py",
+          "sha256": "0e9585cb9c502a6b1ff7c6a0b2a1010956bd8eddf345144d5d90c8a818cae7b9"
+        },
+        {
+          "arquivo": "backend/tests/test_message_repository.py",
+          "sha256": "1e3866a666c37074802183c9d3573769bcb27b5dfcaf0bafb53f3687af681980"
+        },
+        {
+          "arquivo": "backend/tests/test_http_integration.py",
+          "sha256": "4bbe1a4de549f6637035ed91006ffb554fa8179b47129176948297393adbfa4c"
+        },
+        {
+          "arquivo": "backend/tests/test_mandatory_knowledge.py",
+          "sha256": "1fa25ff505f79c2127e8d675ef8786f14c89b0ab9b77a1b8d87be5ebfadf0910"
+        },
+        {
+          "arquivo": "frontend/src/components/ConversationPanel.tsx",
+          "sha256": "dc8b23f4158da77e5e8663523b5244c5b81a8684ac2f159ca5d4d316b3f7a66b"
+        }
+      ]
+    }
+  ],
+  "motivo": "Revisao independente v2 aprovou todos os criterios da entrega inicial; revisao humana permanece pendente."
+}

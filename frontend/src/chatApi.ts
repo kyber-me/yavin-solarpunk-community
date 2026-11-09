@@ -1,5 +1,5 @@
-export type AgentOption = { id: string; name: string };
-export type ConversationMetadata = { conversation_id: string; participant_id: string; created_at: string };
+export type AgentOption = { id: string; name: string; public_description: string | null };
+export type ConversationMetadata = { conversation_id: string; participant_id: string; created_at: string; title: string };
 export type CreationResult = { existing: boolean; conversation: ConversationMetadata };
 
 const API_URL = import.meta.env?.VITE_API_URL ?? 'http://127.0.0.1:8000';
@@ -22,6 +22,7 @@ function metadata(value: unknown): ConversationMetadata {
   const item = object(value);
   if (!item || typeof item.conversation_id !== 'string' || !item.conversation_id.trim()
     || typeof item.participant_id !== 'string' || !item.participant_id.trim()
+    || typeof item.title !== 'string' || !item.title.trim()
     || typeof item.created_at !== 'string' || !Number.isFinite(Date.parse(item.created_at))) {
     throw new Error('A API não retornou uma conversa válida. Tente iniciar a conversa novamente.');
   }
@@ -55,7 +56,8 @@ export async function listAgents(signal?: AbortSignal): Promise<AgentOption[]> {
   if (!Array.isArray(agents) || !agents.every(item => {
     const agent = object(item);
     return agent && typeof agent.id === 'string' && !!agent.id.trim()
-      && typeof agent.name === 'string' && !!agent.name.trim();
+      && typeof agent.name === 'string' && !!agent.name.trim()
+      && (agent.public_description === null || (typeof agent.public_description === 'string' && !!agent.public_description.trim()));
   })) throw new Error('A API não retornou um catálogo de agentes válido.');
   const typed = agents as AgentOption[];
   if (new Set(typed.map(agent => agent.id)).size !== typed.length) {
@@ -64,10 +66,10 @@ export async function listAgents(signal?: AbortSignal): Promise<AgentOption[]> {
   return typed;
 }
 
-export async function createConversation(participantId: string): Promise<CreationResult> {
+export async function createConversation(participantId: string, title: string): Promise<CreationResult> {
   const { response, data, error } = await request('/conversation/create', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ sender_id: SENDER_ID, participant_id: participantId }),
+    body: JSON.stringify({ owner_id: SENDER_ID, conversation_details: { title, participant_id: participantId } }),
   });
   const existing = response.status === 409 && error?.code === 'CONVERSATION_ALREADY_ACTIVE';
   if (!existing && (response.status !== 201 || error)) {
@@ -80,8 +82,21 @@ export async function createConversation(participantId: string): Promise<Creatio
   return { existing, conversation };
 }
 
+export async function updateConversationTitle(conversationId: string, title: string): Promise<string> {
+  const { response, data, error } = await request(`/conversations/${encodeURIComponent(conversationId)}/title`, {
+    method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ owner_id: SENDER_ID, title }),
+  });
+  if (!response.ok || error) fail(response.status, error, 'Não foi possível alterar o título.');
+  const updated = object(data);
+  if (updated?.conversation_id !== conversationId || typeof updated.title !== 'string' || !updated.title.trim()) {
+    throw new Error('A API não confirmou o novo título.');
+  }
+  return updated.title;
+}
+
 export async function sendMessage(conversationId: string, content: string): Promise<string> {
-  const { response, data, error } = await request('/conversation/talk', {
+  const { response, data, error } = await request('/conversation/message', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ conversation_id: conversationId, sender_id: SENDER_ID, message: content }),
     signal: AbortSignal.timeout(120000),

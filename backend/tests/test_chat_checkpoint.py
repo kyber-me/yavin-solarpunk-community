@@ -9,7 +9,7 @@ from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.graph import END, START, MessagesState, StateGraph
 
 from src.agents.agent import Agent
-from src.domain.chat.messages.main import TextMessage
+from src.types.dtos.send_message_service_request import Message
 
 
 def test_graph(**kwargs):
@@ -22,16 +22,15 @@ def test_graph(**kwargs):
 
 class CheckpointTests(unittest.TestCase):
     def test_nested_message_round_trip(self):
-        message = TextMessage(content='oi', sender='a', receiver='b',
-                              conversation_id='Conv_1', conversation_look_up_id='Conv_a_b')
-        restored = TextMessage.model_validate(message.model_dump())
+        message = Message(content='oi')
+        restored = Message.model_validate(message.model_dump())
         self.assertEqual(restored, message)
 
     def test_restore_without_duplicating_knowledge_and_isolate_threads(self):
         verify_persistence(self, InMemorySaver())
 
     def test_missing_thread_id_is_rejected(self):
-        with patch('src.agents.agent.py.create_agent', side_effect=test_graph):
+        with patch('src.agents.agent.create_agent', side_effect=test_graph):
             agent = Agent('Silas', None, InMemorySaver())
             with self.assertRaises(ValueError):
                 agent.invoke('oi', '')
@@ -41,8 +40,8 @@ def verify_persistence(case, saver, restore=None):
     thread = 'test-checkpoint-' + str(uuid4())
     other = thread + '-other'
     try:
-        with tracing_context(enabled=False), patch('src.agents.agent.py.create_agent', side_effect=test_graph), patch.object(
-            Agent, '_retrieval_knowledge', return_value=[SystemMessage('reference')]
+        with tracing_context(enabled=False), patch('src.agents.agent.create_agent', side_effect=test_graph), patch.object(
+            __import__('src.agents.agent', fromlist=['_retrieval_knowledge']), '_retrieval_knowledge', return_value=[SystemMessage('reference')]
         ) as knowledge:
             Agent('Silas', None, saver).invoke('first', thread)
             if restore:

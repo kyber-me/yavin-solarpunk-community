@@ -10,17 +10,20 @@ from fastapi.responses import JSONResponse
 from starlette.concurrency import run_in_threadpool
 
 from src.agents.infra.open_checkpointer_helper import open_checkpointer
-from src.infra.db.relational.conversation_pool import open_conversation_pool
+from src.persistence.db.relational.conversation_pool import open_conversation_pool
 from src.services.send_message_service import SendMessageService
 from src.services.create_conversation_service import CreateConversationService
 from src.services.agent_catalog_service import get_agent_catalog
 from src.types.app_error import AppError
 from src.types.dtos.api_response import ApiError, ApiResponse
-from src.types.dtos.send_message_service_request import ChatServiceRequest
-from src.types.dtos.create_conversation_request import CreateConversationRequest
+from src.types.dtos.send_message_service_request import SendMessageRequest
+from src.types.dtos.create_conversation_request import CreateConversationRequest, UpdateConversationTitleRequest
 from src.types.dtos.agent_catalog import AgentCatalog
-from services.helpers.conversation_history import list_conversations, list_messages
+from src.services.helpers.conversation_history import list_conversations, list_messages
+from src.persistence.db.relational.agent_repository import AgentRepository
 from src.types.dtos.conversation_history import ConversationPage, MessagePage
+from src.services.update_conversation_title_service import UpdateConversationTitleService
+from src.persistence.cache.container import cache_container
 
 from dotenv import load_dotenv
 load_dotenv(Path(__file__).resolve().parent / ".env")
@@ -29,9 +32,11 @@ load_dotenv(Path(__file__).resolve().parent / ".env")
 @asynccontextmanager
 async def lifespan(super_app: FastAPI):
     db_uri = os.getenv("DATABASE_URI")
+    super_app.state.cache_container = cache_container
     if not db_uri:
         raise ValueError("DATABASE_URI environment variable not set.")
     with open_conversation_pool(db_uri) as pool:
+        AgentRepository(pool).seed()
         with open_checkpointer() as checkpointer:
             super_app.state.conversation_pool = pool
             super_app.state.checkpointer = checkpointer
@@ -45,7 +50,7 @@ app.add_middleware(
         "http://127.0.0.1:5173",
         "http://localhost:5173",
     ],
-    allow_methods=["GET", "POST"],
+    allow_methods=["GET", "POST", "PATCH"],
     allow_headers=["Content-Type"],
 )
 
@@ -67,12 +72,12 @@ async def root():
 
 
 @app.get("/agents", response_model=ApiResponse[AgentCatalog])
-async def list_agents():
-    return ApiResponse(data=get_agent_catalog())
+async def list_agents(request: Request):
+    return ApiResponse(data=await run_in_threadpool(get_agent_catalog, request.app.state.conversation_pool))
 
 
-@app.post("/conversation/talk", response_model=ApiResponse[dict[Any, Any]])
-async def chat(payload: ChatServiceRequest, request: Request):
+@app.post("/conversation/message", response_model=ApiResponse[dict[Any, Any]])
+async def chat(payload: SendMessageRequest, request: Request):
     result = await run_in_threadpool(
         SendMessageService.run, payload, request
     )
@@ -98,7 +103,6 @@ async def messages(
     return ApiResponse(data=result)
 
 
-# Treat 409 error
 @app.post(
     "/conversation/create",
     response_model=ApiResponse[dict[str, str]],
@@ -106,6 +110,12 @@ async def messages(
 )
 async def create_conversation(payload: CreateConversationRequest, request: Request):
     result = await run_in_threadpool(CreateConversationService.run, payload, request)
+    return ApiResponse(data=result)
+
+
+@app.patch("/conversations/{conversation_id}/title", response_model=ApiResponse[dict[str, str]])
+async def update_conversation_title(conversation_id: str, payload: UpdateConversationTitleRequest, request: Request):
+    result = await run_in_threadpool(UpdateConversationTitleService.run, conversation_id, payload, request)
     return ApiResponse(data=result)
 
 
