@@ -1,14 +1,14 @@
 from typing import Any, Sequence, TypedDict, Literal #Annotated,
 
 from langchain.agents import AgentState, create_agent
+from langgraph.graph.state import CompiledStateGraph  # pyright: ignore[reportMissingTypeStubs]
 from langchain_core.tools import BaseTool
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 from langchain_core.runnables import RunnableConfig
 from langgraph.checkpoint.postgres import PostgresSaver
-from langgraph.graph.state import CompiledStateGraph  # pyright: ignore[reportMissingTypeStubs]
 from langgraph.types import StateSnapshot
 
-from src.ports.drivens.agent_port import AgentPort
+from src.ports.drivens.ai_provider_port import AiProviderPort
 from src.types.adapters.content_type_return import ContentTypeReturn
 
 # Explore concept
@@ -20,26 +20,27 @@ class CustomAgentState(AgentState):
     preferences: dict | None
     attributes: Attributes
 
-class LangchainAdapterOptions(TypedDict):
+class LangchainAgentContainerOptions(TypedDict):
     identity_content: str
     tools: Sequence[BaseTool]
     checkpointer: PostgresSaver
     name: str
-
 
 # class MessageType(StrEnum):
 #     HUMAN = "human"
 #     AI = "ai"
 #     SYSTEM = "system"
 
-# qwen/qwen3.8-27b
-class LangchainAdapter(AgentPort):
+
+class LangchainAgentContainer:
+    _provider: AiProviderPort
     agent: CompiledStateGraph
 
-    def __init__(self, options: LangchainAdapterOptions, model: Literal["gpt-4o-mini", "qwen/qwen3.8-27b"] = "qwen/qwen3.8-27b"):
+    def __init__(self, options: LangchainAgentContainerOptions, ai_provider: AiProviderPort):
         # super().__init__()
+        self._provider = ai_provider
         self.agent = create_agent(
-            model=model,
+            model=ai_provider.get_container(),
             system_prompt=options["identity_content"],
             checkpointer=options["checkpointer"],
             tools=options["tools"],
@@ -47,7 +48,7 @@ class LangchainAdapter(AgentPort):
         )
 
 
-    def invoke(self, thread_id: str, retrieval_knowledge_base: list[ContentTypeReturn]) -> dict[str, Any]:
+    def invoke(self, thread_id: str, retrieval_knowledge_base: list[ContentTypeReturn]) -> dict[str, str]:
         if not thread_id or not thread_id.strip():
             raise ValueError("thread_id is required")
 
@@ -61,11 +62,14 @@ class LangchainAdapter(AgentPort):
             else:
                 raise ValueError("Invalid type")
 
+        # How to manage this potential specific error case? It tries to create a message
+        # record even after fail here
         messages = [get_base_message(m["type"], m["content"]) for m in retrieval_knowledge_base]
         result = self.agent.invoke(
             {"messages": messages}, {"configurable": {"thread_id": thread_id}}
         )
 
+        print("Result: ", result)
         return {"content": result["messages"][-1].content}
 
 

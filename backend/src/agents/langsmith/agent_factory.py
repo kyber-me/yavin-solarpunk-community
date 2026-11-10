@@ -6,8 +6,9 @@ from src.agents.agent import PROJECT_ROOT, Agent
 def build_agent() -> CompiledStateGraph:
     from src.agents.infra.open_checkpointer_helper import open_checkpointer
 
-    identity_path = (
+    identity_file = (
         PROJECT_ROOT / "src" / "agents" / "prompts" / "IDENTIDADE_ID_SILAS.md"
     )
+    identity_content = identity_file.read_text(encoding="utf-8")
     with open_checkpointer() as checkpointer:
-        return Agent("Silas", identity_path, checkpointer).agent
+        return Agent("Silas", checkpointer, identity_content).agent

@@ -1,23 +1,33 @@
 ---
 name: classificar-tarefa
-description: Classifica tarefas de implementação delegadas no backend de 1 a 5 por complexidade e risco, com evidências do código e apoio opcional do Graphify. Use antes de implementar features ou alterações no backend; exclui frontend, perguntas conceituais e retomadas de contexto.
+description: Classifica implementações de código delegadas no backend de 1 a 5 por complexidade e risco, com evidências do código e apoio opcional do Graphify. Não usar para revisões, diagnósticos, perguntas conceituais, documentação, comandos, memória agêntica ou retomadas de contexto.
 ---
 
 # Classificar tarefa
 
 **Natureza:** procedimento de desenvolvimento, fora do contexto dos agentes da simulação.
 
-Leia [a rubrica](references/rubrica.md) antes de atribuir notas. O modo de
-colaboração está fora da classificação: este fluxo parte da delegação no backend.
-Tarefas exclusivas de frontend não passam por este fluxo. Em tarefas mistas,
-classifique a parcela do backend e considere os consumidores frontend como
-evidência de impacto dos contratos.
+Use esta skill somente quando houver intenção de implementar ou alterar código,
+configuração executável ou dependência de uma aplicação, com edição efetiva
+prevista. Não a use para revisar código existente, investigar erros sem
+alteração autorizada, explicar conceitos, atualizar documentação ou memória,
+registrar comandos, avaliar grafos, consultar o estado do projeto ou retomar
+contexto. O modo de colaboração está fora da classificação: este fluxo parte
+da delegação de uma implementação no backend. Tarefas exclusivas de frontend
+não passam por este fluxo. Em tarefas mistas, classifique apenas a parcela do
+backend e considere os consumidores frontend como evidência de impacto dos
+contratos.
+
+Leia [a rubrica](references/rubrica.md) antes de atribuir notas.
 
 ## Procedimento
 
-1. Identifique objetivo, comportamento esperado, limites e instruções aplicáveis
-   do projeto. Inspecione arquivos, contratos e verificações relacionados, sem
-   implementar ou executar módulos com efeitos colaterais.
+1. Confirme que a tarefa é uma implementação de código. Caso seja revisão,
+   diagnóstico, documentação, memória, comando ou pergunta conceitual, não
+   classifique e encerre o uso desta skill. Para implementações, identifique
+   objetivo, comportamento esperado, limites e instruções aplicáveis do projeto.
+   Inspecione arquivos, contratos e verificações relacionados, sem implementar
+   ou executar módulos com efeitos colaterais.
 2. Investigue o alcance por busca e leitura. Quando houver Graphify disponível,
    siga [a orientação de análise](references/graphify.md). Consulte apenas o
    subgrafo pertinente; confirme no código as relações relevantes.
