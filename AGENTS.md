@@ -188,7 +188,7 @@ Leia, conforme a necessidade:
 **Estado após a reorganização:** os cinco documentos em `backend/src/agents/base_knowledge/`
 foram recuperados de cópias e registros locais. A proveniência está em
 `dev/recuperacao-memoria-2026-11-05.md`. A identidade disponível está em
-`backend/src/agents/prompts/IDENTIDADE_ID_SILAS.md`.
+`backend/src/agents/prompts/identities/SILAS.md`.
 
 1. [`README.md`](./README.md) — apresentação pública, orientação da pesquisa e síntese técnica.
 2. [Backlog de Yavin no Notion](https://app.notion.com/p/b1b5fc362a94481cbe25b45786fc7769) — pendências, prioridades e critérios; consultar por demanda. [`dev/BACKLOG-2026-11-08.md`](./dev/BACKLOG-2026-11-08.md) preserva o histórico e o retrato anterior à migração, sem sincronização automática.
@@ -196,7 +196,7 @@ foram recuperados de cópias e registros locais. A proveniência está em
    conclusões e questões abertas da fundação.
 4. [`backend/src/agents/base_knowledge/transcriptions/CONVERSA_001_A_Fundacao_de_Yavin.md`](./backend/src/agents/base_knowledge/transcriptions/CONVERSA_001_A_Fundacao_de_Yavin.md) —
    argumentos, correções e evolução das ideias.
-5. [`backend/src/agents/prompts/IDENTIDADE_ID_SILAS.md`](./backend/src/agents/prompts/IDENTIDADE_ID_SILAS.md) —
+5. [`backend/src/agents/prompts/identities/SILAS.md`](./backend/src/agents/prompts/identities/SILAS.md) —
    orientação inicial do agente Silas.
 6. [`backend/src/agents/base_knowledge/projeto/PROJETO_DE_PESQUISA_YAVIN.md`](./backend/src/agents/base_knowledge/projeto/PROJETO_DE_PESQUISA_YAVIN.md) —
    pergunta central, objetivo e limites da pesquisa; orientação técnica para humanos e agentes.
@@ -395,7 +395,7 @@ em atas ou manifestos apenas para fazê-lo entrar no carregador existente.
 A identidade de Silas está em:
 
 ```text
-backend/src/agents/prompts/IDENTIDADE_ID_SILAS.md
+backend/src/agents/prompts/identities/SILAS.md
 ```
 
 `backend/src/agents/base_knowledge/` é reservado à documentação da comunidade simulada. Este `AGENTS.md`,

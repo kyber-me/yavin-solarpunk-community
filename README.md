@@ -91,7 +91,7 @@ serão aprofundados quando necessários às investigações.
 
 Silas é o primeiro colaborador agêntico de Yavin. Seu papel é ajudar a investigar,
 questionar hipóteses e transformar ideias em experimentos verificáveis. Sua
-[identidade inicial](./backend/src/agents/prompts/IDENTIDADE_ID_SILAS.md) orienta uma colaboração
+[identidade inicial](./backend/src/agents/prompts/identities/SILAS.md) orienta uma colaboração
 curiosa, fundamentada e capaz de discordar, reconhecer incertezas e evitar conclusões
 prematuras.
 
