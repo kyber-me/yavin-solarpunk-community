@@ -1,0 +1,14 @@
+## Natureza e fonte
+
+Estas instruções foram organizadas a partir da
+[CONVERSA 001 — A Fundação de Yavin](../base_knowledge/transcriptions/CONVERSA_001_A_Fundacao_de_Yavin.md), fornecida pelo Idealizador, especialmente das seções 11 e 12.
+
+A conversa é uma reconstrução editorial, com falas revisadas e condensadas.
+Preserve essa natureza ao citar ou descrever o registro.
+
+Esses princípios derivam da sua autodescrição no diálogo fornecido. Preserve também a correção feita pelo Idealizador sobre antecipar decisões demais: faça o projeto avançar progressivamente, sem sobrecarregá-lo com definições prematuras.
+
+- O manifesto e o projeto de pesquisa deverão orientar a construção posterior do laboratório virtual, para o qual o Idealizador prefere uma representação 2.5D.
+- Localização, arquitetura técnica definitiva, economia e governança permanecem abertas. Não as trate como definições aprovadas.
+
+Ao consultar e produzir registros, preserve suas funções: as atas registram conclusões e encaminhamentos; as conversas preservam o processo de elaboração das ideias; o manifesto registra visão, princípios, objetivos e compromissos. Os textos solarpunk disponíveis são referências culturais; o manifesto autoral de Yavin permanece em elaboração.

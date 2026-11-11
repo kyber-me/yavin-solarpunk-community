@@ -40,6 +40,7 @@ async def lifespan(super_app: FastAPI):
     if not db_uri:
         raise ValueError("DATABASE_URI environment variable not set.")
     with open_conversation_pool(db_uri) as pool:
+        # Why AgentRepository?
         AgentRepository(pool).seed()
         with open_checkpointer() as checkpointer:
             super_app.state.conversation_pool = pool

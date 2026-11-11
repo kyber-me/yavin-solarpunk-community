@@ -27,7 +27,7 @@ class PostgresConversationRepository:
     def get_by_id(self, conversation_id: str) -> ConversationRecord | None:
         with self._pool.connection() as connection:
             return connection.execute(
-                f"SELECT {COLUMNS} FROM yavin.conversations WHERE id = %s",
+                f"SELECT {COLUMNS} FROM conversations WHERE id = %s",
                 (conversation_id,),
             ).fetchone()
 
@@ -36,7 +36,7 @@ class PostgresConversationRepository:
             raise ValueError("Invalid pagination")
         with self._pool.connection() as connection:
             return connection.execute(
-                f"SELECT {COLUMNS} FROM yavin.conversations WHERE sender_id = %s OR participant_id = %s "
+                f"SELECT {COLUMNS} FROM conversations WHERE sender_id = %s OR participant_id = %s "
                 "ORDER BY created_at DESC, id DESC LIMIT %s OFFSET %s",
                 (participant_id, participant_id, limit, offset),
             ).fetchall()
@@ -44,7 +44,7 @@ class PostgresConversationRepository:
     def get_active_by_participants(self, sender_id: str, participant_id: str) -> ConversationRecord | None:
         with self._pool.connection() as connection:
             return connection.execute(
-                f"SELECT {COLUMNS} FROM yavin.conversations "
+                f"SELECT {COLUMNS} FROM conversations "
                 "WHERE LEAST(sender_id, participant_id) = LEAST(%s::text, %s::text) "
                 "AND GREATEST(sender_id, participant_id) = GREATEST(%s::text, %s::text) AND active",
                 (sender_id, participant_id, sender_id, participant_id),
@@ -66,7 +66,7 @@ class PostgresConversationRepository:
         try:
             with self._pool.connection() as connection:
                 saved = connection.execute(
-                    f"INSERT INTO yavin.conversations ({COLUMNS}) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING {COLUMNS}",
+                    f"INSERT INTO conversations ({COLUMNS}) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING {COLUMNS}",
                     (
                         conversation.id, conversation.sender_id, conversation.participant_id,
                         conversation.thread_id, conversation.created_at,
@@ -87,6 +87,6 @@ class PostgresConversationRepository:
     def update_title(self, conversation_id: str, owner_id: str, title: str) -> ConversationRecord | None:
         with self._pool.connection() as connection:
             return connection.execute(
-                f"UPDATE yavin.conversations SET title = %s WHERE id = %s AND sender_id = %s RETURNING {COLUMNS}",
+                f"UPDATE conversations SET title = %s WHERE id = %s AND sender_id = %s RETURNING {COLUMNS}",
                 (title, conversation_id, owner_id),
             ).fetchone()

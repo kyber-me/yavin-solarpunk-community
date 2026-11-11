@@ -15,13 +15,10 @@ from src.agents.tools.common.agent_state import get_agent_state
 from src.agents.knowledge import retrieval_knowledge
 from src.adapters.drivens.OllamaProviderAdapter import OllamaProviderAdapter
 from src.adapters.drivens.Qwen3_5AiModel import Qwen3_5_4bAiModel
-from src.adapters.drivens.GptOss20bCloud import GptOss20bCloud
+#from src.adapters.drivens.GptOss20bCloud import GptOss20bCloud
 
-#from src.ports.drivens.ai_gateway_port import AgentPort
 
 TOOLS: list[BaseTool] = [web_search(), get_agent_state]
-
-
 
 class Agent:
     id: str
@@ -53,7 +50,6 @@ class Agent:
                 #model_adapter=GptOss20bCloud(),
                 temperature=0.3
             )
-            # model="gpt-4o-mini"
         )
 
 

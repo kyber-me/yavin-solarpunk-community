@@ -28,7 +28,7 @@ class PostgresMessageRepository:
         with self._pool.connection() as connection:
             with connection.cursor(row_factory=class_row(MessageRecord)) as cursor:
                 saved = cursor.execute(
-                    f"INSERT INTO yavin.messages ({COLUMNS}) "
+                    f"INSERT INTO messages ({COLUMNS}) "
                     f"VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING {COLUMNS}",
                     (message.id, message.conversation_id, message.sender_id, message.content,
                      message.created_at, message.updated_at, message.deleted_at),
@@ -41,7 +41,7 @@ class PostgresMessageRepository:
         with self._pool.connection() as connection:
             with connection.cursor(row_factory=class_row(MessageRecord)) as cursor:
                 return cursor.execute(
-                    f"SELECT {COLUMNS} FROM yavin.messages WHERE id = %s", (message_id,)
+                    f"SELECT {COLUMNS} FROM messages WHERE id = %s", (message_id,)
                 ).fetchone()
 
     def list_by_conversation(self, conversation_id: str, *, limit: int = 100, offset: int = 0) -> list[MessageRecord]:
@@ -51,6 +51,6 @@ class PostgresMessageRepository:
         with self._pool.connection() as connection:
             with connection.cursor(row_factory=class_row(MessageRecord)) as cursor:
                 return cursor.execute(
-                    f"SELECT {COLUMNS} FROM yavin.messages WHERE conversation_id = %s "
+                    f"SELECT {COLUMNS} FROM messages WHERE conversation_id = %s "
                     "ORDER BY created_at, id LIMIT %s OFFSET %s", (conversation_id, limit, offset),
                 ).fetchall()
