@@ -1,1 +1,1 @@
-from .scripts import *
+from .scripts.document_ingestor import ingest_documents

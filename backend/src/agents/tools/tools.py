@@ -1,7 +1,8 @@
 from typing import Literal
 from dotenv import load_dotenv
-
 load_dotenv()  # Does it make the `TavilySearch` to use the Tavily API Key?
+
+from langchain.tools import ToolRuntime, tool
 from langchain_core.tools import BaseTool
 
 from langchain_tavily import TavilySearch
@@ -11,7 +12,7 @@ def web_search(
         topic: Literal['general', 'news', 'finance'] = "general",
         domains: list[str] | None = None) -> BaseTool:
 
-    tool = TavilySearch(
+    t = TavilySearch(
         max_results=5,
         topic=topic,
         # include_answer=False,
@@ -24,5 +25,10 @@ def web_search(
         # exclude_domains=None
     )
 
-    return tool.as_tool()
+    return t.as_tool()
 
+
+@tool
+def get_agent_state(runtime: ToolRuntime) -> dict:
+    """Return the state of an agent"""
+    return runtime.state

@@ -2,43 +2,52 @@ from typing import Any
 
 from dotenv import load_dotenv
 from ulid import ULID
+
+from domain.yavinist import roleDto
 from src.constants import PROJECT_ROOT
 load_dotenv(PROJECT_ROOT / ".env")
 
 from langchain_core.tools import BaseTool
 from langgraph.checkpoint.postgres import PostgresSaver
 
-from adapters.langchain_container import LangchainAgentContainer, LangchainAgentContainerOptions
-from src.agents.tools.research.web_search import web_search
-from src.agents.tools.common.agent_state import get_agent_state
+from adapters.drivens.langchain_container import LangchainAgentContainer, LangchainAgentContainerOptions
 from src.adapters.drivens.ollama_provider_adapter import OllamaProviderAdapter
 from src.adapters.drivens.qwen3_5_ai_model import Qwen3_5_4bAiModel
 
+from src.agents.tools.tools import web_search, get_agent_state
 
-TOOLS: list[BaseTool] = [web_search(), get_agent_state]
+# Roles Vs Capacities -> create an `Enum` for roles (?)
+CAPACITIES: dict[str, list[BaseTool]] = {
+    "founder": [get_agent_state, web_search()],
+    "counselor": [get_agent_state, web_search()],
+    "researcher": [get_agent_state, web_search()],
+    "engineer": [get_agent_state, web_search()],
+    "citizen": [get_agent_state]
+}
 
 class Yavinist:
     id: str
     name: str
-    agent: LangchainAgentContainer
-    # roles: list[str]  # Create an `Enum` for roles (and permissions)
+    role: list[roleDto.role]
 
+    agent: LangchainAgentContainer
 
     def __init__(
         self,
-        name: str,
         checkpointer: PostgresSaver,
-        identity_content: str,
-        general_documents: list[str] | None = None,
-        agent_id: str | None = None,
+        role: list[roleDto.role],
+        *,
+        name: str,
+        identity_content: str, # Is that really necessary?
+        agent_id: str | None = None, # Investigate it
     ) -> None:
         self.id = agent_id or str(ULID())
         self.name = name
-        self.general_documents = general_documents
+        self.role = role
         self.agent = LangchainAgentContainer(
             LangchainAgentContainerOptions(
                 identity_content=identity_content,
-                tools=TOOLS,
+                tools=self.load_tools(),
                 checkpointer=checkpointer,
                 name=name
             ),
@@ -54,6 +63,14 @@ class Yavinist:
             raise ValueError("thread_id is required")
 
         return self.agent.invoke(message, thread_id, [])
+
+    def load_tools(self) -> list[BaseTool]:
+        tools: list[BaseTool] = []
+        for r in self.role:
+            tools.extend(CAPACITIES[r])
+
+        return tools
+
 
 
 
