@@ -192,11 +192,11 @@ aberto. Este documento não substitui esses registros e poderá evoluir com eles
 
 ## Referências internas
 
-- [Ata de fundação](../atas/ATA_001_Fundacao_de_Yavin.md).
-- [Conversa de fundação](../transcriptions/CONVERSA_001_A_Fundacao_de_Yavin.md).
-- [Manifesto solarpunk — referência cultural](../manifestos/manifesto-solarpunk.md).
-- [Conceitos fundamentais](../manifestos/conceitos-fundamentais.md).
-- [Identidade inicial de Silas](../../prompts/identities/SILAS.md).
+- [Ata de fundação](../history/atas/ATA_001_Fundacao_de_Yavin.md).
+- [Conversa de fundação](../history/transcriptions/CONVERSA_001_A_Fundacao_de_Yavin.md).
+- [Manifesto solarpunk — referência cultural](../library/manifestos/manifesto-solarpunk.md).
+- [Conceitos fundamentais](../library/manifestos/conceitos-fundamentais.md).
+- [Identidade inicial de Silas](../../prompts/conversational_behavior/silas/SILAS.md).
 
 A formulação da pergunta central e a ênfase em observar o processo de construção
 foram apresentadas pelo Idealizador no encerramento da sessão de 05/11/2026.

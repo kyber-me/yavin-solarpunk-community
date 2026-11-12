@@ -26,7 +26,7 @@ from src.persistence.db.relational.agent_repository import AgentRepository
 from src.types.dtos.conversation_history import ConversationPage, MessagePage
 from src.services.update_conversation_title_service import UpdateConversationTitleService
 from src.persistence.cache.container import cache_container
-from src.global_vars import IDEALIZADOR_ACCESS_KEY_ENV
+from src.constants import IDEALIZADOR_ACCESS_KEY_ENV
 from src.types.dtos.idealizador_access import IdealizadorAccessRequest
 
 from dotenv import load_dotenv

@@ -3,12 +3,12 @@ import logging
 import os
 
 from notion_client import Client
-from src.global_vars import BASE_KNOWLEDGE_PATH
+from src.constants import BASE_KNOWLEDGE_PATH
 
 LOG = logging.getLogger(__name__)
 LOCAL = {
     "manifesto": BASE_KNOWLEDGE_PATH / "manifestos/manifesto-solarpunk.md",
-    "research_project": BASE_KNOWLEDGE_PATH / "projeto/PROJETO_DE_PESQUISA_YAVIN.md",
+    "research_project": BASE_KNOWLEDGE_PATH / "institutional/PROJETO_DE_PESQUISA_YAVIN.md",
 }
 
 
@@ -66,7 +66,7 @@ def retrieval_knowledge() -> list[str]:
     print("Retrieving knowledge locally...")
     LOG.warning("Retrieving knowledge locally...")
 
-    base_knowledge_paths = [BASE_KNOWLEDGE_PATH / "manifestos", BASE_KNOWLEDGE_PATH / "projeto"]
+    base_knowledge_paths = [BASE_KNOWLEDGE_PATH / "manifestos", BASE_KNOWLEDGE_PATH / "institutional"]
     messages: list[str] = []
     try:
         for b in base_knowledge_paths:

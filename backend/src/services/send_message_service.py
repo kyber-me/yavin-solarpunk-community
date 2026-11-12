@@ -1,5 +1,5 @@
 from fastapi import Request
-from src.agents.agent import Agent
+from src.domain.yavinist import Yavinist
 from src.types.app_error import AppError
 from src.persistence.db.relational.conversation_record import ConversationRecord
 from src.persistence.db.relational.conversation_repository import PostgresConversationRepository
@@ -9,7 +9,7 @@ from src.services.service_interface import IService
 from src.types.dtos.send_message_service_request import SendMessageRequest, Message
 from src.services.helpers.message_mapper import message_to_record
 from src.persistence.db.relational.agent_repository import AgentRepository
-from src.agents.knowledge import load_general_documents, LOG
+from src.agents.knowledge import LOG #load_general_documents
 
 # current_path = Path(
 #     __file__
@@ -34,8 +34,15 @@ class SendMessageService(IService):
         # It can be interpreted as a suspicious behavior
         conversation_repo = PostgresConversationRepository(request.app.state.conversation_pool)
         conversation_exists = conversation_repo.get_by_id(dto.conversation_id)
+        if not conversation_exists:
+            if not conversation_exists:
+                raise AppError(
+                    code="CONVERSATION_NOT_FOUND",
+                    message="The conversation was not found",
+                    status_code=404,
+                )
+
         (ConversationValidatorChain()
-         .conversation_exists_(conversation_exists)
          .is_conversation_active(conversation_exists)
          .is_conversation_participant(dto.sender_id, conversation_exists))
 
@@ -63,32 +70,32 @@ class SendMessageService(IService):
                 )
 
             request.app.state.cache_container["agents"][agent_id] = agent_record
-        try:
-            general_documents = request.app.state.cache_container.get("general_documents")
-            if not general_documents:
-                # Create a Documents repository may be the best approach
-                general_documents = load_general_documents(agent_repo.general_pages())
-                request.app.state.cache_container["general_documents"] = general_documents
-        except (OSError, ValueError) as error:
-            LOG.error("Failed to load general documents: %s", error)
-            raise AppError(
-                code="KNOWLEDGE_UNAVAILABLE",
-                message="Required knowledge is unavailable",
-                status_code=503) from error
+        # try:
+        #     general_documents = request.app.state.cache_container.get("general_documents")
+        #     if not general_documents:
+        #         # Create a Documents repository may be the best approach
+        #         general_documents = load_general_documents(agent_repo.general_pages())
+        #         request.app.state.cache_container["general_documents"] = general_documents
+        # except (OSError, ValueError) as error:
+        #     LOG.error("Failed to load general documents: %s", error)
+        #     raise AppError(
+        #         code="KNOWLEDGE_UNAVAILABLE",
+        #         message="Required knowledge is unavailable",
+        #         status_code=503) from error
         response: dict[str, str] | None
         try:
             # What are the consequences for the user experience if it fails?
             result = message_repo.create(message_record)
             try:
                 checkpointer = request.app.state.checkpointer
-                silas = Agent(
+                silas = Yavinist(
                     agent_record.name,
                     checkpointer,
                     identity_content=agent_record.identity,
-                    general_documents=general_documents,
+                    general_documents=[], # The loading of documents should be an agentic logic
                     agent_id=agent_record.id)
 
-                response = silas.invoke(result.content, conversation_exists.thread_id)
+                response = silas.send_message(result.content, conversation_exists.thread_id)
                 LOG.debug("silas.invoke response: %s", response)
                 if not response:
                     raise AppError(
@@ -158,17 +165,6 @@ class SendMessageService(IService):
 
 
 class ConversationValidatorChain:
-
-    def conversation_exists_(self, conversation_exists: ConversationRecord | None) -> "ConversationValidatorChain":
-        if not conversation_exists:
-            raise AppError(
-                code="CONVERSATION_NOT_FOUND",
-                message="The conversation was not found",
-                status_code=404,
-            )
-
-        return self
-
 
     def is_conversation_participant(self, sender_id: str, conversation_exists: ConversationRecord | None) -> "ConversationValidatorChain":
         if not conversation_exists:

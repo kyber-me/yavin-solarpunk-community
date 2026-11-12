@@ -85,6 +85,6 @@ Este manifesto estabelece relações entre o solarpunk e diferentes tradições 
 
 Para aprofundar os conceitos mencionados, consulte:
 
-**[Conceitos fundamentais e suas relações com o solarpunk](./conceitos-fundamentais.md)**
+**[Conceitos fundamentais e suas relações com o solarpunk](conceitos-fundamentais.md)**
 
 O documento complementar apresenta os conceitos de *swadeshi*, *jugaad*, *cyberpunk*, *steampunk* e *low-tech*, discutindo suas origens, características e possíveis contribuições para as investigações de Yavin.

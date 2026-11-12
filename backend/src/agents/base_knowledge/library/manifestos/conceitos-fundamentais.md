@@ -2,7 +2,7 @@
 ## Conceitos fundamentais e suas relações com o solarpunk
 
 **Categoria:** Fundamentação conceitual  
-**Documento de origem:** [Manifesto Solarpunk](./manifesto-solarpunk.md)  
+**Documento de origem:** [Manifesto Solarpunk](manifesto-solarpunk.md)  
 **Natureza:** Material de estudo e interpretação
 
 ---
@@ -140,7 +140,7 @@ Essas perguntas não representam conclusões definitivas. Constituem pontos de p
 
 ### 8. Referências para aprofundamento
 
-- [Manifesto Solarpunk — documento principal](./manifesto-solarpunk.md)
+- [Manifesto Solarpunk — documento principal](manifesto-solarpunk.md)
 - [Movimento Swadeshi](https://en.wikipedia.org/wiki/Swadeshi_movement)
 - [Jugaad](https://en.wikipedia.org/wiki/Jugaad)
 - [Cyberpunk](https://en.wikipedia.org/wiki/Cyberpunk)

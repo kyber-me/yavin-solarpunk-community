@@ -9,7 +9,7 @@ from ulid import ULID
 
 MANIFESTO_PAGE = "412778d5150b81438b72e2ade85b77b5"
 PROJECT_PAGE = "412778d5150b81c3a2aee23bfb35a766"
-IDENTITY_FILE = Path(__file__).resolve().parents[3] / "agents/prompts/identities/SILAS.md"
+IDENTITY_FILE = Path(__file__).resolve().parents[3] / "agents/prompts/conversational_behavior/SILAS_v5.md"
 
 
 @dataclass(frozen=True)

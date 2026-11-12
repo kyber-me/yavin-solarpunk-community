@@ -54,9 +54,9 @@ class HttpIntegrationTests(unittest.TestCase):
         self.sender = str(ULID())
         self.enterContext(patch.dict(os.environ, {'DATABASE_URI': self.uri}))
         self.enterContext(tracing_context(enabled=False))
-        self.factory = self.enterContext(patch('src.agents.agent.create_agent', side_effect=simulated_graph))
+        self.factory = self.enterContext(patch('src.agents.yavinist.py.py.create_agent', side_effect=simulated_graph))
         self.knowledge = self.enterContext(patch(
-            'src.agents.agent._retrieval_knowledge', side_effect=lambda **kwargs: [SystemMessage('test reference')]
+            'src.agents.yavinist.py.py._retrieval_knowledge', side_effect=lambda **kwargs: [SystemMessage('test reference')]
         ))
 
     def create(self, client, sender=None):

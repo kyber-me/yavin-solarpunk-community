@@ -1,0 +1,19 @@
+# def send_message(self, message: str, thread_id: str | None) -> dict[str, Any]:
+#     if not thread_id:
+#         raise ValueError("thread_id is required")
+#
+#     return self.agent.invoke(message, thread_id, [])
+    # should_load = self.agent.should_load(thread_id)
+    # True load guarantees a mapped messages with content
+    # mapped_messages = self.agent.get_mapped_state_messages(thread_id)
+
+    # messages: list[ContentTypeReturn]
+    # human_message: ContentTypeReturn = {"content": message, "type": "human"}
+    # if should_load: # Load means there is an existent conversation going on and all base knowledge is already loaded
+    # messages = [human_message]
+    # else:
+    #     # general_documents: `PROJETO_DE_PESQUISA_YAVIN.md` e `manifesto-solarpunk.md`
+    #     messages: list[ContentTypeReturn] = (
+    #             [cast(ContentTypeReturn, {"content": content, "type": "system"}) for content in self.general_documents] + [human_message] if self.general_documents
+    #                 else [cast(ContentTypeReturn, {"content": k, "type": "system"}) for k in retrieval_knowledge()] + [human_message]
+    #     )

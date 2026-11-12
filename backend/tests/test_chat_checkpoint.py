@@ -8,7 +8,7 @@ from langsmith import tracing_context
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.graph import END, START, MessagesState, StateGraph
 
-from src.agents.agent import Agent
+from src.agents.yavinist import Agent
 from src.types.dtos.send_message_service_request import Message
 
 
@@ -30,7 +30,7 @@ class CheckpointTests(unittest.TestCase):
         verify_persistence(self, InMemorySaver())
 
     def test_missing_thread_id_is_rejected(self):
-        with patch('src.agents.agent.create_agent', side_effect=test_graph):
+        with patch('src.agents.yavinist.py.py.create_agent', side_effect=test_graph):
             agent = Agent('Silas', None, InMemorySaver())
             with self.assertRaises(ValueError):
                 agent.invoke('oi', '')
@@ -40,7 +40,7 @@ def verify_persistence(case, saver, restore=None):
     thread = 'test-checkpoint-' + str(uuid4())
     other = thread + '-other'
     try:
-        with tracing_context(enabled=False), patch('src.agents.agent.create_agent', side_effect=test_graph), patch.object(
+        with tracing_context(enabled=False), patch('src.agents.yavinist.py.py.create_agent', side_effect=test_graph), patch.object(
             __import__('src.agents.agent', fromlist=['_retrieval_knowledge']), '_retrieval_knowledge', return_value=[SystemMessage('reference')]
         ) as knowledge:
             Agent('Silas', None, saver).invoke('first', thread)
