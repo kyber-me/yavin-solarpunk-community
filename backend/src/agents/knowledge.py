@@ -7,7 +7,7 @@ from src.constants import BASE_KNOWLEDGE_PATH
 
 LOG = logging.getLogger(__name__)
 LOCAL = {
-    "manifesto": BASE_KNOWLEDGE_PATH / "manifestos/manifesto-solarpunk.md",
+    "manifesto": BASE_KNOWLEDGE_PATH / "manifestos/SOLARPUNK_MANIFESTO.md",
     "research_project": BASE_KNOWLEDGE_PATH / "institutional/PROJETO_DE_PESQUISA_YAVIN.md",
 }
 

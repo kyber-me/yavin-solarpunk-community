@@ -6,7 +6,7 @@
 
 ## Natureza e fonte
 
-Ata consolidada a partir da [CONVERSA 001 — A Fundação de Yavin](../transcriptions/CONVERSA_001_A_Fundacao_de_Yavin.md), fornecida pelo Idealizador. A fonte é uma reconstrução editorial, com falas revisadas e condensadas; esta ata sintetiza seu conteúdo e não se apresenta como reprodução de uma ata anterior ou transcrição literal do histórico original.
+Ata consolidada a partir da [CONVERSA 001 — A Fundação de Yavin](CONVERSA_001_A_Fundacao_de_Yavin.md), fornecida pelo Idealizador. A fonte é uma reconstrução editorial, com falas revisadas e condensadas; esta ata sintetiza seu conteúdo e não se apresenta como reprodução de uma ata anterior ou transcrição literal do histórico original.
 
 ## Objeto da reunião
 

@@ -27,14 +27,11 @@ futuros desejáveis. Transformar essa orientação em uma comunidade exige inves
 como esses valores se relacionam com condições materiais, escolhas técnicas,
 organização coletiva e conflitos entre necessidades.
 
-Uma solução pode atender a um objetivo e criar dificuldades em outro: ampliar a
-oferta de energia pode aumentar custos, exigir manutenção ou introduzir dependência
-de componentes externos. A existência de uma tecnologia não resolve, por si só,
+Uma solução pode atender a um objetivo e criar dificuldades em outro, por exemplo: ampliar a oferta de energia pode aumentar custos, exigir manutenção ou introduzir dependência de componentes externos. A existência de uma tecnologia não resolve, por si só,
 quem a mantém, como seus benefícios são distribuídos ou o que fazer quando falha.
 
 Yavin investigará essas relações por meio de uma simulação construída
-progressivamente, com participação do Idealizador e, conforme sua implementação,
-de agentes de inteligência artificial coordenados por uma orquestração multiagêntica.
+progressivamente, com participação do Idealizador e, conforme sua implementação, de agentes de inteligência artificial coordenados por uma orquestração multiagêntica. ->[Incluir aqui a possibilidade de agentes humanos dentro da simulação e não só "habitantes" artificiais]<-
 
 ## 3. Objetivo geral
 
@@ -62,13 +59,12 @@ quais alternativas foram consideradas, como uma conversa mudou a proposta e quai
 consequências apareceram depois de uma escolha.
 
 O ponto de partida quase vazio permite acompanhar a formação dessas questões.
-Cada necessidade poderá motivar uma investigação, em vez de receber uma solução
-predefinida apenas para completar um cenário.
+Cada necessidade poderá motivar uma investigação, em vez de receber uma solução predefinida apenas para completar um cenário.
 
 Esse ponto inicial não representa ausência de contexto. Yavin já possui orientação
 solarpunk, registros de fundação, o Idealizador como participante e Silas como
-primeiro colaborador agêntico. Energia é o primeiro campo de investigação. O
-laboratório e o mapa oferecem uma representação inicial desse trabalho.
+primeiro colaborador agêntico. ->[Talvez remover isto?: Energia é o primeiro campo de investigação. O
+laboratório e o mapa oferecem uma representação inicial desse trabalho.]<-
 
 A escolha de começar assim não exige que os agentes reinventem conhecimentos
 existentes. Referências externas, cálculos e ferramentas poderão apoiar os estudos;
@@ -86,6 +82,7 @@ Além da pergunta central, a pesquisa deverá explorar:
 - Como as conversas serão conduzidas e como lidar com divergências, dúvidas e falta de evidências?
 - Quais decisões exigem novas informações, experimentos ou revisão de escolhas anteriores?
 - Quais limitações pertencem à comunidade imaginada e quais pertencem ao próprio modelo de simulação?
+->[Incluir algo que sirva como: "Como explorar a tecnologia de vanguarda em prol de uma sociedade sustentável? Quais são as potenciais tecnologias (...)"]<-
 
 Abastecimento, distribuição, manutenção, escassez, falhas e dependência de recursos
 externos são exemplos de situações a investigar, não uma lista de mecanismos já
@@ -133,6 +130,7 @@ Hipóteses, evidências, propostas, deliberações e decisões aprovadas precisa
 identificáveis. Uma proposta ou uma representação no mapa não comprova viabilidade
 nem equivale automaticamente a uma alteração aprovada no mundo da simulação.
 
+->[Rever necessidade deste tópico]<-
 ## 8. Primeiro recorte: energia
 
 A primeira investigação será sobre energia, conforme a fundação de Yavin. Geração,
@@ -190,14 +188,4 @@ Ao entrar no projeto, use esta orientação para compreender a pesquisa, consult
 os registros para saber o que foi discutido e decidido e reconheça o que permanece
 aberto. Este documento não substitui esses registros e poderá evoluir com eles.
 
-## Referências internas
 
-- [Ata de fundação](../history/atas/ATA_001_Fundacao_de_Yavin.md).
-- [Conversa de fundação](../history/transcriptions/CONVERSA_001_A_Fundacao_de_Yavin.md).
-- [Manifesto solarpunk — referência cultural](../library/manifestos/manifesto-solarpunk.md).
-- [Conceitos fundamentais](../library/manifestos/conceitos-fundamentais.md).
-- [Identidade inicial de Silas](../../prompts/conversational_behavior/silas/SILAS.md).
-
-A formulação da pergunta central e a ênfase em observar o processo de construção
-foram apresentadas pelo Idealizador no encerramento da sessão de 05/11/2026.
-Esta síntese não se apresenta como ata ou transcrição dessa sessão.
