@@ -10,11 +10,17 @@ load_dotenv(PROJECT_ROOT / ".env")
 from langchain_core.tools import BaseTool
 from langgraph.checkpoint.postgres import PostgresSaver
 
-from adapters.drivens.langchain_container import LangchainAgentContainer, LangchainAgentContainerOptions
-from src.adapters.drivens.ollama_provider_adapter import OllamaProviderAdapter
-from src.adapters.drivens.qwen3_5_ai_model import Qwen3_5_4bAiModel
-
 from src.agents.tools.tools import web_search, get_agent_state
+from src.adapters import (
+    LangchainAgentContainer,
+    LangchainAgentContainerOptions,
+    OllamaProviderAdapter,
+    NvidiaProviderAdapter,
+    Qwen3_5_4bAiModel,
+    Nemotron3_5SuperVL120bA12b
+)
+
+
 
 # Roles Vs Capacities -> create an `Enum` for roles (?)
 CAPACITIES: dict[str, list[BaseTool]] = {
@@ -51,10 +57,14 @@ class Yavinist:
                 checkpointer=checkpointer,
                 name=name
             ),
-            OllamaProviderAdapter(
-                model_adapter=Qwen3_5_4bAiModel(),
+            NvidiaProviderAdapter(
+                model_adapter=Nemotron3_5SuperVL120bA12b(),
                 temperature=0.25
             )
+            # OllamaProviderAdapter(
+            #     model_adapter=Qwen3_5_4bAiModel(),
+            #     temperature=0.25
+            #)
         )
 
 
