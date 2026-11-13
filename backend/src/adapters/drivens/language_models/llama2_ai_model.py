@@ -1,4 +1,4 @@
-from ports.drivens.ai_provider_port import AiModelPort
+from ports import AiModelPort
 
 
 class Llama2AiModel(AiModelPort):

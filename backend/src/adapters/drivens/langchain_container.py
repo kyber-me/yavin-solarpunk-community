@@ -3,12 +3,12 @@ from typing import Any, Sequence, TypedDict, Literal  #Annotated,
 from langchain.agents import AgentState, create_agent
 from langgraph.graph.state import CompiledStateGraph  # pyright: ignore[reportMissingTypeStubs]
 from langchain_core.tools import BaseTool
-from langchain_core.messages import HumanMessage, SystemMessage, AIMessage, BaseMessage
+from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 from langchain_core.runnables import RunnableConfig
 from langgraph.checkpoint.postgres import PostgresSaver
 from langgraph.types import StateSnapshot
 
-from src.ports.drivens.ai_provider_port import AiProviderPort
+from ports import AiProviderPort
 from src.types.adapters.content_type_return import ContentTypeReturn
 
 
@@ -94,8 +94,7 @@ class LangchainAgentContainer:
         return [{"content": str(c), "type": self._get_mapped_type_message(c)} for c in
                 base_messages] if base_messages else []
 
-    def get_state(self, thread_id: str, checkpoint_id: str = "", get_full_history: bool = False
-                  ) -> list[StateSnapshot]:
+    def get_state(self, thread_id: str, checkpoint_id: str = "", get_full_history: bool = False) -> list[StateSnapshot]:
         config: RunnableConfig = {"configurable": {"thread_id": thread_id}}
         if checkpoint_id:
             config["configurable"]["checkpoint_id"] = checkpoint_id

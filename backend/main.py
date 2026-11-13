@@ -41,11 +41,12 @@ async def lifespan(super_app: FastAPI):
         raise ValueError("DATABASE_URI environment variable not set.")
 
     super_app.state.cache_container = cache_container
-    result = ingest_documents([
-        "institutional/YAVIN_RESEARCH_PROJECT.md", ""
-        "library/JUGAAD",
-        "library/SOLARPUNK_MANIFESTO.md",
-        "library/SWADESHI.md"], use_vec_store=True)
+    # result = ingest_documents([
+    #     "institutional/YAVIN_RESEARCH_PROJECT.md", ""
+    #     "library/JUGAAD",
+    #     "library/SOLARPUNK_MANIFESTO.md",
+    #     "library/SWADESHI.md"
+    # ], use_vec_store=True)
     with open_conversation_pool(db_uri) as pool:
         # Why AgentRepository?
         AgentRepository(pool).seed()

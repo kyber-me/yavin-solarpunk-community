@@ -3,7 +3,7 @@ from typing import Any
 from dotenv import load_dotenv
 from ulid import ULID
 
-from domain.yavinist import roleDto
+from src.domain.yavinist import roleDto
 from src.constants import PROJECT_ROOT
 load_dotenv(PROJECT_ROOT / ".env")
 
@@ -14,10 +14,10 @@ from src.agents.tools.tools import web_search, get_agent_state
 from src.adapters import (
     LangchainAgentContainer,
     LangchainAgentContainerOptions,
-    OllamaProviderAdapter,
     NvidiaProviderAdapter,
-    Qwen3_5_4bAiModel,
-    Nemotron3_5SuperVL120bA12b
+    Nemotron3_5SuperVL120bA12b,
+    # OllamaProviderAdapter,
+    # Qwen3_5_4bAiModel
 )
 
 

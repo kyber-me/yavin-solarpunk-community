@@ -10,6 +10,7 @@ from langchain_core.vectorstores import InMemoryVectorStore #VectorStore #Vector
 from src.constants import BASE_KNOWLEDGE_PATH
 
 
+
 def ingest_documents(p: str | list[str], use_vec_store: bool = False) -> BaseRetriever | None:
     # paths = [Path(d) for d in p if isinstance(p, list) else Path(d)]
     docs = []
@@ -34,7 +35,7 @@ def ingest_documents(p: str | list[str], use_vec_store: bool = False) -> BaseRet
     if use_vec_store:
         vectorstore = InMemoryVectorStore.from_documents(md_splits, OpenAIEmbeddings()).as_retriever()
 
-    
+
     return vectorstore
 
 

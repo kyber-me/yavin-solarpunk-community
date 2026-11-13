@@ -1,5 +1,5 @@
 from langchain_ollama import ChatOllama
-from src.ports.drivens.ai_provider_port import AiModelPort, AiProviderPort
+from ports import AiModelPort, AiProviderPort
 from langchain_core.language_models import BaseChatModel
 
 

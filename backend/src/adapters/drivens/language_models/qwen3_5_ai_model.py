@@ -1,4 +1,4 @@
-from src.ports.drivens.ai_provider_port import AiModelPort
+from ports import AiModelPort
 
 
 class Qwen3_5_4bAiModel(AiModelPort):
