@@ -1,6 +1,7 @@
 from langchain_ollama import ChatOllama
-from ports import AiModelPort, AiProviderPort
 from langchain_core.language_models import BaseChatModel
+
+from src.ports import AiModelPort, AiProviderPort
 
 
 class OllamaProviderAdapter(AiProviderPort):

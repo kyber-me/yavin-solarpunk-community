@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 from langchain_core.language_models import BaseChatModel
 
-from ports import AiModelPort
+from src.ports import AiModelPort
 
 
 # What is the effect of having a Qwen Provider Adapter in the system?

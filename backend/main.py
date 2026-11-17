@@ -28,7 +28,8 @@ from src.services.update_conversation_title_service import UpdateConversationTit
 from src.persistence.cache.container import cache_container
 from src.constants import IDEALIZADOR_ACCESS_KEY_ENV
 from src.types.dtos.idealizador_access import IdealizadorAccessRequest
-from src.domain.document import ingest_documents
+from src.adapters import QdrantVectorStoreContainer, NvidiaEmbeddingsAdapter
+# from src.domain.document import ingest_documents
 
 from dotenv import load_dotenv
 load_dotenv(Path(__file__).resolve().parent / ".env")
@@ -41,12 +42,8 @@ async def lifespan(super_app: FastAPI):
         raise ValueError("DATABASE_URI environment variable not set.")
 
     super_app.state.cache_container = cache_container
-    # result = ingest_documents([
-    #     "institutional/YAVIN_RESEARCH_PROJECT.md", ""
-    #     "library/JUGAAD",
-    #     "library/SOLARPUNK_MANIFESTO.md",
-    #     "library/SWADESHI.md"
-    # ], use_vec_store=True)
+    vector_store_container = QdrantVectorStoreContainer(NvidiaEmbeddingsAdapter())
+    super_app.state.vector_store_container = vector_store_container
     with open_conversation_pool(db_uri) as pool:
         # Why AgentRepository?
         AgentRepository(pool).seed()

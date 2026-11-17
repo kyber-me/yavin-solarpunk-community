@@ -1,4 +1,4 @@
-from ports import AiModelPort
+from src.ports import AiModelPort
 
 
 class Nemotron3_5SuperVL120bA12b(AiModelPort):

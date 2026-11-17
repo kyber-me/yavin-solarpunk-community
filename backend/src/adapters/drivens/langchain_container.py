@@ -8,7 +8,7 @@ from langchain_core.runnables import RunnableConfig
 from langgraph.checkpoint.postgres import PostgresSaver
 from langgraph.types import StateSnapshot
 
-from ports import AiProviderPort
+from src.ports import AiProviderPort
 from src.types.adapters.content_type_return import ContentTypeReturn
 
 

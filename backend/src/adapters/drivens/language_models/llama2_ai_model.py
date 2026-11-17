@@ -1,4 +1,4 @@
-from ports import AiModelPort
+from src.ports import AiModelPort
 
 
 class Llama2AiModel(AiModelPort):

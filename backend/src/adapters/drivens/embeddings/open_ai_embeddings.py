@@ -1,16 +1,15 @@
 from langchain_core.embeddings import Embeddings
-
 from langchain_openai.embeddings import OpenAIEmbeddings
 
 from src.ports import EmbeddingsModelIntegrationPort
 
 
-class OpenAiEmbedding(EmbeddingsModelIntegrationPort):
+class OpenAiEmbeddings(EmbeddingsModelIntegrationPort):
 
     _embedding_container: Embeddings
 
     def __init__(self):
-        self._embedding_container = OpenAIEmbeddings()
+        self._embedding_container = OpenAIEmbeddings(model="text-embedding-3-small")
 
     def embed_query(self):
         raise NotImplementedError()
@@ -18,6 +17,6 @@ class OpenAiEmbedding(EmbeddingsModelIntegrationPort):
     def embed_documents(self):
         raise NotImplementedError()
 
-    def get_embedding_container(self) -> Embeddings:
-        return super().get_embedding_container()
+    def get(self) -> Embeddings:
+        return super().get()
 

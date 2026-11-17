@@ -8,7 +8,7 @@ load_dotenv()
 from langchain_nvidia_ai_endpoints import ChatNVIDIA
 from langchain_core.language_models import BaseChatModel
 
-from ports import AiModelPort, AiProviderPort
+from src.ports import AiModelPort, AiProviderPort
 
 nvidia_api_key = os.environ["NVIDIA_API_KEY"] or ""
 

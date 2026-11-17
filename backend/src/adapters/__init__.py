@@ -8,4 +8,7 @@ from .drivens.language_models.gpt_oss20b_cloud_model import GptOss20bCloudModel
 from .drivens.language_models.llama2_ai_model import Llama2AiModel
 from .drivens.language_models.qwen3_5_ai_model import Qwen3_5_4bAiModel
 
-from .drivens.embeddings.open_ai import OpenAiEmbedding
+from .drivens.embeddings.open_ai_embeddings import OpenAiEmbeddings as OpenAiEmbeddingsAdapter
+from .drivens.embeddings.nvidia_embeddings import NvidiaEmbeddings as NvidiaEmbeddingsAdapter
+
+from .vector_store import QdrantVectorStoreContainer

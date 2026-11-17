@@ -1,4 +1,4 @@
-from ports import AiModelPort
+from src.ports import AiModelPort
 
 class GptOss20bCloudModel(AiModelPort):
     def __init__(self):

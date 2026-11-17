@@ -1,9 +1,5 @@
-
 from abc import ABC, abstractmethod
-
 from langchain_core.embeddings import Embeddings
-
-from ports import AiModelPort
 
 
 class EmbeddingsModelIntegrationPort(ABC):
@@ -12,7 +8,7 @@ class EmbeddingsModelIntegrationPort(ABC):
 
 
     @abstractmethod
-    def __init__(self, model_adapter: AiModelPort):
+    def __init__(self):
         ...
 
     @abstractmethod
@@ -24,7 +20,7 @@ class EmbeddingsModelIntegrationPort(ABC):
         ...
 
     @abstractmethod
-    def get_embedding_container(self) -> Embeddings:
+    def get(self) -> Embeddings:
         return self._embedding_container
 
 

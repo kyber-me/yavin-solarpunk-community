@@ -1,4 +1,4 @@
-from ports import AiModelPort
+from src.ports import AiModelPort
 
 
 class Qwen3_5_4bAiModel(AiModelPort):
