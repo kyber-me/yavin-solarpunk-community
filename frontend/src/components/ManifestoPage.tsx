@@ -1,6 +1,6 @@
 import { Fragment, type ReactNode } from 'react';
-import manifesto from '../../../backend/src/agents/base_knowledge/manifestos/manifesto-solarpunk.md?raw';
-import conceptsUrl from '../../../backend/src/agents/base_knowledge/manifestos/conceitos-fundamentais.md?url';
+import manifesto from '../../../backend/src/agents/base_knowledge/library/SOLARPUNK_MANIFESTO.md?raw';
+// import conceptsUrl from '../../../backend/src/agents/base_knowledge/manifestos/conceitos-fundamentais.md?url';
 import type { ArrivalSound } from '../arrivalSound';
 import { SoundControl } from './SoundControl';
 import '../manifesto.css';
