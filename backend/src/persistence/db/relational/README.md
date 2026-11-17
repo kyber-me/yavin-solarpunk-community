@@ -147,7 +147,8 @@ a SPA não mantém históricos locais. Há cobertura HTTP integrada e dois turno
 Continuam abertos: autenticação, reconciliação de falhas/novas tentativas, validação
 de uso real do compositor da SPA, testes legados e caminho de inspeção do LangGraph.
 Não reexecutar a migração inicial nem chamar o modelo só para conferir esta memória.
-O [backlog](../../../../../BACKLOG.md) e o ponto de retomada registram o próximo passo.
+O [backlog no Notion](https://app.notion.com/p/b1b5fc362a94481cbe25b45786fc7769) e o ponto
+de retomada registram o próximo passo.
 
 ## Testes
 

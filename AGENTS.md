@@ -55,8 +55,7 @@ novamente antes de agir; preserve o índice e as alterações do Idealizador.
 
 **Backlog e base documental no Notion:** o
 [backlog](https://app.notion.com/p/b1b5fc362a94481cbe25b45786fc7769) é a fonte
-ativa das tarefas. O retrato anterior está arquivado em
-[`dev/BACKLOG-2026-11-08.md`](dev/BACKLOG-2026-11-08.md). A
+ativa das tarefas. O repositório não mantém uma cópia local sincronizada. A
 [Base de Conhecimento](https://app.notion.com/p/412778d5150b81d0af8dc57187aa8e52)
 contém cópias conferidas dos cinco documentos de `backend/src/agents/base_knowledge/`;
 os originais continuam no Git. O acesso de Silas ao Notion não foi implementado
@@ -191,7 +190,7 @@ foram recuperados de cópias e registros locais. A proveniência está em
 `backend/src/agents/prompts/identities/SILAS.md`.
 
 1. [`README.md`](./README.md) — apresentação pública, orientação da pesquisa e síntese técnica.
-2. [Backlog de Yavin no Notion](https://app.notion.com/p/b1b5fc362a94481cbe25b45786fc7769) — pendências, prioridades e critérios; consultar por demanda. [`dev/BACKLOG-2026-11-08.md`](./dev/BACKLOG-2026-11-08.md) preserva o histórico e o retrato anterior à migração, sem sincronização automática.
+2. [Backlog de Yavin no Notion](https://app.notion.com/p/b1b5fc362a94481cbe25b45786fc7769) — pendências, prioridades e critérios; consultar por demanda.
 3. [`backend/src/agents/base_knowledge/atas/ATA_001_Fundacao_de_Yavin.md`](./backend/src/agents/base_knowledge/atas/ATA_001_Fundacao_de_Yavin.md) —
    conclusões e questões abertas da fundação.
 4. [`backend/src/agents/base_knowledge/transcriptions/CONVERSA_001_A_Fundacao_de_Yavin.md`](./backend/src/agents/base_knowledge/transcriptions/CONVERSA_001_A_Fundacao_de_Yavin.md) —
@@ -469,8 +468,8 @@ O README da raiz é a entrada pública do projeto: propósito, orientação sola
 método de pesquisa, capacidades atuais e síntese técnica. Instruções de retomada,
 fronteiras de responsabilidade, particularidades de carregamento e recuperação de
 arquivos pertencem a este `AGENTS.md` e aos registros de desenvolvimento citados.
-Prioridades e critérios de conclusão ativos pertencem ao backlog no Notion; `dev/BACKLOG-2026-11-08.md`
-preserva o retrato e histórico anteriores à migração. Detalhes da interface,
+Prioridades e critérios de conclusão ativos pertencem ao backlog no Notion; não há
+arquivo local de backlog. Detalhes da interface,
 controles e estudos visuais pertencem ao `frontend/README.md` e a
 `frontend/sketches/`. O histórico de tentativas rejeitadas continua nos registros
 visuais, sem ocupar a apresentação pública. Não é necessário um README interno
