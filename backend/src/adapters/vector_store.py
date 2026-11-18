@@ -1,5 +1,4 @@
 from pathlib import Path
-from functools import lru_cache
 
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from qdrant_client.models import Distance, VectorParams
@@ -132,7 +131,6 @@ class QdrantVectorStoreContainer:
             raise ValueError("Qdrant client is not initialized")
 
 
-    @lru_cache(maxsize=1)
     def get_retriever(self) -> BaseRetriever:
         """Create a retriever that searches this Qdrant vector store.
 
@@ -146,8 +144,3 @@ class QdrantVectorStoreContainer:
             raise ValueError("Qdrant vector store is not initialized")
 
         return self._store.as_retriever()
-
-
-    # def _test_embeddings_size(self) -> int:
-    #     test_sentence = "Lorem ipsum dolor sit amet"
-    #     return self.embeddings.get_embeddings_size(test_sentence)

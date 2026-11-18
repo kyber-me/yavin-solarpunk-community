@@ -3,6 +3,7 @@ from typing import Any
 from dotenv import load_dotenv
 from ulid import ULID
 
+from adapters import QdrantVectorStoreContainer
 from src.domain.yavinist import roleDto
 from src.constants import PROJECT_ROOT
 load_dotenv(PROJECT_ROOT / ".env")
@@ -10,7 +11,7 @@ load_dotenv(PROJECT_ROOT / ".env")
 from langchain_core.tools import BaseTool
 from langgraph.checkpoint.postgres import PostgresSaver
 
-from src.agents import web_search, get_agent_state, get_base_knowledge
+from src.agents import web_search, get_agent_state, create_base_knowledge_tool
 from src.adapters import (
     LangchainAgentContainer,
     LangchainAgentContainerOptions,
@@ -24,22 +25,22 @@ from src.adapters import (
 
 # Roles Vs Capacities -> create an `Enum` for roles (?)
 CAPACITIES: dict[str, list[BaseTool]] = {
-    "founder": [get_agent_state, web_search(), get_base_knowledge],
-    "counselor": [get_agent_state, web_search(), get_base_knowledge],
-    "researcher": [get_agent_state, web_search(), get_base_knowledge],
-    "engineer": [get_agent_state, web_search(), get_base_knowledge],
+    "founder": [get_agent_state, web_search()],
+    "counselor": [get_agent_state, web_search()],
+    "researcher": [get_agent_state, web_search()],
+    "engineer": [get_agent_state, web_search()],
     "citizen": [get_agent_state]
 }
 
 class Yavinist:
     id: str
-    name: str
     role: list[roleDto.role]
-
+    name: str
     agent: LangchainAgentContainer
 
     def __init__(
         self,
+        vector_database: QdrantVectorStoreContainer,
         checkpointer: PostgresSaver,
         role: list[roleDto.role],
         *,
@@ -48,12 +49,12 @@ class Yavinist:
         agent_id: str | None = None, # Investigate it
     ) -> None:
         self.id = agent_id or str(ULID())
-        self.name = name
         self.role = role
+        self.name = name
         self.agent = LangchainAgentContainer(
             LangchainAgentContainerOptions(
                 identity_content=identity_content,
-                tools=self.load_tools(),
+                tools=self.load_tools() + [create_base_knowledge_tool(retriever=vector_database.get_retriever())],
                 checkpointer=checkpointer,
                 name=name
             ),
@@ -80,7 +81,4 @@ class Yavinist:
             tools.extend(CAPACITIES[r])
 
         return tools
-
-
-
 

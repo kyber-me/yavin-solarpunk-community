@@ -1,4 +1,6 @@
 from fastapi import Request
+
+from adapters import QdrantVectorStoreContainer
 from src.domain.yavinist import Yavinist
 from src.types.app_error import AppError
 from src.persistence.db.relational.conversation_record import ConversationRecord
@@ -91,7 +93,9 @@ class SendMessageService(IService):
 
                 # This object is being created in memory every time a message is sent
                 # Create a pool of agents (?)
+                vector_database: QdrantVectorStoreContainer = request.app.state.vector_store_container
                 silas = Yavinist(
+                    vector_database,
                     checkpointer,
                     ["counselor"],
                     name=agent_record.name,

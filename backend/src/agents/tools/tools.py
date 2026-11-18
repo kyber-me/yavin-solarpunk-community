@@ -1,5 +1,6 @@
 from typing import Literal
 from dotenv import load_dotenv
+from langchain_core.retrievers import BaseRetriever
 
 from adapters import QdrantVectorStoreContainer
 
@@ -36,10 +37,13 @@ def get_agent_state(runtime: ToolRuntime) -> dict:
     """Return the state of an agent"""
     return runtime.state
 
-@tool
-def get_base_knowledge(vector_database: QdrantVectorStoreContainer, query: str) -> str:
-    base_knowledge_retriever = vector_database.get_retriever()
-    retrieved_docs = base_knowledge_retriever.invoke(query)
-    # retrieved_docs is a list of documents
 
-    return "\n\n".join([content.page_content for content in retrieved_docs])
+def create_base_knowledge_tool(retriever: BaseRetriever) -> BaseTool:
+
+    @tool
+    def get_base_knowledge(query: str) -> str:
+        """Search Yavin's knowledge base for context relevant to the query."""
+        documents = retriever.invoke(query)
+        return "\n\n".join(document.page_content for document in documents)
+
+    return get_base_knowledge
