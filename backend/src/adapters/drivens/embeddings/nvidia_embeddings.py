@@ -11,13 +11,16 @@ from src.ports import EmbeddingsModelIntegrationPort
 
 class NvidiaEmbeddings(EmbeddingsModelIntegrationPort):
 
+    def get_embeddings_size(self, text: str) -> int:
+        return super().get_embeddings_size(text)
+
     _embedding_container: Embeddings
 
     def __init__(self):
-        self._embedding_container = NVIDIAEmbeddings(model="nvidia/nemotron-3.5-embed-8b", nvidia_api_key=os.getenv("NVIDIA_API_KEY"))
+        self._embedding_container = NVIDIAEmbeddings(model="nvidia/nemotron-3.5-embed-1b", nvidia_api_key=os.getenv("NVIDIA_API_KEY"))
 
-    def embed_query(self):
-        raise NotImplementedError()
+    def embed_query(self, text: str) -> list[float | int]:
+        return super().embed_query(text)
 
     def embed_documents(self):
         raise NotImplementedError()

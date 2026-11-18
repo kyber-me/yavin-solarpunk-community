@@ -1,11 +1,12 @@
 from pathlib import Path
+from functools import lru_cache
 
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from qdrant_client.models import Distance, VectorParams
 from langchain_qdrant import QdrantVectorStore
 from qdrant_client import QdrantClient
 from langchain_core.documents import Document
-# from langchain_core.retrievers import BaseRetriever
+from langchain_core.retrievers import BaseRetriever
 
 from src.ports import EmbeddingsModelIntegrationPort
 from src.adapters import OpenAiEmbeddingsAdapter
@@ -34,14 +35,16 @@ BASE_DOCUMENTS = [
 # I want to run Qdrant locally and to have an interface to understand what is going on
 class QdrantVectorStoreContainer:
     _client: QdrantClient
-    store: QdrantVectorStore
+    _store: QdrantVectorStore
     embeddings: EmbeddingsModelIntegrationPort
+    embeddings_size: int
 
     def __init__(self, embeddings: EmbeddingsModelIntegrationPort, collection: str = "library_sec_001") -> None:
         self._client = QdrantClient(
             url="http://localhost:6333",
         )
         self.embeddings = embeddings
+        self.embeddings_size = embeddings.get_embeddings_size("Lorem ipsum dolor sit amet")
         self.setup(init_collection=collection)
 
     def setup(self, init_collection: str):
@@ -57,7 +60,7 @@ class QdrantVectorStoreContainer:
             if not exists:
                 created = self._client.create_collection(
                     collection_name=collection,
-                    vectors_config=VectorParams(size=4096, distance=Distance.COSINE)
+                    vectors_config=VectorParams(size=self.embeddings_size, distance=Distance.COSINE)
                 )
 
                 if not created:
@@ -70,17 +73,17 @@ class QdrantVectorStoreContainer:
 
                 # Always instantiate the QdrantVectorStore abstraction
                 # It's crucial to keep an instance of QdrantVectorStore?
-                self.store = QdrantVectorStore(
+                self._store = QdrantVectorStore(
                     client=self._client,
                     collection_name=collection,
                     embedding=self.embeddings.get()
                 )
-                ids = self.store.add_documents(docs_splits) if self.store else []
+                ids = self._store.add_documents(docs_splits) if self._store else []
                 print(ids, end="\n\n")
             else:
                 # Always instantiate the QdrantVectorStore abstraction
                 # It's crucial to keep an instance of QdrantVectorStore?
-                self.store = QdrantVectorStore(
+                self._store = QdrantVectorStore(
                     client=self._client,
                     collection_name=collection,
                     embedding=self.embeddings.get()
@@ -88,7 +91,6 @@ class QdrantVectorStoreContainer:
         except Exception as e:
             print(f"Error setting up QdrantVectorStore: {e}")
             self._client.delete_collection(collection)
-
 
 
     def create_vector(self,
@@ -100,9 +102,9 @@ class QdrantVectorStoreContainer:
             if collection is not None and distance is not None:
                 # created?
                 _ = self.create_collection(collection, distance)
-                self.store.collection_name = collection
+                self._store.collection_name = collection
 
-            ids = self.store.add_documents(docs) if self.store else []
+            ids = self._store.add_documents(docs) if self._store else []
             return ids
         except Exception as e:
             print(f"Error creating QdrantVectorStore: {e}")
@@ -116,7 +118,7 @@ class QdrantVectorStoreContainer:
             if not self._client.collection_exists(name):
                 created = self._client.create_collection(
                     collection_name=name,
-                    vectors_config=VectorParams(size=768, distance=distance)
+                    vectors_config=VectorParams(size=self.embeddings_size, distance=distance)
                 )
         else:
             raise ValueError("Qdrant client is not initialized")
@@ -128,3 +130,24 @@ class QdrantVectorStoreContainer:
             return self._client.collection_exists(name)
         else:
             raise ValueError("Qdrant client is not initialized")
+
+
+    @lru_cache(maxsize=1)
+    def get_retriever(self) -> BaseRetriever:
+        """Create a retriever that searches this Qdrant vector store.
+
+        Returns:
+            A LangChain retriever configured for similarity search.
+
+        Raises:
+            ValueError: If no Qdrant vector store has been initialized.
+        """
+        if not hasattr(self, "_store"):
+            raise ValueError("Qdrant vector store is not initialized")
+
+        return self._store.as_retriever()
+
+
+    # def _test_embeddings_size(self) -> int:
+    #     test_sentence = "Lorem ipsum dolor sit amet"
+    #     return self.embeddings.get_embeddings_size(test_sentence)

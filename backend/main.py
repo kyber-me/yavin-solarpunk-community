@@ -29,7 +29,6 @@ from src.persistence.cache.container import cache_container
 from src.constants import IDEALIZADOR_ACCESS_KEY_ENV
 from src.types.dtos.idealizador_access import IdealizadorAccessRequest
 from src.adapters import QdrantVectorStoreContainer, NvidiaEmbeddingsAdapter
-# from src.domain.document import ingest_documents
 
 from dotenv import load_dotenv
 load_dotenv(Path(__file__).resolve().parent / ".env")

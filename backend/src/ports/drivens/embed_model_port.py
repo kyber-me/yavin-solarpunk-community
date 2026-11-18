@@ -12,12 +12,16 @@ class EmbeddingsModelIntegrationPort(ABC):
         ...
 
     @abstractmethod
-    def embed_query(self):
-        ...
+    def embed_query(self, text: str) -> list[float | int ]:
+        return self._embedding_container.embed_query(text)
 
     @abstractmethod
     def embed_documents(self):
         ...
+
+    @abstractmethod
+    def get_embeddings_size(self, text: str) -> int:
+        return len(self._embedding_container.embed_query(text))
 
     @abstractmethod
     def get(self) -> Embeddings:

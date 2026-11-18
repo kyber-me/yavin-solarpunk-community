@@ -10,7 +10,7 @@ load_dotenv(PROJECT_ROOT / ".env")
 from langchain_core.tools import BaseTool
 from langgraph.checkpoint.postgres import PostgresSaver
 
-from src.agents.tools.tools import web_search, get_agent_state
+from src.agents import web_search, get_agent_state, get_base_knowledge
 from src.adapters import (
     LangchainAgentContainer,
     LangchainAgentContainerOptions,
@@ -24,10 +24,10 @@ from src.adapters import (
 
 # Roles Vs Capacities -> create an `Enum` for roles (?)
 CAPACITIES: dict[str, list[BaseTool]] = {
-    "founder": [get_agent_state, web_search()],
-    "counselor": [get_agent_state, web_search()],
-    "researcher": [get_agent_state, web_search()],
-    "engineer": [get_agent_state, web_search()],
+    "founder": [get_agent_state, web_search(), get_base_knowledge],
+    "counselor": [get_agent_state, web_search(), get_base_knowledge],
+    "researcher": [get_agent_state, web_search(), get_base_knowledge],
+    "engineer": [get_agent_state, web_search(), get_base_knowledge],
     "citizen": [get_agent_state]
 }
 
