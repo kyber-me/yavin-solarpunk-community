@@ -8,7 +8,7 @@ from langchain_core.documents import Document
 from langchain_core.retrievers import BaseRetriever
 
 from src.ports import EmbeddingsModelIntegrationPort
-from src.adapters import OpenAiEmbeddingsAdapter
+# from src.adapters import OpenAiEmbeddingsAdapter
 
 from src.constants import BASE_KNOWLEDGE_PATH
 
@@ -36,36 +36,48 @@ class QdrantVectorStoreContainer:
     _client: QdrantClient
     _store: QdrantVectorStore
     embeddings: EmbeddingsModelIntegrationPort
-    embeddings_size: int
+
 
     def __init__(self, embeddings: EmbeddingsModelIntegrationPort, collection: str = "library_sec_001") -> None:
         self._client = QdrantClient(
             url="http://localhost:6333",
         )
         self.embeddings = embeddings
-        self.embeddings_size = embeddings.get_embeddings_size("Lorem ipsum dolor sit amet")
         self.setup(init_collection=collection)
 
     def setup(self, init_collection: str):
-        # Create the standard base knowledge library for the agents to consume
-        # if it not exists
+        print("Initializing QdrantVectorStore setup...")
+
         collection = init_collection
+        already_exists = False
         try:
-            exists = False
+            # Verifica se coleção inicial já existe. Isto não quer dizer que os
+            # documentos tenham sido carregados
             if self._client:
-                exists = self._client.collection_exists(collection)
+                # Não usa a conexão com a Nvidia
+                # A conexão com a Nvidia é importante para usar o modelo
+                # de embeddings
+                already_exists = self._client.collection_exists(collection)
             else:
                 raise ValueError("Qdrant client is not initialized")
-            if not exists:
+
+            print("Already exists: ", already_exists, end="\n\n")
+
+            # Caso a coleção não exista, cria a coleção inicial
+            size = self.embeddings.get_embeddings_size("Lorem ipsum dolor sit amet")
+            print(f"Embedding size: {size}")
+            if not already_exists:
                 created = self._client.create_collection(
                     collection_name=collection,
-                    vectors_config=VectorParams(size=self.embeddings_size, distance=Distance.COSINE)
+                    vectors_config=VectorParams(size=size, distance=Distance.COSINE)
                 )
 
+                # Pensar em arquitetura resiliente para a criação da coleção
                 if not created:
                     print("Error creating QdrantVectorStore")
-                    return
+                    raise IOError("Error creating QdrantVectorStore")
 
+                # Aqui o algoritmo continua para a preparação/ chunking dos documentos
                 text_splitter = (RecursiveCharacterTextSplitter
                     .from_tiktoken_encoder(chunk_size=500, chunk_overlap=50))
                 docs_splits = text_splitter.split_documents(BASE_DOCUMENTS)
@@ -79,17 +91,37 @@ class QdrantVectorStoreContainer:
                 )
                 ids = self._store.add_documents(docs_splits) if self._store else []
                 print(ids, end="\n\n")
+
+            # Caso a coleção já exista, instanciar um container QdrantVectorStore
+            # É necessário garantir que os documentos iniciais já foram adicionados
+            # A coleção inicial deve servir como "prova" da existência dos
+            # documentos para a base fundamental de conhecimento
             else:
-                # Always instantiate the QdrantVectorStore abstraction
-                # It's crucial to keep an instance of QdrantVectorStore?
+                # Sempre instanciar um QdrantVectorStore no setup da classe
+                # Isto é crucial? Acho que sim
                 self._store = QdrantVectorStore(
                     client=self._client,
                     collection_name=collection,
                     embedding=self.embeddings.get()
                 )
+
+                has_documents = self._client.count(collection_name=collection, exact=True).count > 0
+                print(f"Has documents: {has_documents}")
+                if not has_documents:
+                    print("No documents found")
+
+                    # Aqui o algoritmo continua para a preparação/ chunking dos documentos
+                    text_splitter = (RecursiveCharacterTextSplitter
+                        .from_tiktoken_encoder(chunk_size=500, chunk_overlap=50))
+                    docs_splits = text_splitter.split_documents(BASE_DOCUMENTS)
+
+                    ids = self._store.add_documents(docs_splits) if self._store else []
+                    print(ids, end="\n\n")
+        except (IOError or ValueError) as e:
+            print(f"Error setting up QdrantVectorStore: {e}")
         except Exception as e:
             print(f"Error setting up QdrantVectorStore: {e}")
-            self._client.delete_collection(collection)
+            # self._client.delete_collection(collection)
 
 
     def create_vector(self,

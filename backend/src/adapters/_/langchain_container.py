@@ -1,34 +1,19 @@
-from typing import Any, Sequence, TypedDict, Literal  #Annotated,
+from typing import Any, TypedDict, Literal
 
 from langchain.agents import AgentState, create_agent
+from langchain_core.retrievers import BaseRetriever
 from langgraph.graph.state import CompiledStateGraph  # pyright: ignore[reportMissingTypeStubs]
 from langchain_core.tools import BaseTool
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 from langchain_core.runnables import RunnableConfig
-from langgraph.checkpoint.postgres import PostgresSaver
-from langgraph.types import StateSnapshot
+from langgraph.store.base import BaseStore
+from langgraph.types import StateSnapshot, Checkpointer
 
+from adapters import NvidiaProviderAdapter, Nemotron3_5SuperVL120bA12b
+from agents.tools.tools import get_agent_state, web_search, create_base_knowledge_tool
+from domain.yavinist.role_dto import roleDTO
 from src.ports import AiProviderPort
 from src.types.adapters.content_type_return import ContentTypeReturn
-
-
-# Explore concept
-class Attributes:
-    pass
-
-
-# Explore concept
-class CustomAgentState(AgentState):
-    preferences: dict | None
-    attributes: Attributes
-
-
-class LangchainAgentContainerOptions(TypedDict):
-    identity_content: str
-    tools: Sequence[BaseTool]
-    checkpointer: PostgresSaver
-    name: str
-
 
 # class MessageType(StrEnum):
 #     HUMAN = "human"
@@ -36,19 +21,66 @@ class LangchainAgentContainerOptions(TypedDict):
 #     SYSTEM = "system"
 
 
+# Explore concept
+class Attributes:
+    pass
+
+# Explore concept
+class CustomAgentState(AgentState):
+    preferences: dict | None
+    attributes: Attributes
+
+class LangchainAgentContainerOptions(TypedDict):
+    checkpointer: Checkpointer
+    store: BaseStore
+    retriever: BaseRetriever
+    identity_prompt: str
+
+
+# Create an `Enum` for roles
+CAPACITIES: dict[str, list[BaseTool]] = {
+    "founder": [get_agent_state, web_search()],
+    "counselor": [get_agent_state, web_search()],
+    "researcher": [get_agent_state, web_search()],
+    "engineer": [get_agent_state, web_search()],
+    "citizen": [get_agent_state]
+}
+
+
+def load_tools(role: list[roleDTO]) -> list[BaseTool]:
+    tools: list[BaseTool] = []
+    for r in role:
+        tools.extend(CAPACITIES[r])
+
+    return tools
+
 
 class LangchainAgentContainer:
     _provider: AiProviderPort
     agent: CompiledStateGraph
 
-    def __init__(self, options: LangchainAgentContainerOptions, ai_provider: AiProviderPort):
-        self._provider = ai_provider
+    def __init__(self,
+            name: str,
+            roles: list[roleDTO],
+            options: LangchainAgentContainerOptions
+        ):
+
+        # OllamaProviderAdapter(
+        #     model_adapter=Qwen3_5_4bAiModel(),
+        #     temperature=0.25
+        # )
+        self._provider = NvidiaProviderAdapter(
+            model_adapter=Nemotron3_5SuperVL120bA12b(),
+            temperature=0.25
+        )
+
         self.agent = create_agent(
-            model=ai_provider.get_container(),
-            system_prompt=options["identity_content"],
+            system_prompt=options["identity_prompt"],
+            name=name, # Criar padrão `name_{ULID}`
+            model=self._provider.get_container(),
             checkpointer=options["checkpointer"],
-            tools=options["tools"],
-            name=options["name"],
+            store=options["store"],
+            tools=load_tools(roles) + [create_base_knowledge_tool(retriever=options["retriever"])]
         )
 
     def invoke(self, message: str, thread_id: str, retrieved_knowledge: list[ContentTypeReturn]) -> dict[str, str]:

@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "task_id": "2026-11-19-203724-corrigir-construtor-yavinist",
+  "registrado_em": "2026-11-19T20:37:24-03:00",
+  "avaliado_em": "2026-11-19T20:37:24-03:00",
+  "origem_registro": "contemporanea",
+  "revisao_git": "b2d482c495f2dae6cdfc04ae61290fc41956962c",
+  "tarefa": "Corrigir a chamada do construtor de LangchainAgentContainer em Yavinist",
+  "complexidade": 1,
+  "risco": 2,
+  "nivel": 2,
+  "justificativas": {
+    "complexidade": "Alteração localizada em uma única chamada, com solução conhecida: fornecer as opções pelo parâmetro nomeado esperado pelo construtor.",
+    "risco": "A chamada corrigida participa da criação do agente e uma regressão pode impedir o fluxo de conversas, mas a mudança é reversível e não altera dados persistidos."
+  },
+  "evidencias": [
+    {
+      "arquivo": "backend/src/domain/yavinist/yavinist.py",
+      "simbolo": "Yavinist.__init__",
+      "observacao": "A chamada passa name e roles por nome e depois LangchainAgentContainerOptions como argumento posicional, causando SyntaxError."
+    },
+    {
+      "arquivo": "backend/src/adapters/_/langchain_container.py",
+      "simbolo": "LangchainAgentContainer.__init__",
+      "observacao": "O terceiro parâmetro do construtor se chama options e aceita LangchainAgentContainerOptions."
+    }
+  ],
+  "incertezas": [
+    "A validação local pode confirmar a sintaxe, mas a inicialização completa depende das integrações externas já configuradas no backend."
+  ],
+  "classificacao_provisoria": true,
+  "graphify": {
+    "utilizado": false,
+    "motivo": "A relação relevante foi confirmada diretamente por leitura e busca; o ajuste é localizado.",
+    "versao_ferramenta": null,
+    "revisao_codigo": null,
+    "estado_arquivos": "Árvore de trabalho já contém alterações locais relacionadas ao backend; a classificação considera os arquivos no estado observado.",
+    "atualidade": "nao_verificada",
+    "limitacoes": [
+      "Não foi realizada análise estrutural adicional do grafo."
+    ]
+  },
+  "observacoes": [
+    "O registro é uma classificação de implementação e não concede autorização automática para editar o backend.",
+    "O nível é max(complexidade, risco)."
+  ]
+}

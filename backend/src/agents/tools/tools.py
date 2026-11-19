@@ -1,14 +1,10 @@
 from typing import Literal
 from dotenv import load_dotenv
-from langchain_core.retrievers import BaseRetriever
-
-from adapters import QdrantVectorStoreContainer
-
 load_dotenv()  # Does it make the `TavilySearch` to use the Tavily API Key?
 
+from langchain_core.retrievers import BaseRetriever
 from langchain.tools import ToolRuntime, tool
 from langchain_core.tools import BaseTool
-
 from langchain_tavily import TavilySearch
 
 

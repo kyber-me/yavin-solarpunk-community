@@ -1,4 +1,4 @@
-from .drivens.langchain_container import LangchainAgentContainer, LangchainAgentContainerOptions
+from adapters._.langchain_container import LangchainAgentContainer, LangchainAgentContainerOptions
 
 from .drivens.ai_providers.nvidia_provider import NvidiaProviderAdapter
 from .drivens.ai_providers.ollama_provider import OllamaProviderAdapter

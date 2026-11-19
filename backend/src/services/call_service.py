@@ -1,7 +1,5 @@
 from fastapi import Request
-
-from adapters import QdrantVectorStoreContainer
-from src.domain.yavinist import Yavinist
+from agents.dtos.factory_dto import FactoryDTO
 from src.types.app_error import AppError
 from src.persistence.db.relational.conversation_record import ConversationRecord
 from src.persistence.db.relational.conversation_repository import PostgresConversationRepository
@@ -11,15 +9,12 @@ from src.services.service_interface import IService
 from src.types.dtos.send_message_service_request import SendMessageRequest, Message
 from src.services.helpers.message_mapper import message_to_record
 from src.persistence.db.relational.agent_repository import AgentRepository
-from src.agents.knowledge import LOG
-
-# current_path = Path(
-#     __file__
-# )  # /Users/tiagocuri/Repos/Yavin/backend/src/services/send_message_service.py
+from src.agents.knowledge import LOG # Wrong
+from src.agents.factory import build as build_agent
 
 
 # Events don't need to be updated on real-time in the map/ Frontend (like new messages or actions)
-class SendMessageService(IService):
+class CallService(IService):
     @classmethod
     def run(
         cls, dto: SendMessageRequest, request: Request
@@ -89,20 +84,17 @@ class SendMessageService(IService):
             # What are the consequences for the user experience if it fails?
             result = message_repo.create(message_record)
             try:
-                checkpointer = request.app.state.checkpointer
+                agent = build_agent(
+                    FactoryDTO(
+                        id=agent_record.id,
+                        vector_database=request.app.state.vector_store_container,
+                        checkpointer=request.app.state.checkpointer,
+                        store=request.app.state.store,
+                        identity_prompt=agent_record.identity,
+                    )
+                )
 
-                # This object is being created in memory every time a message is sent
-                # Create a pool of agents (?)
-                vector_database: QdrantVectorStoreContainer = request.app.state.vector_store_container
-                silas = Yavinist(
-                    vector_database,
-                    checkpointer,
-                    ["counselor"],
-                    name=agent_record.name,
-                    identity_content=agent_record.identity,
-                    agent_id=agent_record.id)
-
-                response = silas.send_message(result.content, conversation_container.thread_id)
+                response = agent.send_message(result.content, conversation_container.thread_id)
                 if not response:
                     LOG.error("An error has occurred: the agent was not able tor respond.")
                     raise AppError(
@@ -112,7 +104,6 @@ class SendMessageService(IService):
                     )
 
                 # LOG.debug("silas.invoke response: %s", response)
-
                 message_record = MessageRecord(
                     conversation_id=dto.conversation_id,
                     sender_id=(

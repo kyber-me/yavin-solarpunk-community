@@ -12,7 +12,8 @@ CATALOG = AgentCatalog(agents=[AgentSummary(id='01M6YB17QPC3B4RND1KJD62M28', nam
 
 class AgentCatalogTests(unittest.TestCase):
     def test_catalog_returns_only_silas_without_constructing_agent(self):
-        with patch('main.get_agent_catalog', return_value=CATALOG), patch.object(app.state, 'conversation_pool', object(), create=True), patch('src.services.send_message_service.Agent') as agent:
+        with patch('main.get_agent_catalog', return_value=CATALOG), patch.object(app.state, 'conversation_pool', object(), create=True), patch(
+                'src.services.call_service.py.Agent') as agent:
             response = TestClient(app).get('/agents')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {

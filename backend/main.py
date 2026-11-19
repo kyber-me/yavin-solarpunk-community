@@ -11,9 +11,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from starlette.concurrency import run_in_threadpool
 
-from src.agents.infra.open_checkpointer_helper import open_checkpointer
+from src.agents.infra.open_db_connections_helper import open_store
+from src.agents.infra.open_db_connections_helper import open_checkpointer
 from src.persistence.db.relational.conversation_pool import open_conversation_pool
-from src.services.send_message_service import SendMessageService
+from src.services.call_service import CallService
 from src.services.create_conversation_service import CreateConversationService
 from src.services.agent_catalog_service import get_agent_catalog
 from src.types.app_error import AppError
@@ -46,10 +47,12 @@ async def lifespan(super_app: FastAPI):
     with open_conversation_pool(db_uri) as pool:
         # Why AgentRepository?
         AgentRepository(pool).seed()
+        super_app.state.conversation_pool = pool
         with open_checkpointer() as checkpointer:
-            super_app.state.conversation_pool = pool
             super_app.state.checkpointer = checkpointer
-            yield
+            with open_store() as store:
+                super_app.state.store = store
+                yield
 
 app = FastAPI(lifespan=lifespan)
 
@@ -120,7 +123,7 @@ async def list_agents(request: Request):
 @app.post("/conversation/message", response_model=ApiResponse[dict[Any, Any]])
 async def chat(payload: SendMessageRequest, request: Request):
     result = await run_in_threadpool(
-        SendMessageService.run, payload, request
+        CallService.run, payload, request
     )
 
     return ApiResponse(data=result)

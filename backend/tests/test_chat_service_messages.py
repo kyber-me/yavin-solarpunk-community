@@ -7,7 +7,7 @@ from unittest.mock import patch
 from fastapi import FastAPI, Request
 
 from src.infra.db.relational.message_record import MessageRecord
-from src.services.send_message_service import SendMessageService
+from src.services.call_service import SendMessageService
 from src.types.app_error import AppError
 from src.types.dtos.send_message_service_request import SendMessageRequest
 
@@ -21,16 +21,16 @@ class SendMessageServiceMessageTests(unittest.TestCase):
         self.dto = SendMessageRequest(conversation_id='Conv_test', sender_id='idealizador', message='Olá')
         self.conversation = SimpleNamespace(sender_id='idealizador', participant_id='silas', thread_id='thread_test', active=True)
         self.conversations = self.enterContext(patch(
-            'src.services.send_message_service.PostgresConversationRepository'))
+            'src.services.call_service.py.PostgresConversationRepository'))
         self.conversations.return_value.get_by_id.return_value = self.conversation
-        self.messages = self.enterContext(patch('src.services.send_message_service.PostgresMessageRepository')).return_value
+        self.messages = self.enterContext(patch('src.services.call_service.py.PostgresMessageRepository')).return_value
         self.messages.create.side_effect = lambda record: record
-        self.agent = self.enterContext(patch('src.services.send_message_service.Agent')).return_value
+        self.agent = self.enterContext(patch('src.services.call_service.py.Agent')).return_value
         self.agent.invoke.return_value = {'content': 'Resposta'}
-        agents = self.enterContext(patch('src.services.send_message_service.AgentRepository')).return_value
+        agents = self.enterContext(patch('src.services.call_service.py.AgentRepository')).return_value
         agents.get.return_value = SimpleNamespace(id='silas', name='Silas', identity='identity')
         agents.general_pages.return_value = {'manifesto': 'page-1', 'research_project': 'page-2'}
-        self.enterContext(patch('src.services.send_message_service.load_general_documents', return_value=['manifesto', 'project']))
+        self.enterContext(patch('src.services.call_service.py.load_general_documents', return_value=['manifesto', 'project']))
 
     def test_response_uses_other_participant_in_either_pair_orientation(self):
         for sender, participant in [('idealizador', 'silas'), ('silas', 'idealizador')]:

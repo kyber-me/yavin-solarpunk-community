@@ -13,7 +13,7 @@ from psycopg.errors import CheckViolation
 from ulid import ULID
 
 from main import app
-from src.agents.infra.open_checkpointer_helper import open_checkpointer
+from src.agents.infra.open_db_connections_helper import open_checkpointer
 
 
 def simulated_graph(**kwargs):
